@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16わんこ恋愛診断｜あなたの恋を犬種で診断</title>
+<meta name="description" content="16タイプ性格診断 × 犬で、あなたの恋愛タイプをかわいい犬種に例えて診断。気になるあの人との相性もチェックできる無料診断。">
+<!-- OGP -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="16わんこ恋愛診断">
+<meta property="og:description" content="あなたの恋を、かわいい犬種で診断。相性チェックもできるよ🐾">
+<meta property="og:image" content="https://example.com/ogp.png">
+<meta property="og:url" content="https://example.com/">
+<meta name="twitter:card" content="summary_large_image">
+<!-- TODO(S): AdSense head script をここに -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXX" crossorigin="anonymous"></script> -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fff8f1; --paper:#fffdfa; --beige:#f3e6d6;
+  --pink:#f3c6cf; --pink-deep:#e58aa0; --ink:#6b5648; --ink-soft:#9c8676;
+  --nt:#b9a0d6; --nf:#f0a0ad; --sj:#9fd6bd; --sp:#f4c781;
+  --shadow:0 10px 30px rgba(180,140,120,.18);
+  --radius:26px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Zen Maru Gothic','M PLUS Rounded 1c',sans-serif;
+  color:var(--ink); line-height:1.85;
+  background:
+    radial-gradient(900px 500px at 15% -5%, #ffe9ef 0%, transparent 60%),
+    radial-gradient(800px 500px at 95% 8%, #ede2f6 0%, transparent 55%),
+    var(--cream);
+  min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:680px;margin:0 auto;padding:0 18px 80px}
+.screen{display:none;animation:fade .45s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- hero ---- */
+.hero{text-align:center;padding:46px 8px 18px}
+.hero .paws{font-size:30px;letter-spacing:6px;opacity:.55}
+.hero h1{
+  font-family:'Baloo 2','M PLUS Rounded 1c',cursive;
+  font-weight:800; font-size:clamp(34px,9vw,54px); line-height:1.12;
+  color:var(--pink-deep); margin:6px 0 2px; letter-spacing:.5px;
+  text-shadow:2px 3px 0 #fff, 4px 6px 0 rgba(229,138,160,.18);
+}
+.hero h1 small{display:block;font-size:.42em;color:var(--ink);font-family:'M PLUS Rounded 1c';font-weight:800;letter-spacing:.18em;margin-top:8px}
+.hero p.lead{font-size:15.5px;color:var(--ink-soft);margin:14px auto 4px;max-width:30em}
+.dogrow{font-size:34px;margin:18px 0 6px;filter:saturate(1.05)}
+.btn{
+  display:block;width:100%;border:none;cursor:pointer;font-family:inherit;
+  font-weight:700;font-size:18px;padding:18px;border-radius:999px;color:#fff;
+  background:linear-gradient(135deg,#f6a8bc,#e58aa0);
+  box-shadow:0 8px 20px rgba(229,138,160,.4); transition:transform .15s, box-shadow .15s;
+  margin:14px 0;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(229,138,160,.5)}
+.btn:active{transform:translateY(0)}
+.btn.sub{background:#fff;color:var(--pink-deep);border:2.5px solid #f6c5d2;box-shadow:var(--shadow)}
+.btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--beige);box-shadow:none;font-size:15px;padding:14px}
+.hint{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:-4px}
+
+/* ---- quiz ---- */
+.qhead{text-align:center;padding:30px 0 6px}
+.progress{display:flex;justify-content:center;gap:7px;margin:18px 0 8px;flex-wrap:wrap}
+.pip{width:13px;height:13px;border-radius:50%;background:#f0ddd0;transition:.3s}
+.pip.on{background:var(--pink-deep);transform:scale(1.15)}
+.qcount{font-size:13px;color:var(--ink-soft);letter-spacing:.1em}
+.qcard{background:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px 22px;margin-top:14px}
+.qtext{font-size:20px;font-weight:700;text-align:center;line-height:1.6;min-height:3.2em;display:flex;align-items:center;justify-content:center}
+.opts{margin-top:18px;display:grid;gap:12px}
+.opt{
+  border:2.5px solid #f1e2d6;background:#fff;border-radius:18px;padding:16px 18px;
+  font-family:inherit;font-size:16px;font-weight:500;color:var(--ink);cursor:pointer;
+  text-align:left;transition:.16s;line-height:1.5;
+}
+.opt:hover{border-color:var(--pink);background:#fff6f8;transform:translateY(-1px)}
+
+/* ---- shortcut grid ---- */
+.grid16{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}
+.tcell{
+  border:none;cursor:pointer;font-family:inherit;border-radius:16px;padding:12px 4px 10px;
+  background:#fff;box-shadow:0 4px 12px rgba(180,140,120,.14);transition:.15s;text-align:center;
+}
+.tcell:hover{transform:translateY(-3px) scale(1.03)}
+.tcell .em{font-size:24px;display:block}
+.tcell .code{font-family:'Baloo 2';font-weight:700;font-size:13px;margin-top:3px}
+.tcell .br{font-size:10px;color:var(--ink-soft);line-height:1.25;display:block;margin-top:2px}
+@media(max-width:430px){.grid16{grid-template-columns:repeat(2,1fr)}}
+
+/* ---- result ---- */
+.cert{
+  position:relative;background:var(--paper);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:30px 22px 26px;margin-top:18px;overflow:hidden;
+  border:3px solid #fff;
+}
+.cert:before{content:"";position:absolute;inset:8px;border:2px dashed #eccfd9;border-radius:18px;pointer-events:none}
+.cert .ribbon{font-size:12px;letter-spacing:.3em;color:var(--ink-soft);text-align:center}
+.cert .em{font-size:78px;text-align:center;line-height:1;margin:8px 0 4px;display:block}
+.cert .code{font-family:'Baloo 2';font-weight:800;font-size:15px;text-align:center;letter-spacing:.12em}
+.cert .breed{font-size:30px;font-weight:800;text-align:center;color:var(--pink-deep);margin:2px 0}
+.cert .role{font-size:13px;text-align:center;color:var(--ink-soft)}
+.cert .tagline{font-size:16px;text-align:center;font-weight:700;margin:14px auto 4px;max-width:24em;line-height:1.6}
+.sec{margin-top:24px}
+.sec h3{
+  font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px;
+  margin-bottom:8px;color:var(--ink);
+}
+.sec h3 .dot{width:10px;height:10px;border-radius:50%;background:var(--pink-deep)}
+.sec p{font-size:15px}
+.taglist{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.taglist span{background:#fff;border:2px solid #f1e2d6;border-radius:999px;padding:5px 13px;font-size:13.5px;font-weight:500}
+.taglist.cons span{border-color:#e8c8d2}
+
+/* ad + bonus slots */
+.adslot{margin:26px 0;min-height:90px;border-radius:18px;background:#fbeef2;
+  display:flex;align-items:center;justify-content:center;color:#caa;font-size:12px;letter-spacing:.1em}
+.bonus{background:linear-gradient(135deg,#fff3f6,#f3edfb);border-radius:var(--radius);
+  padding:24px 20px;text-align:center;margin-top:26px;border:2px dashed #e8c8e0}
+.bonus h3{font-size:18px;font-weight:800;margin-bottom:6px}
+.bonus p{font-size:13.5px;color:var(--ink-soft);margin-bottom:14px}
+
+/* ---- compatibility ---- */
+.compat-pick{background:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 20px;margin-top:18px}
+.compat-pick label{font-size:13px;font-weight:700;color:var(--ink-soft);display:block;margin:10px 0 6px}
+.compat-pick select{
+  width:100%;font-family:inherit;font-size:16px;font-weight:500;color:var(--ink);
+  padding:14px;border-radius:16px;border:2.5px solid #f1e2d6;background:#fff;appearance:none;
+}
+.score-ring{text-align:center;margin:8px 0 4px}
+.score-ring .num{font-family:'Baloo 2';font-weight:800;font-size:64px;color:var(--pink-deep);line-height:1}
+.score-ring .lbl{font-size:14px;font-weight:700}
+.pair{display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0 14px}
+.pair .em{font-size:40px}
+.cert .dog{width:170px;height:auto;display:block;margin:6px auto 2px;filter:drop-shadow(0 6px 12px rgba(180,140,120,.28))}
+.tcell .dog{width:100%;aspect-ratio:299/245;object-fit:cover;border-radius:12px;display:block;margin-bottom:4px}
+.pair .dog{width:88px;height:auto;border-radius:12px}
+.pair .heart{font-size:22px}
+
+/* ---- canvas / share ---- */
+.shareblock{text-align:center;margin-top:24px}
+#cardCanvas{max-width:100%;border-radius:18px;box-shadow:var(--shadow);display:none;margin:14px auto 0}
+.sns{display:flex;gap:10px;margin-top:12px}
+.sns .btn{margin:0;font-size:15px;padding:14px}
+.x-btn{background:#222!important}
+
+footer{text-align:center;font-size:11.5px;color:var(--ink-soft);padding:30px 0 10px;line-height:1.9}
+.center{text-align:center}
+.mt{margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ========== TOP ========== -->
+  <section id="top" class="screen active">
+    <div class="hero">
+      <div class="paws">🐾 🐾 🐾</div>
+      <h1>16わんこ<br>恋愛診断<small>あなたの恋を、犬種で診断🐶</small></h1>
+      <p class="lead">かんたん12問であなたの恋愛タイプが、かわいい犬種に大変身。気になるあの人との相性もチェックできるよ。</p>
+      <div class="dogrow">🐕 🐩 🐶 🦴</div>
+      <button class="btn" onclick="startQuiz()">12問でしんだんする</button>
+      <button class="btn sub" onclick="show('shortcut')">MBTIがわかる人はこちら</button>
+      <p class="hint">所要1〜2分・無料・登録なし</p>
+    </div>
+  </section>
+
+  <!-- ========== QUIZ ========== -->
+  <section id="quiz" class="screen">
+    <div class="qhead">
+      <div class="progress" id="pips"></div>
+      <div class="qcount" id="qcount"></div>
+    </div>
+    <div class="qcard">
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    <button class="btn ghost mt" onclick="quizBack()">← もどる</button>
+  </section>
+
+  <!-- ========== SHORTCUT ========== -->
+  <section id="shortcut" class="screen">
+    <div class="qhead"><h2 style="font-size:22px;color:var(--pink-deep)">自分のMBTIを選んでね</h2>
+      <p class="hint mt">タップするとすぐ結果が見れるよ</p></div>
+    <div class="grid16" id="grid16"></div>
+    <button class="btn ghost mt" onclick="show('top')">← トップへ</button>
+  </section>
+
+  <!-- ========== RESULT ========== -->
+  <section id="result" class="screen">
+    <div class="center" style="padding-top:24px"><span class="qcount">あなたの恋愛わんこは…🐶</span></div>
+    <div class="cert" id="cert"></div>
+
+    <div class="shareblock">
+      <canvas id="cardCanvas" width="800" height="1000"></canvas>
+      <div class="sns">
+        <button class="btn x-btn" onclick="shareX()">Xでシェア</button>
+        <button class="btn sub" onclick="saveCard()">画像を保存</button>
+      </div>
+    </div>
+
+
+    <div class="sec" id="desc"></div>
+
+    <div class="bonus">
+      <h3>🦴 もっと詳しく知りたい？</h3>
+      <p>相性ランキングTOP3・落とし方の完全版・待受画像がもらえるよ</p>
+      <button class="btn" style="margin:0" onclick="openOfferwall()">ボーナスをうけとる</button>
+    </div>
+
+    <div class="sec mt">
+      <h3><span class="dot"></span>気になるあの人との相性は？</h3>
+      <p>相手の犬種（MBTI）を選んでチェック！</p>
+      <button class="btn sub mt" onclick="goCompat()">相性をしらべる 🐾</button>
+    </div>
+
+    <button class="btn ghost mt" onclick="show('top')">もう一度診断する</button>
+  </section>
+
+  <!-- ========== COMPAT ========== -->
+  <section id="compat" class="screen">
+    <div class="qhead"><h2 style="font-size:22px;color:var(--pink-deep)">わんこ相性診断 🐾</h2></div>
+    <div class="compat-pick">
+      <label>あなたのタイプ</label>
+      <select id="cpA"></select>
+      <label>お相手のタイプ</label>
+      <select id="cpB"></select>
+      <button class="btn mt" onclick="runCompat()">相性をみる 💕</button>
+    </div>
+    <div id="compatResult"></div>
+    <button class="btn ghost mt" onclick="show('result')">← 結果にもどる</button>
+  </section>
+
+  <footer>
+    16わんこ恋愛診断は、遊びとして楽しむ性格診断です。<br>
+    結果は娯楽目的であり、心理学的・医学的な診断ではありません。<br>
+    © 16わんこ恋愛診断
+  </footer>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const GROUP={NT:'var(--nt)',NF:'var(--nf)',SJ:'var(--sj)',SP:'var(--sp)'};
+const TYPES={
+ INTJ:{g:'NT',role:'建築家',breed:'チワワ',em:'🐶',tag:'小さな体に強気なプライド。本命にだけ心を開く計算家。',
+  personality:'クールで頭の回転が速く、いつも一歩先を読んでいるタイプ。群れずに自分の世界を持ち、感情を簡単には見せません。',
+  love:'恋にも戦略あり。誰にでも愛想を振りまかないぶん、心を許した相手には驚くほど一途。本命と暇つぶしの線引きがはっきりしています。',
+  pros:['一途','頭がいい','ブレない'],cons:['素直になれない','警戒心が強い','プライド高め'],
+  howto:'軽いノリより、知的で対等な会話で信頼を勝ち取るのが近道。媚びず、でも特別扱いしてあげると一気に心を開きます。'},
+ INTP:{g:'NT',role:'論理学者',breed:'ミニチュアシュナウザー',em:'🐕',tag:'理屈っぽい哲学者。分析しすぎるけど沼ると一途。',
+  personality:'好奇心と探究心のかたまり。マイペースで、頭の中はいつも考えごとでいっぱい。独特の世界観を持つ変わり者です。',
+  love:'恋すらも分析対象。「これは恋なのか？」と考えているうちにタイミングを逃しがち。でも一度ハマると、深くまっすぐ愛します。',
+  pros:['発想が面白い','束縛しない','深く考える'],cons:['鈍感','腰が重い','理屈っぽい'],
+  howto:'感情で押すより、興味を引く話題で会話を楽しんで。「一緒にいてラク」が最強の口説き文句です。'},
+ ENTJ:{g:'NT',role:'指揮官',breed:'コーギー',em:'🐕',tag:'仕切りたがりの女王様。グイグイ引っ張る頼れるリーダー。',
+  personality:'目標に向かって一直線、リーダー気質。決断が早く、まわりを引っ張る存在感があります。負けず嫌いで努力家。',
+  love:'恋でも主導権を握りたいタイプ。デートも関係も自分でデザインしたい。守りたい欲が強く、選んだ相手には全力を注ぎます。',
+  pros:['頼れる','決断力','尽くす'],cons:['仕切りすぎ','負けず嫌い','弱音が苦手'],
+  howto:'頼られると燃えるタイプ。たまに弱さを見せて甘えると、ギャップに弱く一気に距離が縮まります。'},
+ ENTP:{g:'NT',role:'討論者',breed:'ジャックラッセル・テリア',em:'🐕',tag:'機転とイタズラで退屈させない、刺激好きの自由人。',
+  personality:'頭の回転が速く、トークが上手で人気者。新しいこと・面白いことが大好きで、じっとしていられません。',
+  love:'退屈が一番の敵。駆け引きや刺激を楽しむタイプで、追われるより追いたい派。飽きさせない相手にぞっこんになります。',
+  pros:['会話が楽しい','行動的','ポジティブ'],cons:['飽きっぽい','口が達者','つかみどころなし'],
+  howto:'予測できない刺激と知的な会話がカギ。あえて全部は見せず、ミステリアスさを残すと夢中にさせられます。'},
+ INFJ:{g:'NF',role:'提唱者',breed:'キャバリア',em:'🐶',tag:'潤んだ瞳の理想主義者。たった一人に静かで深い愛。',
+  personality:'優しく思慮深く、人の気持ちに敏感。理想が高く、表には出さないけれど熱い芯を秘めています。レアタイプ。',
+  love:'恋に運命やつながりを求めるロマンチスト。心を開くまで時間はかかるけれど、開いたら一人にすべてを捧げる深い愛情の持ち主。',
+  pros:['思いやり','一途','察しがいい'],cons:['抱え込む','理想が高い','人見知り'],
+  howto:'焦らず、本音を丁寧に聞いてあげること。表面より「価値観の一致」を感じた瞬間、心の扉が開きます。'},
+ INFP:{g:'NF',role:'仲介者',breed:'マルチーズ',em:'🐶',tag:'夢見るロマンチスト。理想の恋を一途に守り抜く。',
+  personality:'やさしく繊細で、心の中に大きな理想の世界を持つ人。感受性が豊かで、自分の価値観をとても大切にします。',
+  love:'運命の相手を夢見るピュアな恋愛体質。一度好きになると一途で献身的。理想と現実のギャップに傷つきやすい一面も。',
+  pros:['ピュア','献身的','想像力豊か'],cons:['傷つきやすい','理想が高い','内に秘める'],
+  howto:'否定せず、世界観をまるごと受け止めてあげて。安心できる相手だと感じたら、まっすぐ愛を返してくれます。'},
+ ENFJ:{g:'NF',role:'主人公',breed:'ゴールデン・レトリバー',em:'🦮',tag:'みんなの太陽。尽くして愛される愛されモテ犬。',
+  personality:'明るくて面倒見がよく、自然と人が集まるカリスマ。相手の気持ちを汲むのが得意で、場をあたためる太陽のような存在。',
+  love:'とにかく尽くす愛情家。相手の幸せが自分の幸せ。モテるけれど一途で、好きな人にはまっすぐ全力で向き合います。',
+  pros:['愛情深い','社交的','尽くす'],cons:['尽くしすぎ','八方美人に見える','自己犠牲'],
+  howto:'いつも与える側だからこそ、しっかり感謝と愛を返してあげて。「あなたも大事にされてるよ」が一番響きます。'},
+ ENFP:{g:'NF',role:'運動家',breed:'トイ・プードル',em:'🐩',tag:'好奇心の塊。恋を全力で楽しむムードメーカー。',
+  personality:'好奇心旺盛で表情ゆたか、いつも楽しいことを探しているムードメーカー。人懐っこくて、誰とでもすぐ仲良くなれます。',
+  love:'恋を全力で楽しむタイプ。感情表現が豊かで、好きになるとまっすぐアピール。ドキドキとときめきを大切にします。',
+  pros:['一緒にいて楽しい','素直','情熱的'],cons:['気分屋','飽きっぽい','寂しがり'],
+  howto:'リアクション大きめで一緒に楽しんで！ときめきと自由を奪わないことが、長続きの秘訣です。'},
+ ISTJ:{g:'SJ',role:'管理者',breed:'柴犬',em:'🐕',tag:'不器用で実直。一度決めたら一生ものの古風な一途者。',
+  personality:'真面目でコツコツ努力する、信頼できる人。ルールや約束を大切にし、感情を派手に出さない硬派なタイプ。',
+  love:'恋愛も誠実そのもの。口下手で不器用だけど、一度決めた相手にはとことん一途。安定した長い関係を望みます。',
+  pros:['誠実','一途','責任感'],cons:['不器用','頑固','照れ屋'],
+  howto:'派手な演出より、誠実さと積み重ねが効く相手。約束を守り、少しずつ信頼を貯めていくのが正解です。'},
+ ISFJ:{g:'SJ',role:'擁護者',breed:'シーズー',em:'🐶',tag:'穏やかな甘え上手。さりげなく尽くす献身派。',
+  personality:'おだやかで思いやりがあり、まわりをそっと支える縁の下の力持ち。人の変化によく気づく、あたたかいタイプ。',
+  love:'好きな人にさりげなく尽くす献身派。自分から押すのは苦手だけど、相手をよく見ていて、痒いところに手が届く愛情家です。',
+  pros:['気がきく','献身的','安心感'],cons:['尽くしすぎ','本音を隠す','遠慮がち'],
+  howto:'尽くされたら、ちゃんと気づいて言葉で返してあげて。「いつもありがとう」が何よりのご褒美になります。'},
+ ESTJ:{g:'SJ',role:'幹部',breed:'ボストン・テリア',em:'🐕',tag:'きっちり紳士。計画的に着実に愛を育てる。',
+  personality:'しっかり者でまとめ役。現実的で段取り上手、頼れるリーダータイプ。曲がったことが嫌いな筋の通った人。',
+  love:'恋も計画的。あいまいな関係は苦手で、付き合うなら真剣に。決めたらまっすぐ、誠実に関係を育てていきます。',
+  pros:['頼れる','誠実','面倒見がいい'],cons:['仕切り屋','頑固','ストレートすぎ'],
+  howto:'ハッキリした態度と本気度を見せると安心します。あいまいに濁さず、まっすぐ向き合うのが好相性。'},
+ ESFJ:{g:'SJ',role:'領事',breed:'ラブラドール・レトリバー',em:'🦮',tag:'面倒見抜群の人気者。ストレートにたっぷり愛を伝える。',
+  personality:'社交的で世話好き、みんなに好かれる人気者。気配り上手で、まわりを笑顔にするのが得意な愛されキャラ。',
+  love:'愛情表現はストレートで惜しみなし。記念日もマメに大切にします。相手にも同じだけ愛を返してほしい甘えん坊な一面も。',
+  pros:['愛情豊か','マメ','明るい'],cons:['さみしがり','世話焼きすぎ','嫉妬しやすい'],
+  howto:'こまめな連絡と感謝の言葉が安心材料。たっぷり愛を返してあげれば、最高に尽くしてくれます。'},
+ ISTP:{g:'SP',role:'巨匠',breed:'ミニチュア・ダックスフンド',em:'🐕',tag:'クールでマイペース。多くは語らないけど芯は熱い。',
+  personality:'クールで物静か、でも好きなことには没頭する職人気質。ベタベタが苦手で、自分の時間とペースを大切にします。',
+  love:'感情表現は控えめでクール。でも内側には熱いものを秘めています。束縛より、ほどよい距離感で信頼し合える関係を好みます。',
+  pros:['さっぱり','自立してる','いざという時頼れる'],cons:['素っ気ない','感情を出さない','マイペース'],
+  howto:'グイグイ来るより、自由を尊重しつつそばにいるのが◎。べたつかない安心感が、じわじわ効いてきます。'},
+ ISFP:{g:'SP',role:'冒険家',breed:'フレンチ・ブルドッグ',em:'🐶',tag:'ゆるい癒し系。マイペースに自由に愛する平和主義。',
+  personality:'おっとりマイペースで、自分の感性を大切にする癒し系。争いを好まず、今この瞬間の心地よさを大事にします。',
+  love:'ゆるやかで自然体な恋を好むタイプ。重い空気や束縛は苦手。一緒にいてラクな相手と、のんびり愛を育てたい平和主義者。',
+  pros:['癒し系','自然体','やさしい'],cons:['流されやすい','優柔不断','本音が読めない'],
+  howto:'急かさず、心地よい空気をつくってあげて。プレッシャーをかけないほど、安心して心を開いてくれます。'},
+ ESTP:{g:'SP',role:'起業家',breed:'ビーグル',em:'🐕',tag:'行動あるのみ。好奇心と勢いで距離を一気に詰める。',
+  personality:'行動力のかたまりで好奇心旺盛。考えるより先に動く、エネルギッシュなムードメーカー。ノリと勢いの天才です。',
+  love:'気になったら即アプローチ。スピード感のある恋を楽しむタイプで、一緒にワクワクできる相手に夢中になります。',
+  pros:['行動力','ノリがいい','一緒にいて楽しい'],cons:['せっかち','飽きっぽい','後先考えない'],
+  howto:'テンポよく、一緒に遊んで楽しむのがカギ。退屈させない刺激とリアクションで、ぐっと距離が縮まります。'},
+ ESFP:{g:'SP',role:'エンターテイナー',breed:'ポメラニアン',em:'🐶',tag:'華やかな恋の主役。かまってほしい愛されたがり。',
+  personality:'明るく華やかで、その場の主役になれるタイプ。ノリがよく、人を楽しませる天才。感情ゆたかな愛されキャラです。',
+  love:'恋の主役はいつも自分。ドラマチックでロマンチックな恋に憧れます。かまってほしがりで、たっぷり愛されると輝くタイプ。',
+  pros:['一緒にいて華やか','素直','情熱的'],cons:['さみしがり','嫉妬深い','かまってちゃん'],
+  howto:'こまめにかまって、ちゃんと「特別だよ」と伝えて。愛されている実感があるほど、全力で愛を返してくれます。'},
+};
+const ORDER=['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
+const imgPath=c=>`img/${c.toLowerCase()}.png`;
+const dogImg=(c,cls='dog')=>`<img class="${cls}" src="${imgPath(c)}" alt="${TYPES[c].breed}" onerror="this.replaceWith(document.createTextNode('${TYPES[c].em}'))">`;
+
+/* ---- quiz: 4 axes × 3 (恋愛シーンで4軸を判定) ---- */
+const Q=[
+ {t:'休日デートのあと、元気が回復するのは？',a:['みんなでワイワイ二次会☕',{E:1}],b:['ひとりでゆっくり余韻にひたる🛁',{I:1}]},
+ {t:'好きな人ができたら、まず？',a:['友達にすぐ話したくなる📣',{E:1}],b:['自分の中でそっと温める🤫',{I:1}]},
+ {t:'初対面の合コン、あなたは？',a:['自分から話しかけて盛り上げる🎉',{E:1}],b:['まず様子を見て聞き役にまわる👀',{I:1}]},
+ {t:'人を好きになるきっかけは？',a:['やさしくされた具体的なエピソード💬',{S:1}],b:['なんとなく感じる運命やフィーリング✨',{N:1}]},
+ {t:'デートで惹かれるのは？',a:['美味しいごはんや景色など今この瞬間🍰',{S:1}],b:['二人の未来や可能性を語れる時間🔮',{N:1}]},
+ {t:'恋人へのプレゼント、選ぶなら？',a:['実用的で本当に使えるもの🎁',{S:1}],b:['意味やストーリーのこもったもの💌',{N:1}]},
+ {t:'恋人と意見がぶつかったら？',a:['どっちが正しいか筋で考える⚖️',{T:1}],b:['まず相手の気持ちに寄り添う🫂',{F:1}]},
+ {t:'相談されたとき、つい？',a:['解決策やアドバイスを出す💡',{T:1}],b:['まず「わかるよ」と共感する🥹',{F:1}]},
+ {t:'好きな人にどう思われたい？',a:['頼れる・尊敬できる人だと思われたい👑',{T:1}],b:['やさしい・あたたかい人だと思われたい🌷',{F:1}]},
+ {t:'デートの予定は？',a:['お店も時間もきっちり計画したい📋',{J:1}],b:['その日の気分で自由に決めたい🍃',{P:1}]},
+ {t:'恋人とのLINE、理想は？',a:['返事はなるべく早く・こまめに📱',{J:1}],b:['気が向いたときにゆるく🌙',{P:1}]},
+ {t:'付き合うなら？',a:['将来を見すえた安定した関係🏠',{J:1}],b:['今のときめきを楽しむ自由な関係🎡']  /* P */, p:true},
+];
+// normalize last question
+Q[11].b=['今のときめきを楽しむ自由な関係🎡',{P:1}];
+
+/* ============ STATE / ROUTER ============ */
+let qi=0, score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0}, hist=[];
+let current=null;
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function startQuiz(){qi=0;score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};hist=[];show('quiz');renderQ();}
+function renderQ(){
+  const q=Q[qi];
+  document.getElementById('qtext').textContent=q.t;
+  document.getElementById('qcount').textContent=`Q${qi+1} / ${Q.length}`;
+  const pips=Q.map((_,i)=>`<div class="pip ${i<=qi?'on':''}"></div>`).join('');
+  document.getElementById('pips').innerHTML=pips;
+  const o=document.getElementById('opts');
+  o.innerHTML='';
+  [q.a,q.b].forEach(opt=>{
+    const b=document.createElement('button');
+    b.className='opt';b.textContent=opt[0];
+    b.onclick=()=>pick(opt[1]);
+    o.appendChild(b);
+  });
+}
+function pick(delta){
+  for(const k in delta)score[k]+=delta[k];
+  hist.push(delta);
+  if(qi<Q.length-1){qi++;renderQ();}
+  else finish();
+}
+function quizBack(){
+  if(qi===0){show('top');return;}
+  qi--;
+  const last=hist.pop();
+  if(last)for(const k in last)score[k]-=last[k];
+  renderQ();
+}
+
+function finish(){
+  const code=(score.E>=score.I?'E':'I')+(score.S>=score.N?'S':'N')+(score.T>=score.F?'T':'F')+(score.J>=score.P?'J':'P');
+  current=code; renderResult(code);
+}
+
+/* ---- shortcut grid ---- */
+function buildGrid(){
+  const g=document.getElementById('grid16');
+  g.innerHTML=ORDER.map(c=>{
+    const t=TYPES[c];
+    return `<button class="tcell" style="border-bottom:4px solid ${GROUP[t.g]}" onclick="pickType('${c}')">
+      ${dogImg(c)}
+      <span class="code">${c}</span>
+      <span class="br">${t.breed.replace('・レトリバー','').replace('・テリア','').replace('・ブルドッグ','ブル').replace('ミニチュア・','M.')}</span>
+    </button>`;
+  }).join('');
+}
+function pickType(c){current=c;renderResult(c);}
+
+/* ---- result ---- */
+function renderResult(code){
+  const t=TYPES[code];
+  const col=GROUP[t.g];
+  document.getElementById('cert').style.background=`linear-gradient(180deg,#fff,${hex(t.g)})`;
+  document.getElementById('cert').innerHTML=`
+    <div class="ribbon">🐾 恋愛血統書 🐾</div>
+    ${dogImg(code)}
+    <div class="code" style="color:${col}">${code}・${t.role}</div>
+    <div class="breed">${t.breed}</div>
+    <div class="role">タイプ</div>
+    <div class="tagline">${t.tag}</div>`;
+  document.getElementById('desc').innerHTML=`
+    ${block('性格',t.personality)}
+    ${block('恋愛傾向',t.love)}
+    <div class="sec"><h3><span class="dot"></span>長所</h3><div class="taglist">${t.pros.map(p=>`<span>💗 ${p}</span>`).join('')}</div></div>
+    <div class="sec"><h3><span class="dot"></span>気をつけたいところ</h3><div class="taglist cons">${t.cons.map(p=>`<span>🦴 ${p}</span>`).join('')}</div></div>
+    ${block('落とし方',t.howto)}`;
+  drawCard(code);
+  show('result');
+}
+function block(title,body){return `<div class="sec"><h3><span class="dot"></span>${title}</h3><p>${body}</p></div>`;}
+function hex(g){return {NT:'#f3edfb',NF:'#fff1f3',SJ:'#eef9f3',SP:'#fff6e9'}[g];}
+
+/* ---- compatibility ---- */
+const HIGHLIGHT={
+ 'ENFJ|INFP':[92,'尽くすゴールデンと、夢見るマルチーズ。お互いを世界一大切にする溺愛カップル。理想の二人です💕'],
+ 'ENFP|INTJ':[90,'自由なプードルと、クールなチワワ。正反対だけど惹かれ合う、刺激と安心の黄金ペア✨'],
+ 'ENTJ|INFP':[85,'仕切り屋コーギーが、純情マルチーズを全力で守る。引っ張る側と委ねる側でバランス◎'],
+ 'INTP|ENTJ':[86,'天才シュナウザーとリーダーコーギー。頭脳派どうし、議論も愛もハイレベルに育つ知的カップル🧠'],
+ 'ISFJ|ESFP':[84,'献身シーズーと、かまってポメ。尽くしたい子と愛されたい子で噛み合う最強の甘やかし関係🍯'],
+ 'ISTJ|ESFP':[78,'硬派な柴犬を、明るいポメが溶かしていく。正反対だからこそ毎日が新鮮な好相性。'],
+ 'ENFJ|ISTP':[72,'尽くすゴールデンと、クールなダックス。温度差はあるけど、追いかける楽しさのあるカップル。'],
+ 'INFJ|ENFP':[88,'深い愛のキャバリアと、明るいプードル。心の世界が通じ合う、運命を感じるソウルメイト🔮'],
+ 'ESTJ|ISFP':[70,'きっちりボストンと、ゆるいフレブル。ペースは真逆だけど、補い合えればいい凸凹コンビ。'],
+ 'ESTP|ISFJ':[74,'勢いビーグルを、優しいシーズーが受け止める。動と静でバランスのとれた相性です。'],
+ 'ENTP|ISFJ':[68,'自由なジャックラッセルと、献身シーズー。振り回し&受け止め型。安心感がカギになる関係。'],
+ 'INTJ|INTJ':[60,'チワワ同士、プライドのぶつかり合い。理解は深いけど、素直になれず空回りしがち⚠️'],
+};
+function compatScore(a,b){
+  if(a===b)return [70,'同じわんこ同士、価値観はバッチリ。似たもの同士で居心地はいいけど、刺激は自分たちで作ろう🐾'];
+  const key=[a,b].sort().join('|');
+  if(HIGHLIGHT[key])return HIGHLIGHT[key];
+  let s=46;
+  s+=(a[0]!==b[0])?8:5;
+  s+=(a[1]===b[1])?16:4;
+  s+=(a[2]!==b[2])?10:6;
+  s+=(a[3]!==b[3])?9:6;
+  const sorted=[a,b].sort().join('');
+  s+=((sorted.charCodeAt(0)+sorted.charCodeAt(5))%7)-3;
+  s=Math.max(40,Math.min(97,s));
+  let msg;
+  if(s>=82)msg='相性バツグン！自然体で居られる、長続きしやすいベストカップル💕';
+  else if(s>=70)msg='いい感じ◎ 違いを楽しめれば、どんどん深まっていく好相性。';
+  else if(s>=58)msg='育てる相性。歩み寄りとこまめな会話で、ぐっと縮まる二人。';
+  else msg='ちょっぴり試練あり。価値観の違いを認め合えるかがカギ⚠️';
+  return [s,msg];
+}
+function buildSelects(){
+  const opt=ORDER.map(c=>`<option value="${c}">${TYPES[c].em} ${TYPES[c].breed}（${c}）</option>`).join('');
+  document.getElementById('cpA').innerHTML=opt;
+  document.getElementById('cpB').innerHTML=opt;
+}
+function goCompat(){ if(current)document.getElementById('cpA').value=current; show('compat'); }
+function runCompat(){
+  const a=document.getElementById('cpA').value, b=document.getElementById('cpB').value;
+  const [s,msg]=compatScore(a,b);
+  document.getElementById('compatResult').innerHTML=`
+   <div class="compat-pick mt">
+     <div class="pair">${dogImg(a)}<span class="heart">💞</span>${dogImg(b)}</div>
+     <div class="score-ring"><div class="num">${s}<span style="font-size:24px">%</span></div><div class="lbl">${TYPES[a].breed} × ${TYPES[b].breed}</div></div>
+     <p style="text-align:center;font-size:15px;margin-top:10px">${msg}</p>
+   </div>`;
+}
+
+/* ---- share card (canvas) ---- */
+function drawCard(code){
+  const t=TYPES[code], c=document.getElementById('cardCanvas'), x=c.getContext('2d');
+  const W=800,H=1000;
+  const bg={NT:'#f3edfb',NF:'#ffeef2',SJ:'#eaf7f0',SP:'#fff4e3'}[t.g];
+  const ac={NT:'#b9a0d6',NF:'#e58aa0',SJ:'#6ec3a0',SP:'#eaa94e'}[t.g];
+  function render(dog){
+    x.fillStyle=bg;x.fillRect(0,0,W,H);
+    x.fillStyle='#fffdfa';roundRect(x,40,40,W-80,H-80,40);x.fill();
+    x.strokeStyle=ac;x.lineWidth=4;x.setLineDash([14,12]);roundRect(x,70,70,W-140,H-140,28);x.stroke();x.setLineDash([]);
+    x.textAlign='center';x.fillStyle=ac;x.font='600 30px "Zen Maru Gothic",sans-serif';
+    x.fillText('🐾 恋愛血統書 🐾',W/2,170);
+    if(dog){const dw=320,dh=dw*dog.height/dog.width;x.drawImage(dog,(W-dw)/2,195,dw,dh);}
+    else{x.font='130px sans-serif';x.fillText(t.em,W/2,380);}
+    x.fillStyle=ac;x.font='700 34px "Baloo 2",sans-serif';x.fillText(code+'・'+t.role,W/2,500);
+    x.fillStyle='#6b5648';x.font='800 60px "Zen Maru Gothic",sans-serif';x.fillText(t.breed,W/2,575);
+    x.font='500 27px "Zen Maru Gothic",sans-serif';x.fillStyle='#6b5648';
+    wrapText(x,t.tag,W/2,650,W-200,42);
+    x.fillStyle=ac;x.font='700 30px "Zen Maru Gothic",sans-serif';
+    x.fillText('16わんこ恋愛診断',W/2,H-120);
+    x.fillStyle='#9c8676';x.font='400 22px "Zen Maru Gothic",sans-serif';
+    x.fillText('あなたの恋は何わんこ？ #16わんこ恋愛診断',W/2,H-80);
+  }
+  const dog=new Image();
+  dog.onload=()=>render(dog);
+  dog.onerror=()=>render(null);
+  dog.src=imgPath(code);
+}
+function roundRect(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();}
+function wrapText(ctx,text,cx,y,maxW,lh){
+  const words=text.split('');let line='',lines=[];
+  for(const ch of words){if(ctx.measureText(line+ch).width>maxW&&line){lines.push(line);line=ch;}else line+=ch;}
+  lines.push(line);lines.forEach((l,i)=>ctx.fillText(l,cx,y+i*lh));
+}
+function saveCard(){
+  const c=document.getElementById('cardCanvas');c.style.display='block';
+  try{
+    const a=document.createElement('a');a.download='16wanko_'+current+'.png';a.href=c.toDataURL('image/png');a.click();
+  }catch(e){
+    alert('画像はカードが表示されたあと長押し（PCは右クリック）でも保存できます。');
+  }
+}
+function shareX(){
+  const t=TYPES[current];
+  const text=`私の恋愛わんこは【${t.breed}】(${current})だった！🐾\n「${t.tag}」\nあなたの恋は何わんこ？`;
+  const url=location.href.split('?')[0];
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=16わんこ恋愛診断`,'_blank');
+}
+function openOfferwall(){
+  // TODO(S): ここに offerwall プロバイダの呼び出しを差し込む
+  alert('（デモ）ここでオファーウォールを開いてボーナスをアンロックします。');
+}
+
+/* init */
+buildGrid();buildSelects();
+</script>
+</body>
+</html>
