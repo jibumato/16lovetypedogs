@@ -331,7 +331,7 @@ const TYPES={
   howto:'こまめにかまって、ちゃんと「特別だよ」と伝えて。愛されている実感があるほど、全力で愛を返してくれます。'},
 };
 const ORDER=['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
-const imgPath=c=>`img/${c.toLowerCase()}.png`;
+const imgPath=c=>`${c.toLowerCase()}.png`;
 const dogImg=(c,cls='dog')=>`<img class="${cls}" src="${imgPath(c)}" alt="${TYPES[c].breed}" onerror="this.replaceWith(document.createTextNode('${TYPES[c].em}'))">`;
 
 /* ---- quiz: 4 axes × 3 (恋愛シーンで4軸を判定) ---- */
