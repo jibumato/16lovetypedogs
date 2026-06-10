@@ -252,6 +252,55 @@ footer{text-align:center;font-size:11.5px;color:var(--ink-soft);padding:30px 0 1
 .cert .paramhead{color:#b88a3a}
 .cert .paramhead:before,.cert .paramhead:after{content:"";display:inline-block;width:20px;height:1px;background:#dcbd84;vertical-align:middle;margin:0 9px}
 .cert .pstars{color:#c79a3f;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+
+/* ---- washi texture + foil + yumekawa ---- */
+.cert{
+  --tint:#fff;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1.4px 1.4px at 18% 24%, rgba(184,137,58,.20), transparent 60%),
+    radial-gradient(1.4px 1.4px at 72% 38%, rgba(184,137,58,.16), transparent 60%),
+    radial-gradient(1.4px 1.4px at 40% 72%, rgba(229,138,160,.22), transparent 60%),
+    radial-gradient(1.4px 1.4px at 86% 80%, rgba(229,138,160,.16), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(120,90,40,.018) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg,#fffdf8, var(--tint));
+  background-size:auto,150px 150px,170px 170px,160px 160px,190px 190px,auto,auto;
+  box-shadow:0 18px 44px rgba(184,137,58,.18), 0 8px 22px rgba(229,138,160,.20);
+}
+.cert:after{ /* 青海波 (seigaiha) wagara */
+  --wc:rgba(199,154,63,.13);
+  content:"";position:absolute;inset:0;border-radius:var(--radius);pointer-events:none;opacity:.6;
+  background:
+   radial-gradient(circle at 50% 112%, transparent 30%, var(--wc) 30% 35%, transparent 35% 43%, var(--wc) 43% 48%, transparent 48% 56%, var(--wc) 56% 61%, transparent 61%) 0 0/34px 17px,
+   radial-gradient(circle at 50% 112%, transparent 30%, var(--wc) 30% 35%, transparent 35% 43%, var(--wc) 43% 48%, transparent 48% 56%, var(--wc) 56% 61%, transparent 61%) 17px 8.5px/34px 17px;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 26%,#000 90%,transparent);
+  mask-image:linear-gradient(180deg,transparent,#000 26%,#000 90%,transparent);
+}
+.cert .seal{
+  background:radial-gradient(circle at 35% 28%, #fff7e6, #f3e3b0 55%, #d9b56a 100%);
+  border-color:#c79a3f;box-shadow:0 2px 7px rgba(184,137,58,.32), inset 0 1px 2px rgba(255,255,255,.8)}
+.cert .divider:after{filter:none}
+.cert .spk{position:absolute;pointer-events:none;z-index:3;font-size:13px;color:#d8b25a;opacity:.85}
+.cert .spk.s1{top:48px;left:24px}
+.cert .spk.s2{top:128px;right:30px;color:#e58aa0;font-size:12px}
+.cert .spk.s3{bottom:70px;left:30px;font-size:12px}
+.cert .spk.tw{animation:twinkle 2.6s ease-in-out infinite}
+.cert .spk.s2.tw{animation-delay:1s}
+.cert .spk.s3.tw{animation-delay:1.7s}
+@keyframes twinkle{0%,100%{opacity:.22;transform:scale(.8)}50%{opacity:.9;transform:scale(1.12)}}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+ .cert .persona{
+   background:linear-gradient(110deg,#b88a3a 0%,#e9cf8f 18%,#fff4cf 28%,#c9a24c 44%,#a87a2f 60%,#e9cf8f 80%,#b88a3a 100%);
+   background-size:280% 100%;-webkit-background-clip:text;background-clip:text;
+   -webkit-text-fill-color:transparent;color:transparent;
+   filter:drop-shadow(0 1px 0 rgba(255,255,255,.55)) drop-shadow(0 1px 1px rgba(184,137,58,.25));
+   animation:foilshine 5.5s linear infinite}
+ .cert .ribbon,.cert .paramhead{
+   background:linear-gradient(100deg,#b88a3a,#e7cd8a,#b88a3a);background-size:200% 100%;
+   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+   animation:foilshine 6s linear infinite}
+}
+@keyframes foilshine{to{background-position:280% 0}}
 </style>
 </head>
 <body>
@@ -492,11 +541,12 @@ function revealResult(code){
 function renderResult(code,stay){
   const d=LOC[L][code],g=BASE[code].g,col=GROUP[g],i=I();
   const cert=document.getElementById('cert');
-  cert.style.background='linear-gradient(180deg,#fff,'+hex(g)+')';
+  cert.style.setProperty('--tint',hex(g));
   const P=PARAM[code],serial=(codeNum(code)*37%9000+1000);
   const stars=v=>'★★★★★'.slice(0,v)+'☆☆☆☆☆'.slice(0,5-v);
   let pr='';for(let k=0;k<5;k++)pr+='<div class="prow"><span class="plabel">'+i.param_labels[k]+'</span><span class="pstars">'+stars(P[k])+'</span></div>';
   cert.innerHTML='<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>'
+    +'<span class="spk s1 tw">✨</span><span class="spk s2 tw">♡</span><span class="spk s3 tw">✨</span>'
     +'<div class="seal"><span>🐾</span><small>'+i.badge+'</small></div>'
     +'<div class="ribbon">'+i.ribbon+'　No.'+serial+'</div>'
     +'<div class="divider"></div>'
