@@ -170,6 +170,7 @@ body{
 .sns{display:flex;gap:10px;margin-top:12px}
 .sns .btn{margin:0;font-size:15px;padding:14px}
 .x-btn{background:#222!important}
+.line-btn{background:#06c755!important;box-shadow:0 8px 20px rgba(6,199,85,.28)}
 
 footer{text-align:center;font-size:11.5px;color:var(--ink-soft);padding:30px 0 10px;line-height:1.9}
 .center{text-align:center}
@@ -353,6 +354,20 @@ footer{text-align:center;font-size:11.5px;color:var(--ink-soft);padding:30px 0 1
 .afflink:hover{border-color:#e0a94e;transform:translateY(-1px)}
 .affgoods{text-align:center;margin-top:18px}
 .shopchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px}
+.unlock{background:linear-gradient(135deg,#fff7df,#fff3f8);border:2px solid #efd5a3;border-radius:22px;
+  box-shadow:var(--shadow);padding:16px 18px;margin-top:18px;text-align:center}
+.unlock .ttl{font-size:15px;font-weight:900;color:#b88a3a;line-height:1.55}
+.unlock .txt{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-top:4px}
+.unlock .mini{display:inline-flex;align-items:center;gap:6px;margin-top:10px;border:none;border-radius:999px;
+  background:#fff;color:var(--pink-deep);font-family:inherit;font-weight:900;font-size:13px;padding:9px 16px;cursor:pointer}
+.result-next{background:linear-gradient(135deg,#fff3f6,#f3edfb);border:2px solid #f1d7e5;border-radius:24px;
+  box-shadow:var(--shadow);padding:22px 18px;margin-top:28px;text-align:center}
+.result-next h3{font-size:17px;font-weight:900;color:var(--pink-deep);margin-bottom:6px}
+.result-next p{font-size:13.5px;color:var(--ink-soft);line-height:1.75}
+.result-next .sns{margin-top:14px}
+.result-next .btn{margin:0}
+.result-next .note{font-size:12.5px;color:var(--ink-soft);margin-top:12px}
+@media(max-width:430px){.result-next .sns{flex-direction:column}}
 /* ---- static seo content ---- */
 .seo-static{max-width:680px;margin:46px auto 0;padding:26px 20px;background:#fff;border-radius:22px;box-shadow:var(--shadow)}
 .seo-static h2{font-size:16.5px;font-weight:800;color:var(--pink-deep);margin:18px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--beige)}
@@ -430,10 +445,12 @@ footer{text-align:center;font-size:11.5px;color:var(--ink-soft);padding:30px 0 1
     <div class="center" style="padding-top:24px"><span class="qcount" id="t-reshead"></span></div>
     <div class="cert" id="cert"></div>
     <div class="hook" id="hook"></div>
+    <div id="dexNotice"></div>
 
     <div class="shareblock">
       <canvas id="shareCanvas" width="1080" height="1920"></canvas>
       <div class="sns">
+        <button class="btn line-btn" id="t-linebtn" onclick="shareLine()"></button>
         <button class="btn x-btn" id="t-sharebtn" onclick="shareX()"></button>
         <button class="btn sub" id="t-shareimg" onclick="saveShareImg()"></button>
       </div>
@@ -448,6 +465,7 @@ footer{text-align:center;font-size:11.5px;color:var(--ink-soft);padding:30px 0 1
     </div>
 
     <div class="sec" id="desc"></div>
+    <div id="resultNext"></div>
 
     <div class="daily" id="daily"></div>
     <div class="affgoods" id="affgoods"></div>
@@ -458,7 +476,7 @@ footer{text-align:center;font-size:11.5px;color:var(--ink-soft);padding:30px 0 1
       <button class="btn" style="margin:0" id="t-bonusb" onclick="openOfferwall()"></button>
     </div>
 
-    <button class="btn ghost mt" id="t-again" onclick="show('top')"></button>
+    <button class="btn ghost mt" id="t-again" onclick="startQuiz()"></button>
   </section>
 
   <!-- ========== COMPAT ========== -->
@@ -539,10 +557,17 @@ const PARAM={"INTJ": [5, 3, 4, 4, 2], "INTP": [4, 2, 2, 1, 2], "ENTJ": [4, 4, 4,
 const OMK={"levels": [{"lab": {"ja": "大吉", "en": "Great Luck", "ko": "대길", "zh": "大吉"}, "msg": {"ja": "恋の大チャンス！勇気を出した分だけ前進できる日。", "en": "A big chance for love! The braver you are, the further you go today.", "ko": "사랑의 큰 기회! 용기를 낸 만큼 나아가는 날.", "zh": "恋爱大好机会！今天越勇敢，就走得越远。"}}, {"lab": {"ja": "中吉", "en": "Good Luck", "ko": "중길", "zh": "中吉"}, "msg": {"ja": "いい流れ。素直な笑顔が幸運を呼び込みそう。", "en": "A nice flow. An honest smile will invite fortune your way.", "ko": "좋은 흐름. 솔직한 미소가 행운을 부를 거예요.", "zh": "顺流而上。真诚的笑容会替你招来好运。"}}, {"lab": {"ja": "小吉", "en": "Small Luck", "ko": "소길", "zh": "小吉"}, "msg": {"ja": "焦らずマイペースに。小さな優しさが効く日。", "en": "No rush, at your own pace. Small kindnesses pay off today.", "ko": "서두르지 말고 마이페이스로. 작은 친절이 통하는 날.", "zh": "别急，按自己节奏。今天小小的温柔很奏效。"}}, {"lab": {"ja": "末吉", "en": "Future Luck", "ko": "말길", "zh": "末吉"}, "msg": {"ja": "ゆっくりでも大丈夫。今日は自分を大事にする日。", "en": "Slow is fine. Today is a day to treasure yourself.", "ko": "천천히도 괜찮아요. 오늘은 자신을 아끼는 날.", "zh": "慢一点也没关系。今天是好好疼自己的一天。"}}], "colors": [{"hex": "#f6a8bc", "name": {"ja": "さくらピンク", "en": "Sakura Pink", "ko": "벚꽃 핑크", "zh": "樱花粉"}}, {"hex": "#cf9f43", "name": {"ja": "ゴールド", "en": "Gold", "ko": "골드", "zh": "金色"}}, {"hex": "#8ec9b0", "name": {"ja": "ミントグリーン", "en": "Mint Green", "ko": "민트 그린", "zh": "薄荷绿"}}, {"hex": "#a7c7e7", "name": {"ja": "スカイブルー", "en": "Sky Blue", "ko": "스카이 블루", "zh": "天空蓝"}}, {"hex": "#e0caa0", "name": {"ja": "クリームベージュ", "en": "Cream Beige", "ko": "크림 베이지", "zh": "奶油米色"}}, {"hex": "#c8a2c8", "name": {"ja": "ラベンダー", "en": "Lavender", "ko": "라벤더", "zh": "薰衣草紫"}}], "act": {"ja": ["気になる人に自分から一言送ってみて📱", "笑顔であいさつ、それだけで運気アップ😊", "新しい場所に出かけると出会いの予感🌿", "自分を褒めて、ごきげんでいるのが一番のモテ💖", "まわりの人に小さな親切を🍬", "今日は聞き役にまわると好印象👂"], "en": ["Send a first little message to your crush 📱", "Greet with a smile—that alone lifts your luck 😊", "Go somewhere new; a meeting may be waiting 🌿", "Praise yourself; staying happy is the best charm 💖", "Do a small kindness for someone nearby 🍬", "Be the listener today for a great impression 👂"], "ko": ["마음에 둔 사람에게 먼저 한마디 보내봐요 📱", "웃으며 인사, 그것만으로 운기 UP 😊", "새로운 곳에 나가보면 만남의 예감 🌿", "자신을 칭찬하기, 기분 좋은 게 최고의 매력 💖", "주변 사람에게 작은 친절을 🍬", "오늘은 들어주는 역할이 좋은 인상 👂"], "zh": ["主动给心仪的人发个消息吧 📱", "微笑打招呼，光这样就增运 😊", "去个新地方，也许有邂逅 🌿", "夸夸自己，保持好心情就是最强魅力 💖", "对身边的人做点小善意 🍬", "今天当个倾听者，印象超好 👂"]}};
 const LKEYWORD=["ファー ポーチ", "犬 キーホルダー", "白 スニーカー レディース", "ベージュ 小物", "ハンドクリーム いい香り", "花 モチーフ ピアス", "肉球 ステッカー", "ベージュ マフラー レディース", "クリア ポーチ", "もこもこ 手袋", "桜色 ヘアアクセ", "リップ 秋色"];
 const ORDER=["INTJ", "INTP", "ENTJ", "ENTP", "INFJ", "INFP", "ENFJ", "ENFP", "ISTJ", "ISFJ", "ESTJ", "ESFJ", "ISTP", "ISFP", "ESTP", "ESFP"];
+const LOOP_TXT={
+  ja:{dexNew:'🎉 {breed}が図鑑に登録されたよ',dexSeen:'🐾 {breed}は図鑑に登録済み',dexProgress:'{n}/16 コンプリート',dexBtn:'図鑑を見る',nextHead:'次は友達と比べてみる？',nextText:'結果をシェアすると、友達はこの結果ページから見られるよ。',share:'Xでシェア',line:'LINEで送る',compat:'あの人との相性を見る',again:'自分ももう一度診断する',omikuji:'明日は恋愛おみくじも引けるよ。今日のラッキーわんこも図鑑に登録されます。'},
+  en:{dexNew:'🎉 {breed} was added to your Dog Dex',dexSeen:'🐾 {breed} is already in your Dog Dex',dexProgress:'{n}/16 collected',dexBtn:'Open Dog Dex',nextHead:'Compare with a friend next?',nextText:'When you share your result, friends land directly on this result page.',share:'Share on X',line:'Send on LINE',compat:'Check compatibility',again:'Take it again',omikuji:'Come back tomorrow for a love fortune. The lucky dog gets added to your Dex too.'},
+  ko:{dexNew:'🎉 {breed} 도감에 등록됐어요',dexSeen:'🐾 {breed}는 이미 도감에 있어요',dexProgress:'{n}/16 수집',dexBtn:'도감 보기',nextHead:'다음은 친구와 비교해 볼까요?',nextText:'결과를 공유하면 친구가 이 결과 페이지로 바로 들어와요.',share:'X에 공유',line:'LINE으로 보내기',compat:'그 사람과 궁합 보기',again:'다시 진단하기',omikuji:'내일은 연애 운세도 뽑을 수 있어요. 행운의 강아지도 도감에 등록돼요.'},
+  zh:{dexNew:'🎉 {breed} 已加入狗狗图鉴',dexSeen:'🐾 {breed} 已在图鉴中',dexProgress:'{n}/16 已收集',dexBtn:'查看图鉴',nextHead:'接下来和朋友比比看？',nextText:'分享结果后，朋友会直接打开这个结果页。',share:'分享到X',line:'发送到LINE',compat:'查看和TA的契合度',again:'我也再测一次',omikuji:'明天还能抽恋爱运势，幸运狗狗也会加入图鉴。'}
+};
 
 /* ============ LOGIC ============ */
 const GROUP={NT:'var(--nt)',NF:'var(--nf)',SJ:'var(--sj)',SP:'var(--sp)'};
 const LANGS=['ja','en','ko','zh'];
+const SITE_URL='https://16lovetypedogs.com/';
 let L='ja',current=null,qi=0,score={},hist=[],loadTimer=null;
 
 function I(){return I18N[L];}
@@ -552,6 +577,27 @@ function dogImg(code){
   return '<img class="dog" src="'+imgPath(code)+'" alt="'+br+'" onerror="this.outerHTML=\'<span class=em>'+em+'</span>\'">';
 }
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+function loopText(){return LOOP_TXT[L]||LOOP_TXT.ja;}
+function validType(v){v=(v||'').toUpperCase();return ORDER.includes(v)?v:null;}
+function resultUrl(code){
+  const u=new URL(SITE_URL);
+  u.search='';
+  u.hash='';
+  u.searchParams.set('type',code);
+  if(L)u.searchParams.set('lang',L);
+  return u.toString();
+}
+function syncResultUrl(code){
+  try{history.replaceState(null,'',resultUrl(code));}catch(e){}
+}
+function clearResultUrl(){
+  try{
+    const u=new URL(location.href);
+    u.searchParams.delete('type');
+    if(L)u.searchParams.set('lang',L);
+    history.replaceState(null,'',u);
+  }catch(e){}
+}
 
 function applyStatic(){
   const i=I();
@@ -570,6 +616,7 @@ function applyStatic(){
   setText('t-navdex',i.nav_dex);setText('t-navomk',i.nav_omikuji);setText('t-shareimg',i.share_img);
   setText('t-dexhead',i.dex_head);setText('t-dexback',i.back_top);
   setText('t-omkhead',i.omk_head);setText('t-omkback',i.back_top);
+  setText('t-linebtn',loopText().line);
   document.getElementById('t-footer').innerHTML=i.footer.replace(/\n/g,'<br>')+'<br>'+i.aff_disclosure
     +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
     +'<br>© '+i.title;
@@ -598,6 +645,8 @@ function setLang(l){
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.seo-static').forEach(s=>{s.style.display=id==='top'?'':'none';});
+  if(id==='top'||id==='quiz'||id==='shortcut'||id==='loading')clearResultUrl();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -667,6 +716,8 @@ function revealResult(code){
 
 /* ---- result ---- */
 function renderResult(code,stay){
+  current=code;
+  syncResultUrl(code);
   const d=LOC[L][code],g=BASE[code].g,col=GROUP[g],i=I();
   const cert=document.getElementById('cert');
   cert.style.setProperty('--tint',hex(g));
@@ -685,7 +736,9 @@ function renderResult(code,stay){
     +'<div class="paramhead">'+i.h_param+'</div><div class="params">'+pr+'</div>'
     +'<div class="stamp">'+i.stamp+'</div>';
   document.getElementById('hook').innerHTML=d.hook;
+  const seenBefore=dexGet(),wasNew=!seenBefore.includes(code);
   dexAdd(code);
+  renderDexNotice(code,wasNew,dexGet().length);
   document.getElementById('desc').innerHTML=
      block(i.h_pers,d.personality)
     +block(i.h_love,d.love)
@@ -714,7 +767,25 @@ function renderResult(code,stay){
     +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LOC.ja[code].breed+' ぬいぐるみ')+'">'+LOC[L][code].breed+' '+i.w_plush+'</a>'
     +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LOC.ja[code].breed+' グッズ')+'">'+LOC[L][code].breed+' '+i.w_goods+'</a>'
     +'</div></div>';
+  renderResultNext();
   if(!stay)show('result');
+}
+function renderDexNotice(code,wasNew,n){
+  const t=loopText(),breed=LOC[L][code].breed;
+  const title=(wasNew?t.dexNew:t.dexSeen).replace('{breed}',breed);
+  document.getElementById('dexNotice').innerHTML='<div class="unlock"><div class="ttl">'+title+'</div>'
+    +'<div class="txt">'+t.dexProgress.replace('{n}',n)+'</div>'
+    +'<button class="mini" onclick="openDex()">🐾 '+t.dexBtn+'</button></div>';
+}
+function renderResultNext(){
+  const t=loopText();
+  document.getElementById('resultNext').innerHTML='<div class="result-next"><h3>'+t.nextHead+'</h3>'
+    +'<p>'+t.nextText+'</p>'
+    +'<div class="sns"><button class="btn line-btn" onclick="shareLine()">'+t.line+'</button>'
+    +'<button class="btn x-btn" onclick="shareX()">'+t.share+'</button>'
+    +'<button class="btn sub" onclick="goCompat()">'+t.compat+'</button></div>'
+    +'<button class="btn ghost mt" onclick="startQuiz()">'+t.again+'</button>'
+    +'<div class="note">'+t.omikuji+'</div></div>';
 }
 function daySeed(){const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000);}
 function curSeason(){const m=new Date().getMonth()+1;return m<=2?'winter':m<=5?'spring':m<=8?'summer':m<=11?'autumn':'winter';}
@@ -765,8 +836,16 @@ function shareX(){
   else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\n"'+d.tag+'"\nWhat is your love-dog?';
   else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n"'+d.tag+'"\n당신의 연애견은?';
   else text='我的恋爱犬是【'+d.breed+'】('+current+')！🐾\n「'+d.tag+'」\n你的恋爱犬是哪只？';
-  const url=location.href.split('?')[0];
+  const url=resultUrl(current);
   window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url)+'&hashtags='+encodeURIComponent(i.hashtag),'_blank');
+}
+function shareLine(){
+  const d=LOC[L][current];let text;
+  if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\nあなたの恋は何わんこ？\n'+resultUrl(current);
+  else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\nWhat is your love-dog?\n'+resultUrl(current);
+  else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n당신의 연애견은?\n'+resultUrl(current);
+  else text='我的恋爱犬是【'+d.breed+'】('+current+')！🐾\n你的恋爱犬是哪只？\n'+resultUrl(current);
+  window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(resultUrl(current))+'&text='+encodeURIComponent(text),'_blank');
 }
 function openOfferwall(){
   const m={ja:'（デモ）ここでオファーウォールを開いてボーナスをアンロックします。',en:'(Demo) This is where the offerwall opens to unlock the bonus.',ko:'(데모) 여기서 오퍼월을 열어 보너스를 잠금 해제합니다.',zh:'（演示）这里会打开 offerwall 来解锁奖励。'};
@@ -896,8 +975,14 @@ function renderOmikuji(r,animate){
 
 /* init */
 (function(){
-  try{const p=new URL(location.href).searchParams.get('lang');if(LANGS.includes(p))L=p;}catch(e){}
+  let initialType=null;
+  try{
+    const params=new URL(location.href).searchParams;
+    const p=params.get('lang');if(LANGS.includes(p))L=p;
+    initialType=validType(params.get('type'));
+  }catch(e){}
   applyStatic();buildGrid();buildSelects();
+  if(initialType)renderResult(initialType);
 })();
 </script>
 </body>
