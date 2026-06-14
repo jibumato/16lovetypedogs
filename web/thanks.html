@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>ご購入ありがとうございます ｜ 16わんこ恋愛診断</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#4a3f35; --ink-soft:#7a6e62;
+  --gold:#b8893a; --gold-deep:#9c7430; --gold-line:#e0c894;
+  --pink:#e0779a; --pink-deep:#d35d85; --pink-soft:#fbe6ee; --pink-pale:#fdf1f5;
+  --mint:#5bb89a; --mint-soft:#e3f3ee;
+  --cream:#fdf7ef; --cream-2:#faf0e2; --paper:#fffdf9;
+  --shadow:0 6px 24px rgba(176,120,80,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Zen Maru Gothic',sans-serif; color:var(--ink);
+  background:radial-gradient(130% 60% at 50% 0%,#fff 0%,var(--cream) 45%,var(--cream-2) 100%);
+  line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 60px;
+  min-height:100vh;
+}
+.wrap{max-width:520px;margin:0 auto;padding:0 18px;}
+.serif{font-family:'Cormorant Garamond',serif;}
+
+/* ヒーロー */
+.hero{text-align:center;padding:40px 0 24px;}
+.hero .badge{display:inline-block;font-size:11px;font-weight:700;color:var(--gold-deep);
+  border:1px solid var(--gold-line);border-radius:20px;padding:4px 14px;letter-spacing:.1em;
+  margin-bottom:18px;}
+.confetti{font-size:36px;margin-bottom:8px;display:block;}
+.hero h1{font-size:22px;font-weight:700;line-height:1.5;color:var(--ink);}
+.hero h1 .accent{color:var(--gold-deep);}
+.hero .sub{font-size:13px;color:var(--ink-soft);margin-top:8px;}
+
+/* タイプカード */
+.typecard{
+  background:var(--paper);border:1px solid var(--gold-line);border-radius:20px;
+  padding:22px 20px;text-align:center;box-shadow:var(--shadow);margin-top:24px;
+}
+.typecard .ped{font-family:'Cormorant Garamond',serif;font-size:11px;
+  letter-spacing:.28em;color:var(--gold);margin-bottom:10px;}
+.typecard .dogframe{width:100px;height:100px;margin:0 auto 12px;border-radius:18px;
+  overflow:hidden;border:1px solid var(--gold-line);background:#fdf1f5;}
+.typecard .dogframe img{width:100%;height:100%;object-fit:cover;display:block;}
+.typecard h2{font-size:20px;font-weight:700;color:var(--gold-deep);line-height:1.4;}
+.typecard .breed{font-size:16px;font-weight:700;margin-top:6px;}
+.typecard .tcode{font-size:12px;letter-spacing:.2em;color:var(--ink-soft);margin-top:2px;}
+.typecard .oneline{font-size:12px;color:var(--ink-soft);margin-top:12px;
+  padding-top:12px;border-top:1px dashed var(--gold-line);}
+
+/* ダウンロード */
+.dl-section{margin-top:28px;}
+.dl-section h3{font-size:14px;font-weight:700;margin-bottom:14px;text-align:center;}
+.btn-dl{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:17px 16px;border:0;border-radius:14px;cursor:pointer;
+  font-family:inherit;font-size:17px;font-weight:700;color:#fff;text-decoration:none;
+  background:linear-gradient(135deg,var(--pink),var(--pink-deep));
+  box-shadow:0 6px 20px rgba(211,93,133,.38);
+  transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;
+}
+.btn-dl:active{transform:translateY(1px);box-shadow:0 3px 10px rgba(211,93,133,.3);}
+.btn-dl .icon{font-size:22px;}
+.btn-dl .tx{text-align:left;}
+.btn-dl .tx .sm{display:block;font-size:11px;font-weight:500;opacity:.9;margin-top:1px;}
+
+/* 多言語ボタン */
+.lang-btns{display:flex;gap:8px;margin-top:10px;}
+.btn-lang{flex:1;padding:11px 6px;border:1.5px solid var(--gold-line);border-radius:11px;
+  background:var(--paper);color:var(--gold-deep);font-family:inherit;font-size:13px;
+  font-weight:700;cursor:pointer;text-decoration:none;text-align:center;
+  transition:background .15s;-webkit-tap-highlight-color:transparent;}
+.btn-lang:active{background:var(--pink-pale);}
+.btn-lang .flag{display:block;font-size:17px;margin-bottom:2px;}
+
+/* ダウンロードできない場合 */
+.fallback{background:var(--cream-2);border:1px solid var(--gold-line);border-radius:12px;
+  padding:14px 16px;margin-top:14px;font-size:12px;color:var(--ink-soft);text-align:center;
+  display:none;}
+.fallback a{color:var(--gold-deep);}
+
+/* 読み方ガイド */
+.guide{background:var(--paper);border:1px solid #f0e3cf;border-radius:16px;
+  padding:18px 18px;box-shadow:var(--shadow);margin-top:24px;}
+.guide h3{font-size:14px;font-weight:700;margin-bottom:14px;padding-left:9px;
+  border-left:3px solid var(--gold);}
+.guide ol{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.guide li{display:flex;gap:10px;align-items:flex-start;font-size:13px;}
+.guide .n{flex:0 0 22px;width:22px;height:22px;border-radius:50%;
+  background:var(--pink-pale);color:var(--pink-deep);font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.guide .tx b{display:block;font-weight:700;margin-bottom:1px;}
+.guide .tx span{color:var(--ink-soft);font-size:11.5px;}
+
+/* シェア */
+.share{margin-top:24px;text-align:center;}
+.share p{font-size:12px;color:var(--ink-soft);margin-bottom:12px;}
+.share-btns{display:flex;gap:8px;justify-content:center;}
+.btn-share{flex:1;max-width:140px;padding:10px 8px;border:1.5px solid #f0e3cf;
+  border-radius:11px;background:var(--paper);font-family:inherit;font-size:12px;
+  font-weight:700;cursor:pointer;color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:background .15s;-webkit-tap-highlight-color:transparent;}
+.btn-share:active{background:var(--pink-pale);}
+
+/* フッタ */
+.footer{text-align:center;margin-top:28px;font-size:10px;color:#a99880;line-height:1.7;}
+.footer a{color:var(--gold-deep);}
+
+/* エラー */
+.err-state{text-align:center;padding:60px 20px;display:none;}
+.err-state p{font-size:14px;color:var(--ink-soft);margin-bottom:16px;}
+
+@media(max-width:380px){
+  .hero h1{font-size:20px;} .btn-dl{font-size:15px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- エラー表示 -->
+  <div class="err-state" id="errState">
+    <p>ページの読み込みに問題が発生しました。<br>メールに届いたダウンロードリンクをご確認ください。</p>
+    <a href="mailto:jbnmatrix@gmail.com" style="color:var(--gold-deep);font-size:13px;">
+      サポートへ問い合わせる →
+    </a>
+  </div>
+
+  <!-- メインコンテンツ -->
+  <div id="main">
+
+    <!-- ヒーロー -->
+    <section class="hero">
+      <div class="badge">PURCHASE COMPLETE</div>
+      <span class="confetti" id="confetti">🎉</span>
+      <h1>ご購入<span class="accent">ありがとうございます</span><br>攻略書の準備ができました</h1>
+      <div class="sub">下のボタンからすぐにダウンロードできます</div>
+    </section>
+
+    <!-- タイプカード -->
+    <div class="typecard">
+      <div class="ped" id="ped">PEDIGREE</div>
+      <div class="dogframe" id="dogframe">🐶</div>
+      <h2 id="title">恋愛攻略書</h2>
+      <div class="breed" id="breed"></div>
+      <div class="tcode" id="tcode"></div>
+      <div class="oneline" id="oneline"></div>
+    </div>
+
+    <!-- ダウンロードセクション -->
+    <section class="dl-section">
+      <h3>📖 恋愛攻略書をダウンロード</h3>
+
+      <!-- 日本語（デフォルト表示） -->
+      <a id="btnJa" class="btn-dl" href="#" download>
+        <span class="icon">⬇️</span>
+        <span class="tx">日本語版をダウンロード<span class="sm">フルカラーPDF・全14ページ</span></span>
+      </a>
+
+      <!-- 多言語版 -->
+      <div class="lang-btns" id="langBtns">
+        <a class="btn-lang" id="btnEn" href="#" download>
+          <span class="flag">🇺🇸</span>English
+        </a>
+        <a class="btn-lang" id="btnKo" href="#" download>
+          <span class="flag">🇰🇷</span>한국어
+        </a>
+        <a class="btn-lang" id="btnZh" href="#" download>
+          <span class="flag">🇨🇳</span>中文
+        </a>
+      </div>
+
+      <div class="fallback" id="fallback">
+        ダウンロードが始まらない場合は
+        <a id="fallbackLink" href="#">こちらを長押し→「リンクを保存」</a>
+      </div>
+    </section>
+
+    <!-- 読み方ガイド -->
+    <div class="guide">
+      <h3>攻略書の使い方</h3>
+      <ol>
+        <li>
+          <div class="n">1</div>
+          <div class="tx"><b>まず通し読み</b>
+          <span>P3〜P15をさらっと読んで全体像をつかんでください</span></div>
+        </li>
+        <li>
+          <div class="n">2</div>
+          <div class="tx"><b>気になる人のページへ</b>
+          <span>好きな人ができたら相性マップで相手タイプを確認</span></div>
+        </li>
+        <li>
+          <div class="n">3</div>
+          <div class="tx"><b>ワークに書き込む</b>
+          <span>P14・15のシートに自分の言葉で書くと気持ちが整理されます</span></div>
+        </li>
+        <li>
+          <div class="n">4</div>
+          <div class="tx"><b>30日アクションプラン</b>
+          <span>最終ページのチェックリストで心の物語を現実へ</span></div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- シェア -->
+    <section class="share">
+      <p>あなたのタイプをシェアして、気になる人のタイプを調べてみて</p>
+      <div class="share-btns">
+        <a class="btn-share" id="shareLine" href="#">
+          <span>💬</span>LINEでシェア
+        </a>
+        <a class="btn-share" id="shareX" href="#" target="_blank" rel="noopener">
+          <span>🐦</span>Xでシェア
+        </a>
+        <a class="btn-share" id="shareCopy" href="#">
+          <span>🔗</span>URLコピー
+        </a>
+      </div>
+    </section>
+
+    <!-- フッタ -->
+    <div class="footer">
+      本コンテンツは娯楽目的です。心理学的・医学的な診断ではありません。<br>
+      ご不明な点は <a href="mailto:jbnmatrix@gmail.com">jbnmatrix@gmail.com</a> までご連絡ください。<br>
+      © 2025 Mymatrix / 16わんこ恋愛診断
+    </div>
+
+  </div><!-- /main -->
+</div>
+
+<script>
+/* =========================================================
+   設定
+   ========================================================= */
+const CONFIG = {
+  /* R2 PDFのURL（タイプ・言語ごとのパスを設定）
+     例: https://pub-XXXX.r2.dev/{type}/{lang}/love_guide_{type}_{lang}.pdf
+     または Cloudflare Worker エンドポイント: /api/pdf?type=INFP&lang=ja
+  */
+  pdfBase: "https://r2.16lovetypedogs.com",  /* ← 差し替え */
+
+  /* PDFファイルパスの構成: {base}/{type}/{lang}/love_guide_{type}_{lang}.pdf */
+  pdfPath: (type, lang) =>
+    `${CONFIG.pdfBase}/${type}/${lang}/love_guide_${type}_${lang}.pdf`,
+
+  /* 診断サイトURL（シェア用） */
+  siteUrl: "https://16lovetypedogs.com",
+};
+
+/* タイプデータ（upsell_v2.htmlと共通） */
+const TYPE_DATA = {
+  INFP:{ dog:"マルチーズ", emoji:"🐶", pedigree:"4172",
+    title:"理想の恋を守り抜く<br>ロマンチスト", breed:"マルチーズ",
+    code:"INFP", label:"仲介者", oneline:"夢見るロマンチスト。理想の恋を一途に守り抜く。" },
+  INFJ:{ dog:"キャバリア", emoji:"🐾", pedigree:"2891",
+    title:"魂で愛する<br>ヴィジョニスト", breed:"キャバリア",
+    code:"INFJ", label:"提唱者", oneline:"深く・静かに・一途に。魂ごと相手を愛する稀なタイプ。" },
+  ENFJ:{ dog:"ゴールデン", emoji:"🐕", pedigree:"3341",
+    title:"全力で尽くす<br>ソウルガイド", breed:"ゴールデン",
+    code:"ENFJ", label:"主人公", oneline:"あなたのために全力を尽くす。愛情が行動に直結するタイプ。" },
+  ENFP:{ dog:"プードル", emoji:"🐩", pedigree:"1057",
+    title:"恋に夢を見る<br>フリースピリット", breed:"プードル",
+    code:"ENFP", label:"運動家", oneline:"恋するたびに世界が輝く。可能性を信じるロマンティックな自由人。" },
+  INTJ:{ dog:"チワワ", emoji:"🐕‍🦺", pedigree:"0712",
+    title:"孤高の完璧主義者<br>ストラテジスト", breed:"チワワ",
+    code:"INTJ", label:"建築家", oneline:"恋も人生も設計図通りに。選んだ相手には揺るぎない忠誠を。" },
+  INTP:{ dog:"シュナウザー", emoji:"🐶", pedigree:"0834",
+    title:"愛を論じる<br>フィロソファー", breed:"シュナウザー",
+    code:"INTP", label:"論理学者", oneline:"恋も仮説で考える。深い議論のなかで芽生える静かな愛のタイプ。" },
+  ENTJ:{ dog:"コーギー", emoji:"🐕", pedigree:"1523",
+    title:"恋も人生も制す<br>ストラテジスト", breed:"コーギー",
+    code:"ENTJ", label:"指揮官", oneline:"決断力と行動力で愛を築く。相手を守りながら未来を切り開く。" },
+  ENTP:{ dog:"ジャックラッセル", emoji:"🐶", pedigree:"2267",
+    title:"恋を遊ぶ<br>アイデアマン", breed:"ジャックラッセル",
+    code:"ENTP", label:"討論者", oneline:"刺激と議論で恋を燃やす。飽きさせない天才的な変化球の使い手。" },
+  ISFJ:{ dog:"シーズー", emoji:"🐶", pedigree:"3698",
+    title:"静かに深く愛する<br>ガーディアン", breed:"シーズー",
+    code:"ISFJ", label:"擁護者", oneline:"言葉より行動で愛を示す。相手の幸せが自分の幸せ。" },
+  ISFP:{ dog:"フレブル", emoji:"🐶", pedigree:"4403",
+    title:"ありのままで愛する<br>センシティブアーティスト", breed:"フレブル",
+    code:"ISFP", label:"冒険家", oneline:"言葉にしない愛がある。感覚と空気で深くつながるタイプ。" },
+  ESFJ:{ dog:"ラブラドール", emoji:"🐕", pedigree:"1184",
+    title:"みんなを幸せにする<br>ハーモニーメーカー", breed:"ラブラドール",
+    code:"ESFJ", label:"領事", oneline:"愛情表現は行動で。周りの笑顔が一番の幸せという安定のお世話焼き。" },
+  ESFP:{ dog:"ポメ", emoji:"🐾", pedigree:"2056",
+    title:"恋を全力で楽しむ<br>パフォーマー", breed:"ポメ",
+    code:"ESFP", label:"エンターテイナー", oneline:"今この瞬間が全て。その場の空気を幸せで包んでしまう天才。" },
+  ISTJ:{ dog:"柴犬", emoji:"🐕", pedigree:"0391",
+    title:"誠実一途な<br>ロイヤルパートナー", breed:"柴犬",
+    code:"ISTJ", label:"管理者", oneline:"派手さはないが裏切らない。約束を守ることが愛情表現のタイプ。" },
+  ISTP:{ dog:"ダックス", emoji:"🐕", pedigree:"3017",
+    title:"自分のペースで深める<br>クールな職人", breed:"ダックス",
+    code:"ISTP", label:"巨匠", oneline:"言葉より行動。距離感を保ちながら、確かな愛を育てるタイプ。" },
+  ESTJ:{ dog:"ボストン", emoji:"🐾", pedigree:"2734",
+    title:"恋も仕事も<br>きっちりこなす管理者", breed:"ボストン",
+    code:"ESTJ", label:"幹部", oneline:"責任感と実行力で愛を守る。頼もしさが最大の愛情表現。" },
+  ESTP:{ dog:"ビーグル", emoji:"🐕", pedigree:"1849",
+    title:"刺激と興奮で<br>駆け抜けるアクター", breed:"ビーグル",
+    code:"ESTP", label:"起業家", oneline:"今この瞬間に全力投球。行動力と度胸で相手をときめかせるタイプ。" },
+};
+
+/* =========================================================
+   初期化
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const p = new URLSearchParams(location.search);
+const code = (p.get("type") || "INFP").toUpperCase();
+const lang = p.get("lang") || "ja";
+const T = TYPE_DATA[code];
+
+if (!T) {
+  $("#main").style.display = "none";
+  $("#errState").style.display = "block";
+} else {
+  /* タイプ情報 */
+  $("#ped").textContent   = `PEDIGREE No.${T.pedigree}`;
+  $("#dogframe").innerHTML = `<img src="img/${code.toLowerCase()}.webp" alt="${T.breed}">`;
+  $("#title").innerHTML   = T.title;
+  $("#breed").textContent = T.breed;
+  $("#tcode").textContent = `${T.code} ・ ${T.label}`;
+  $("#oneline").textContent = T.oneline;
+
+  /* 購入言語のボタンを強調 */
+  const highlight = {"ja":"#btnJa","en":"#btnEn","ko":"#btnKo","zh":"#btnZh"}[lang];
+  if(highlight) $(highlight).style.outline = "2px solid var(--pink)";
+
+  /* ダウンロードリンクセット */
+  const langs = ["ja","en","ko","zh"];
+  const ids   = ["#btnJa","#btnEn","#btnKo","#btnZh"];
+  langs.forEach((l,i) => {
+    const url = CONFIG.pdfPath(code, l);
+    const el = $(ids[i]);
+    el.href = url;
+    el.setAttribute("download", `love_guide_${code}_${l}.pdf`);
+  });
+  $("#fallbackLink").href = CONFIG.pdfPath(code, lang);
+
+  /* ダウンロード失敗フォールバック表示（3秒後） */
+  setTimeout(() => { $("#fallback").style.display = "block"; }, 3000);
+
+  /* シェアボタン */
+  const shareText = `16わんこ恋愛診断で${T.breed}（${T.code}）と出ました！あなたも診断してみて👇`;
+  const shareUrl  = `${CONFIG.siteUrl}?ref=share`;
+
+  $("#shareLine").href = `https://line.me/R/msg/text/?${encodeURIComponent(shareText + "\n" + shareUrl)}`;
+
+  $("#shareX").href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+
+  $("#shareCopy").addEventListener("click", async (e) => {
+    e.preventDefault();
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      $("#shareCopy").innerHTML = "<span>✅</span>コピーしました";
+      setTimeout(() => { $("#shareCopy").innerHTML = "<span>🔗</span>URLコピー"; }, 2000);
+    } catch { /* フォールバック */ }
+  });
+
+  /* 紙吹雪アニメ（軽量JS版） */
+  const confettiEmoji = ["🎉","✨","💖","🐾","🎀","💛"];
+  let i = 0;
+  const iv = setInterval(() => {
+    $("#confetti").textContent = confettiEmoji[i++ % confettiEmoji.length];
+    if(i >= confettiEmoji.length * 2) clearInterval(iv);
+  }, 350);
+}
+</script>
+</body>
+</html>
