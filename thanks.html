@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>ご購入ありがとうございます | 16わんこ恋愛診断</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Shippori Mincho','Hiragino Mincho ProN',serif;
+    background:linear-gradient(180deg,#fffdf8 0%,#fff3f0 100%);
+    color:#3a2e28;
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+  }
+  .card{
+    width:100%;max-width:480px;
+    background:#fffdf8;
+    border:1.5px solid #e1c489;
+    border-radius:20px;
+    padding:40px 28px;
+    text-align:center;
+    box-shadow:0 12px 40px rgba(184,137,58,.12);
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute;inset:8px;
+    border:0.5px solid #dcbd84;
+    border-radius:14px;
+    pointer-events:none;
+  }
+  .seal{
+    display:inline-block;
+    font-size:10px;letter-spacing:.25em;font-weight:700;
+    color:#a87a2f;
+    border:1px solid #c79a3f;border-radius:99px;
+    padding:4px 14px;
+    background:radial-gradient(circle at 35% 28%,#fff7e6,#f3e3b0 55%,#ddbb72 100%);
+    margin-bottom:18px;
+  }
+  .dogimg{
+    width:120px;height:120px;
+    border-radius:16px;object-fit:cover;
+    border:3px solid #fff;
+    box-shadow:0 6px 16px rgba(184,137,58,.2);
+    margin:0 auto 18px;
+    display:block;
+  }
+  h1{
+    font-size:18px;font-weight:900;color:#a87a2f;
+    margin-bottom:6px;letter-spacing:.05em;
+  }
+  .breed{
+    font-size:22px;font-weight:900;color:#3a2e28;
+    margin-bottom:4px;
+  }
+  .role{
+    font-size:12px;color:#9c8676;letter-spacing:.15em;
+    margin-bottom:14px;
+  }
+  .tagline{
+    font-size:13px;line-height:1.9;color:#6b5648;
+    padding:12px 0;margin-bottom:24px;
+    border-top:1px dashed #dcbd84;
+    border-bottom:1px dashed #dcbd84;
+  }
+  .dlbtn{
+    display:inline-block;width:100%;
+    background:linear-gradient(135deg,#e58aa0,#d56a86);
+    color:#fff;text-decoration:none;
+    font-size:15px;font-weight:800;letter-spacing:.1em;
+    padding:16px 0;border-radius:99px;
+    box-shadow:0 6px 16px rgba(229,138,160,.35);
+    transition:transform .15s ease, box-shadow .15s ease;
+    font-family:inherit;
+  }
+  .dlbtn:active{transform:translateY(2px);box-shadow:0 3px 8px rgba(229,138,160,.3);}
+  .note{
+    font-size:11.5px;color:#9c8676;line-height:1.8;
+    margin-top:16px;
+  }
+  .back{
+    display:inline-block;margin-top:28px;
+    font-size:12px;color:#b88a3a;
+    text-decoration:none;letter-spacing:.1em;
+    border-bottom:1px solid #e7cf9f;
+    padding-bottom:2px;
+  }
+  .errbox{padding:20px 0;}
+  .errbox h1{margin-bottom:14px;}
+  .errbox p{font-size:13px;line-height:1.9;color:#6b5648;}
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="seal">CERTIFIED PURCHASE</div>
+    <img class="dogimg" id="dogimg" src="" alt="" onerror="this.style.display='none'">
+    <h1>ご購入ありがとうございます</h1>
+    <div class="breed" id="breed"></div>
+    <div class="role" id="role"></div>
+    <div class="tagline" id="tagline"></div>
+    <a class="dlbtn" id="dlbtn" href="#" download>📖 恋愛攻略書をダウンロード</a>
+    <p class="note">ボタンが反応しない場合は、リンクを長押し（スマホ）または右クリック（PC）し、「リンク先を保存」をお試しください。<br>ダウンロードしたPDFは端末に保存しておくことをおすすめします。</p>
+    <a class="back" href="https://16lovetypedogs.com/">← 診断トップへ戻る</a>
+  </div>
+
+<script>
+  // ───────────────────────────────────────────────────────────
+  // R2公開バケットのベースURL（16wanko-pdf-ja の Public Development URL）
+  // 例: https://pub-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.r2.dev
+  var R2_BASE = 'https://pub-700c1b66624d44ccaf9164ea9fbc57e4.r2.dev';
+
+  // 犬の写真（任意）。サイトの画像パスに合わせて変更してください。
+  // 不要な場合は空文字 '' のままでOK（自動的に非表示になります）。
+  var DOG_IMG_BASE = '';
+
+  var TYPES = {
+    intj: {breed:'チワワ',        role:'建築家',        title:'本命にだけ甘える 一途な策士'},
+    intp: {breed:'シュナウザー',  role:'論理学者',      title:'沼ると一途な 恋の探究者'},
+    entj: {breed:'コーギー',      role:'指揮官',        title:'グイグイ引っ張る 恋のリーダー'},
+    entp: {breed:'ジャックラッセル', role:'討論者',      title:'退屈させない 刺激の自由人'},
+    infj: {breed:'キャバリア',    role:'提唱者',        title:'たった一人を 深く愛す理想主義者'},
+    infp: {breed:'マルチーズ',    role:'仲介者',        title:'理想の恋を守り抜く ロマンチスト'},
+    enfj: {breed:'ゴールデン',    role:'主人公',        title:'尽くして愛される みんなの太陽'},
+    enfp: {breed:'プードル',      role:'運動家',        title:'恋を全力で 楽しむ情熱家'},
+    istj: {breed:'柴犬',          role:'管理者',        title:'一度決めたら 一生の恋愛職人'},
+    isfj: {breed:'シーズー',      role:'擁護者',        title:'さりげなく尽くす 癒しの献身家'},
+    estj: {breed:'ボストン',      role:'幹部',          title:'着実に愛を育てる 誠実な紳士'},
+    esfj: {breed:'ラブラドール',  role:'領事',          title:'愛をたっぷり伝える 世話好き'},
+    istp: {breed:'ダックス',      role:'巨匠',          title:'多くは語らない 芯の熱いクール系'},
+    isfp: {breed:'フレブル',      role:'冒険家',        title:'自由気ままに 愛する癒し系'},
+    estp: {breed:'ビーグル',      role:'起業家',        title:'勢いで距離を詰める 行動派ハンター'},
+    esfp: {breed:'ポメ',          role:'エンターテイナー', title:'華やかに恋する 愛されたがりの主役'}
+  };
+
+  var params = new URLSearchParams(window.location.search);
+  var type = (params.get('type') || '').toLowerCase().trim();
+  var data = TYPES[type];
+
+  if (data) {
+    document.getElementById('breed').textContent = data.breed + '（' + type.toUpperCase() + '）';
+    document.getElementById('role').textContent = data.role + ' ・ ' + data.title;
+    document.getElementById('tagline').textContent = '「恋愛攻略書 ' + data.breed + '版」をダウンロードして、あなただけの恋愛トリセツをお楽しみください。';
+
+    var dlbtn = document.getElementById('dlbtn');
+    dlbtn.setAttribute('href', R2_BASE + '/' + type + '_love_guide.pdf');
+
+    if (DOG_IMG_BASE) {
+      document.getElementById('dogimg').src = DOG_IMG_BASE + '/' + type + '_dog.png';
+    } else {
+      document.getElementById('dogimg').remove();
+    }
+  } else {
+    document.getElementById('card').innerHTML =
+      '<div class="errbox">' +
+      '<div class="seal">CERTIFIED PURCHASE</div>' +
+      '<h1>ご購入ありがとうございます</h1>' +
+      '<p>タイプ情報を確認できませんでした。<br>お手数ですが、購入時に届いた確認メールのリンクから再度アクセスしていただくか、' +
+      '<a href="mailto:jbnmatrix@gmail.com" style="color:#e58aa0;">jbnmatrix@gmail.com</a> までお問い合わせください。</p>' +
+      '<a class="back" href="https://16lovetypedogs.com/">← 診断トップへ戻る</a>' +
+      '</div>';
+  }
+</script>
+</body>
+</html>
