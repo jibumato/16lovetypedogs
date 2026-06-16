@@ -648,6 +648,7 @@ function loopText(){return LOOP_TXT[L]||LOOP_TXT.ja;}
 function validType(v){v=(v||'').toUpperCase();return ORDER.includes(v)?v:null;}
 function resultUrl(code){
   if(L==='ko')return SITE_URL+'ko/'+code.toLowerCase()+'.html';
+  if(L==='ja')return SITE_URL+'type-'+code.toLowerCase()+'.html';
   const u=new URL(SITE_URL);
   u.search='';
   u.hash='';
