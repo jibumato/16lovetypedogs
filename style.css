@@ -1,0 +1,117 @@
+/* 16わんこ恋愛診断 — shared base styles */
+
+:root {
+  --cream: #fff8f1;
+  --paper: #fffdfa;
+  --beige: #f3e6d6;
+  --pink: #f3c6cf;
+  --pink-deep: #e58aa0;
+  --ink: #6b5648;
+  --ink-soft: #9c8676;
+  --nt: #b9a0d6;
+  --nf: #f0a0ad;
+  --sj: #9fd6bd;
+  --sp: #f4c781;
+  --shadow: 0 10px 30px rgba(180, 140, 120, 0.18);
+  --radius: 26px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Zen Maru Gothic', 'M PLUS Rounded 1c', 'Hiragino Maru Gothic Pro', sans-serif;
+  color: var(--ink);
+  line-height: 1.85;
+  background: var(--cream);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--pink-deep);
+}
+
+/* Card component */
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 22px;
+  margin-top: 22px;
+}
+
+.card h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--pink-deep);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--beige);
+}
+
+.card h3 {
+  font-size: 15px;
+  font-weight: 800;
+  margin: 18px 0 6px;
+  color: var(--ink);
+}
+
+.card p {
+  margin-bottom: 10px;
+  line-height: 1.85;
+}
+
+.card ul {
+  padding-left: 1.4em;
+  margin-bottom: 10px;
+}
+
+.card ul li {
+  margin-bottom: 5px;
+  line-height: 1.75;
+}
+
+/* Tag component */
+.tag {
+  display: inline-block;
+  background: #fff6ee;
+  border: 1.5px solid #f0d9b0;
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+/* Header */
+#t-header {
+  border-bottom: 1px solid var(--beige);
+}
+
+/* Footer */
+#t-footer {
+  text-align: center;
+  padding: 20px 16px;
+  font-size: 12px;
+  color: #aaa;
+  border-top: 1px solid var(--beige);
+}
+
+#t-footer a {
+  color: #aaa;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card {
+    padding: 20px 14px;
+  }
+}

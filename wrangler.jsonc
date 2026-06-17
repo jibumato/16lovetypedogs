@@ -1,0 +1,8 @@
+{
+  // 16わんこ恋愛診断 — Cloudflare Workers Static Assets
+  "name": "16lovetypedogs",
+  "compatibility_date": "2024-09-23",
+  "assets": {
+    "directory": "./"
+  }
+}
