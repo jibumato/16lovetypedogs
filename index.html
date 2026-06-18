@@ -137,15 +137,15 @@ body{
 
 /* ---- result : pedigree certificate ---- */
 .cert{
-  position:relative;background:var(--paper);border:1px solid var(--glass-bd);border-radius:var(--radius);
+  position:relative;background:var(--tint,var(--paper-solid));border:1px solid rgba(210,98,143,.18);border-radius:var(--radius);
   box-shadow:var(--shadow);padding:22px 22px 26px;margin-top:16px;overflow:hidden;
 }
 .cert:before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#f7a8c4,#ffd49a,#c9a6f0,#f7a8c4);background-size:200% 100%;animation:shimmerBar 3s linear infinite}
 .cert:after{content:"🐾";position:absolute;right:-24px;bottom:-30px;font-size:180px;line-height:1;opacity:.05;pointer-events:none;transform:rotate(-12deg)}
-.cert .frame{position:absolute;inset:9px;top:15px;border:1.5px dashed var(--hair);border-radius:16px;pointer-events:none}
+.cert .frame{position:absolute;inset:9px;top:15px;border:1.5px dashed rgba(120,90,140,.22);border-radius:16px;pointer-events:none}
 .cert>*{position:relative;z-index:1}
-.cert .regrow{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ink-faint);margin-top:6px}
-.cert .ribbon{font-size:9px;letter-spacing:.3em;color:var(--ink-faint);text-align:center;font-weight:800;margin-top:14px}
+.cert .regrow{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ink-soft);margin-top:6px}
+.cert .ribbon{font-size:9px;letter-spacing:.3em;color:var(--ink-soft);text-align:center;font-weight:800;margin-top:14px}
 .cert .title{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:7px;font-size:17px;font-weight:800;letter-spacing:.18em;color:var(--pink-deep)}
 .cert .title .pw{font-size:12px;opacity:.5;letter-spacing:0}
 .cert .seal{position:absolute;top:38px;right:14px;width:58px;height:58px;border-radius:50%;
@@ -173,22 +173,22 @@ body{
 .cert .breed .cd{display:block;font-size:11.5px;color:var(--ink-soft);font-weight:600;letter-spacing:.08em;margin-top:3px}
 .cert .role{font-size:13px;text-align:center;color:var(--ink-soft)}
 .cert .divider{display:flex;align-items:center;gap:10px;max-width:250px;margin:16px auto 0}
-.cert .divider:before,.cert .divider:after{content:"";flex:1;height:1px;background:var(--hair)}
+.cert .divider:before,.cert .divider:after{content:"";flex:1;height:1px;background:rgba(120,90,140,.22)}
 .cert .divider span{font-size:11px;opacity:.45}
 .cert .tagline{font-size:15px;text-align:center;font-weight:700;margin:14px 8px 0;line-height:1.75;color:var(--ink);text-wrap:pretty}
 .cert .axes{display:flex;justify-content:center;gap:7px;margin-top:18px}
-.cert .axis{flex:1;max-width:72px;text-align:center;background:rgba(255,255,255,.6);border:1px solid var(--glass-bd);border-radius:14px;padding:9px 4px}
+.cert .axis{flex:1;max-width:72px;text-align:center;background:rgba(255,255,255,.75);border:1px solid rgba(210,98,143,.14);border-radius:14px;padding:9px 4px}
 .cert .axis b{font-family:'M PLUS Rounded 1c';font-size:18px;font-weight:800;color:var(--pink-deep);line-height:1;display:block}
 .cert .axis i{font-size:10px;font-weight:700;color:var(--ink-soft);font-style:normal;margin-top:3px;display:block}
 .cert .paramhead{display:flex;align-items:center;gap:10px;max-width:280px;margin:24px auto 14px;font-size:10.5px;font-weight:800;letter-spacing:.16em;color:var(--ink-soft);text-align:center;justify-content:center}
-.cert .paramhead:before,.cert .paramhead:after{content:"";flex:1;height:1px;background:var(--hair)}
+.cert .paramhead:before,.cert .paramhead:after{content:"";flex:1;height:1px;background:rgba(120,90,140,.22)}
 .params{max-width:300px;margin:0 auto;display:grid;gap:9px}
 .prow{display:flex;align-items:center;gap:12px;font-size:12px}
 .plabel{flex:none;width:60px;font-weight:700;color:var(--ink-soft)}
 .pbar{flex:1;height:9px;border-radius:999px;background:var(--track);overflow:hidden}
 .pbar i{display:block;height:100%;border-radius:999px;background:var(--accent)}
 .pstars{flex:none;width:32px;text-align:right;font-weight:800;color:var(--pink-deep)}
-.cert .sign{text-align:center;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--ink-faint);margin-top:24px}
+.cert .sign{text-align:center;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--ink-soft);margin-top:24px}
 .cert .stamp,.cert .corner{display:none}
 
 /* announce + confetti */
@@ -199,7 +199,7 @@ body{
 .confetti i{position:absolute;top:-14px;display:block}
 
 /* sections */
-.sec{margin-top:16px;background:var(--paper);border:1px solid var(--glass-bd);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px 20px}
+.sec{margin-top:16px;background:var(--paper);border:1px solid rgba(200,180,220,.3);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px 20px}
 .sec h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:11px;margin-bottom:12px;color:var(--ink)}
 .sec h3 .dot{flex:none;width:42px;height:42px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(140deg,rgba(247,168,196,.28),rgba(201,166,240,.28));box-shadow:0 6px 14px -5px rgba(210,98,143,.34),inset 0 1px 0 rgba(255,255,255,.6)}
 .sec h3 .lbl{display:flex;flex-direction:column;line-height:1.15}
@@ -208,10 +208,10 @@ body{
 .sec + .sec h3{margin-top:0}
 .sec h3.mt{margin-top:22px}
 .taglist{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
-.taglist span{background:rgba(255,255,255,.7);border:1px solid var(--glass-bd);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--ink)}
+.taglist span{background:rgba(255,255,255,.8);border:1px solid rgba(200,180,220,.35);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--ink)}
 
 /* hook */
-.hook{background:var(--accent-soft);border-radius:18px;padding:16px 18px;margin-top:16px;font-size:15px;line-height:1.9;font-weight:700;color:var(--ink);text-align:center;text-wrap:pretty}
+.hook{background:rgba(247,168,196,.22);border:1px solid rgba(246,184,205,.55);border-radius:18px;padding:16px 18px;margin-top:16px;font-size:15px;line-height:1.9;font-weight:700;color:var(--ink);text-align:center;text-wrap:pretty}
 
 /* ad + bonus */
 .adslot{margin:22px 0;min-height:90px;border-radius:18px;background:rgba(255,255,255,.5);border:1px dashed var(--hair);
@@ -272,7 +272,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 
 /* daily extra cards */
 .daily{display:grid;gap:14px;margin-top:16px}
-.dcard{position:relative;border-radius:20px;padding:18px 20px 18px 60px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--glass-bd);background:var(--paper)}
+.dcard{position:relative;border-radius:20px;padding:18px 20px 18px 60px;box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(200,180,220,.3);background:var(--paper)}
 .dcard .ico{position:absolute;left:16px;top:16px;font-size:28px}
 .dcard h4{font-size:14px;font-weight:800;letter-spacing:.02em;margin-bottom:5px;color:var(--pink-deep)}
 .dcard p{font-size:14px;line-height:1.75;color:var(--ink)}
@@ -396,7 +396,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 
 /* ---- compatibility ranking TOP3（欠落していた定義を追加） ---- */
 .rank{display:flex;flex-direction:column;gap:10px;margin-top:4px}
-.rankrow{display:flex;align-items:center;gap:12px;min-width:0;background:rgba(255,255,255,.7);border:1px solid var(--glass-bd);border-radius:18px;padding:10px 13px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 10px 24px -18px rgba(150,120,180,.55)}
+.rankrow{display:flex;align-items:center;gap:12px;min-width:0;background:rgba(255,255,255,.8);border:1px solid rgba(200,180,220,.3);border-radius:18px;padding:10px 13px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 10px 24px -18px rgba(150,120,180,.55)}
 .rankrow:hover{transform:translateY(-2px);box-shadow:0 16px 30px -18px rgba(150,120,180,.6)}
 .rankrow .medal{flex:none;font-size:24px;line-height:1}
 .rankrow .dog{flex:none;width:46px;height:46px;border-radius:13px;object-fit:cover;background:var(--accent-soft)}
