@@ -1201,11 +1201,15 @@ function saveCompatImg(){
 
 /* ---- share (X) ---- */
 function shareX(){
-  const d=LOC[L][current],i=I();let text;
-  if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\n「'+d.tag+'」\nあなたの恋は何わんこ？';
-  else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\n"'+d.tag+'"\nWhat is your love-dog?';
-  else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n"'+d.tag+'"\n당신의 연애견은?';
-  else text='我的恋爱犬是【'+d.breed+'】('+current+')！🐾\n「'+d.tag+'」\n你的恋爱犬是哪只？';
+  const d=LOC[L][current],i=I(),hook=d.hook||d.tag;
+  const T={
+    ja:'私の恋愛わんこは【'+d.breed+'】('+current+') 🐾\n\n「'+hook+'」\n\n…当たってて笑った😳\nあなたの恋は何わんこ？',
+    en:'My love-dog is '+d.breed+' ('+current+') 🐾\n\n"'+hook+'"\n\n…scarily accurate 😳\nWhat\'s your love-dog?',
+    ko:'내 연애견은 【'+d.breed+'】('+current+') 🐾\n\n"'+hook+'"\n\n…너무 정확해서 웃었다 😳\n당신의 연애견은?',
+    zh:'我的恋爱犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…准到笑出来😳\n你的恋爱犬是哪只？',
+    tw:'我的戀愛犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…準到笑出來😳\n你的戀愛犬是哪隻？'
+  };
+  const text=T[L]||T.ja;
   const url=shareUrl(current);
   window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url)+'&hashtags='+encodeURIComponent(i.hashtag),'_blank');
 }
@@ -1214,7 +1218,8 @@ function shareLine(){
   if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\nあなたの恋は何わんこ？\n'+shareUrl(current);
   else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\nWhat is your love-dog?\n'+shareUrl(current);
   else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n당신의 연애견은?\n'+shareUrl(current);
-  else text='我的恋爱犬是【'+d.breed+'】('+current+')！🐾\n你的恋爱犬是哪只？\n'+shareUrl(current);
+  else if(L==='tw')text='我的戀愛犬是【'+d.breed+'】('+current+'）！🐾\n你的戀愛犬是哪隻？\n'+shareUrl(current);
+  else text='我的恋爱犬是【'+d.breed+'】('+current+'）！🐾\n你的恋爱犬是哪只？\n'+shareUrl(current);
   window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl(current))+'&text='+encodeURIComponent(text),'_blank');
 }
 function ensureKakao(){
