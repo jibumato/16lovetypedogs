@@ -627,6 +627,7 @@ function resultUrl(code){
 function shareUrl(code){
   if(L==='ko')return SITE_URL+'ko/'+code.toLowerCase()+'.html';
   if(L==='ja')return SITE_URL+'type-'+code.toLowerCase()+'.html';
+  if(L==='en'||L==='zh')return SITE_URL+L+'/'+code.toLowerCase()+'.html';
   return resultUrl(code);
 }
 function syncResultUrl(code){
@@ -1082,15 +1083,18 @@ function runCompat(){
   const a=document.getElementById('cpA').value,b=document.getElementById('cpB').value;
   dexAdd(a);dexAdd(b);
   const r=compatScore(a,b),s=r[0],msg=r[1];
-  const cs={ja:{line:'LINEで送る',x:'Xでシェア'},en:{line:'Send on LINE',x:'Share on X'},ko:{line:'LINE로 보내기',x:'X에 공유'},zh:{line:'用LINE发送',x:'分享到X'},tw:{line:'用LINE發送',x:'分享到X'}}[L]||{line:'LINEで送る',x:'Xでシェア'};
+  const cs={ja:{line:'LINEで送る',x:'Xでシェア',img:'画像で保存・シェア'},en:{line:'Send on LINE',x:'Share on X',img:'Save / share image'},ko:{line:'LINE로 보내기',x:'X에 공유',img:'이미지 저장·공유'},zh:{line:'用LINE发送',x:'分享到X',img:'保存·分享图片'},tw:{line:'用LINE發送',x:'分享到X',img:'保存·分享圖片'}}[L]||{line:'LINEで送る',x:'Xでシェア',img:'画像で保存・シェア'};
+  compatState={a:a,b:b,s:s,msg:msg};
   document.getElementById('compatResult').innerHTML=
    '<div class="compat-pick mt"><div class="pair">'+dogImg(a)+'<span class="heart">💞</span>'+dogImg(b)+'</div>'
    +'<div class="score-ring"><div class="num">'+s+'<span style="font-size:24px">%</span></div>'
    +'<div class="lbl">'+LOC[L][a].breed+' × '+LOC[L][b].breed+'</div></div>'
    +'<p style="text-align:center;font-size:15px;margin-top:10px">'+msg+'</p>'
-   +'<div class="sns mt"><button class="btn line-btn" onclick="shareCompat(\'line\',\''+a+'\',\''+b+'\','+s+')">'+cs.line+'</button>'
-   +'<button class="btn x-btn" onclick="shareCompat(\'x\',\''+a+'\',\''+b+'\','+s+')">'+cs.x+'</button></div></div>';
+   +'<div class="sns mt"><button class="btn line-btn" onclick="shareCompat(\'line\')">'+cs.line+'</button>'
+   +'<button class="btn x-btn" onclick="shareCompat(\'x\')">'+cs.x+'</button>'
+   +'<button class="btn sub" onclick="saveCompatImg()">'+cs.img+'</button></div></div>';
 }
+let compatState=null;
 function compatShareText(a,b,s){
   const ba=LOC[L][a].breed,bb=LOC[L][b].breed;
   if(L==='en')return 'Our compatibility is '+s+'%! 🐾\n'+ba+' × '+bb+'\nWhat are you two?';
@@ -1099,13 +1103,65 @@ function compatShareText(a,b,s){
   if(L==='tw')return '我們的契合度是'+s+'%！🐾\n'+ba+' × '+bb+'\n你們是哪兩隻戀愛犬？';
   return '私と気になるあの人の相性は【'+s+'%】だった！🐾\n'+ba+' × '+bb+'\nあなたたちは何わんこ同士？';
 }
-function shareCompat(platform,a,b,s){
-  const i=I(),text=compatShareText(a,b,s),url=SITE_URL+(L?'?lang='+L:'');
+function shareCompat(platform){
+  if(!compatState)return;
+  const {a,b,s}=compatState,i=I(),text=compatShareText(a,b,s),url=SITE_URL+(L?'?lang='+L:'');
   if(platform==='line'){
     window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text+'\n'+url),'_blank');
   }else{
     window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url)+'&hashtags='+encodeURIComponent(i.hashtag),'_blank');
   }
+}
+function drawCompatCard(cb){
+  if(!compatState){cb(null);return;}
+  const {a,b,s,msg}=compatState,i=I(),W=1080,H=1350;
+  const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const bg=x.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#fffdf8');bg.addColorStop(1,'#ffeef2');
+  x.fillStyle=bg;x.fillRect(0,0,W,H);
+  x.fillStyle='rgba(214,98,143,.08)';for(let k=0;k<60;k++){x.beginPath();x.arc((k*149%W),(k*223%H),2.4,0,7);x.fill();}
+  x.fillStyle='#fffdfa';rr(x,56,80,W-112,H-160,40);x.fill();
+  x.lineWidth=4;x.strokeStyle='#f2b8cc';rr(x,56,80,W-112,H-160,40);x.stroke();
+  x.textAlign='center';
+  x.fillStyle='#d2628f';x.font='800 52px '+FF;x.fillText((i.compat_head||'').replace(/🐾/g,'').trim(),W/2,178);
+  const imgs={};let loaded=0;
+  function done(){
+    const DS=300,gap=120,startX=(W-(DS*2+gap))/2,dy=250;
+    [a,b].forEach((code,idx)=>{
+      const im=imgs[code],dx=startX+idx*(DS+gap);
+      x.save();rr(x,dx,dy,DS,DS,30);x.clip();x.fillStyle='#fff';x.fillRect(dx,dy,DS,DS);
+      if(im){const sc=Math.max(DS/im.width,DS/im.height),w=im.width*sc,h=im.height*sc;x.drawImage(im,dx+(DS-w)/2,dy+(DS-h)/2,w,h);}
+      x.restore();
+      x.lineWidth=4;x.strokeStyle='#f2b8cc';rr(x,dx,dy,DS,DS,30);x.stroke();
+      x.font='700 30px '+FF;wrapLines(x,LOC[L][code].breed,dx+DS/2,dy+DS+46,DS+50,36,'#6b5648');
+    });
+    x.font='84px sans-serif';x.fillText('💞',W/2,dy+DS/2+30);
+    const cy=dy+DS+200,rad=118;
+    x.lineWidth=22;x.strokeStyle='#f3e0e8';x.beginPath();x.arc(W/2,cy,rad,0,7);x.stroke();
+    x.strokeStyle='#f7a8c4';x.lineCap='round';x.beginPath();x.arc(W/2,cy,rad,-Math.PI/2,-Math.PI/2+Math.PI*2*s/100);x.stroke();x.lineCap='butt';
+    x.fillStyle='#d2628f';x.font='800 92px '+FF;x.fillText(s+'%',W/2,cy+32);
+    x.font='500 33px '+FF;wrapLines(x,msg,W/2,cy+rad+76,W-240,46,'#6b5648');
+    x.fillStyle='#9c8676';x.font='400 28px '+FF;x.fillText('#'+i.hashtag+'  ·  16lovetypedogs.com',W/2,H-104);
+    cb(c);
+  }
+  [a,b].forEach(code=>{const im=new Image();im.onload=()=>{imgs[code]=im;if(++loaded===2)done();};im.onerror=()=>{if(++loaded===2)done();};im.src=imgPath(code);});
+}
+function saveCompatImg(){
+  if(!compatState)return;
+  drawCompatCard((c)=>{
+    if(!c)return;
+    try{
+      c.toBlob(async(blob)=>{
+        if(!blob)return;
+        const {a,b,s}=compatState;
+        const file=new File([blob],'16lovedog_compat_'+a+'_'+b+'.png',{type:'image/png'});
+        const url=SITE_URL+(L?'?lang='+L:''),text=compatShareText(a,b,s)+'\n'+url;
+        if(navigator.canShare&&navigator.canShare({files:[file]})){
+          try{await navigator.share({files:[file],text:text,url:url});return;}catch(e){if(e&&e.name==='AbortError')return;}
+        }
+        const aE=document.createElement('a');aE.href=URL.createObjectURL(blob);aE.download=file.name;aE.click();
+      },'image/png');
+    }catch(e){const aE=document.createElement('a');aE.href=c.toDataURL('image/png');aE.download='16lovedog_compat.png';aE.click();}
+  });
 }
 
 /* ---- share (X) ---- */
