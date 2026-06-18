@@ -282,7 +282,8 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .navbtn{flex:1;font-family:inherit;font-weight:800;font-size:13px;color:var(--ink);background:var(--paper);
   border:1px solid var(--glass-bd);border-radius:16px;padding:14px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:3px}
 .navbtn:hover{transform:translateY(-2px)}
-#shareCanvas{display:none}
+#shareCanvas{display:block;width:min(290px,76%);height:auto;margin:4px auto 12px;border-radius:24px;box-shadow:var(--shadow)}
+.share-cap{text-align:center;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin:0 0 10px}
 
 /* dex */
 .dexgrid .tcell{cursor:pointer}
@@ -477,6 +478,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div id="dexNotice"></div>
 
     <div class="shareblock">
+      <p class="share-cap" id="t-sharecap"></p>
       <canvas id="shareCanvas" width="1080" height="1920"></canvas>
       <div class="sns">
         <button class="btn kakao-btn" id="t-kakaobtn" onclick="shareKakao()"></button>
@@ -603,7 +605,7 @@ const KAKAO_JS_KEY='';
 let L='ja',current=null,qi=0,score={},hist=[],loadTimer=null;
 
 function I(){return I18N[L];}
-function imgPath(code){return code.toLowerCase()+'.png';}
+function imgPath(code){return '/'+code.toLowerCase()+'.png';}
 function dogImg(code){
   const em=BASE[code].em, br=LOC[L][code].breed;
   return '<img class="dog" src="'+imgPath(code)+'" alt="'+br+'" onerror="this.outerHTML=\'<span class=em>'+em+'</span>\'">';
@@ -619,6 +621,13 @@ function resultUrl(code){
   u.searchParams.set('type',code);
   if(L)u.searchParams.set('lang',L);
   return u.toString();
+}
+/* 共有リンク用URL：リンクプレビュー（OGP）がタイプ別になるページを返す。
+   ja は per-type OGP を持つ type-*.html、ko は /ko/*.html。en/zh は専用OGP未整備のため従来の結果URL。 */
+function shareUrl(code){
+  if(L==='ko')return SITE_URL+'ko/'+code.toLowerCase()+'.html';
+  if(L==='ja')return SITE_URL+'type-'+code.toLowerCase()+'.html';
+  return resultUrl(code);
 }
 function syncResultUrl(code){
   try{history.replaceState(null,'',resultUrl(code));}catch(e){}
@@ -825,6 +834,9 @@ function renderResult(code,stay){
     +'</div></div>';
   renderResultNext();
   renderLoveGuide(code);
+  const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
+  setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
+  drawShareCard(code);
   if(!stay)show('result');
 }
 function renderDexNotice(code,wasNew,n){
@@ -1070,11 +1082,30 @@ function runCompat(){
   const a=document.getElementById('cpA').value,b=document.getElementById('cpB').value;
   dexAdd(a);dexAdd(b);
   const r=compatScore(a,b),s=r[0],msg=r[1];
+  const cs={ja:{line:'LINEで送る',x:'Xでシェア'},en:{line:'Send on LINE',x:'Share on X'},ko:{line:'LINE로 보내기',x:'X에 공유'},zh:{line:'用LINE发送',x:'分享到X'},tw:{line:'用LINE發送',x:'分享到X'}}[L]||{line:'LINEで送る',x:'Xでシェア'};
   document.getElementById('compatResult').innerHTML=
    '<div class="compat-pick mt"><div class="pair">'+dogImg(a)+'<span class="heart">💞</span>'+dogImg(b)+'</div>'
    +'<div class="score-ring"><div class="num">'+s+'<span style="font-size:24px">%</span></div>'
    +'<div class="lbl">'+LOC[L][a].breed+' × '+LOC[L][b].breed+'</div></div>'
-   +'<p style="text-align:center;font-size:15px;margin-top:10px">'+msg+'</p></div>';
+   +'<p style="text-align:center;font-size:15px;margin-top:10px">'+msg+'</p>'
+   +'<div class="sns mt"><button class="btn line-btn" onclick="shareCompat(\'line\',\''+a+'\',\''+b+'\','+s+')">'+cs.line+'</button>'
+   +'<button class="btn x-btn" onclick="shareCompat(\'x\',\''+a+'\',\''+b+'\','+s+')">'+cs.x+'</button></div></div>';
+}
+function compatShareText(a,b,s){
+  const ba=LOC[L][a].breed,bb=LOC[L][b].breed;
+  if(L==='en')return 'Our compatibility is '+s+'%! 🐾\n'+ba+' × '+bb+'\nWhat are you two?';
+  if(L==='ko')return '우리 궁합은 '+s+'%! 🐾\n'+ba+' × '+bb+'\n당신들은 어떤 연애견?';
+  if(L==='zh')return '我们的契合度是'+s+'%！🐾\n'+ba+' × '+bb+'\n你们是哪两只恋爱犬？';
+  if(L==='tw')return '我們的契合度是'+s+'%！🐾\n'+ba+' × '+bb+'\n你們是哪兩隻戀愛犬？';
+  return '私と気になるあの人の相性は【'+s+'%】だった！🐾\n'+ba+' × '+bb+'\nあなたたちは何わんこ同士？';
+}
+function shareCompat(platform,a,b,s){
+  const i=I(),text=compatShareText(a,b,s),url=SITE_URL+(L?'?lang='+L:'');
+  if(platform==='line'){
+    window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text+'\n'+url),'_blank');
+  }else{
+    window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url)+'&hashtags='+encodeURIComponent(i.hashtag),'_blank');
+  }
 }
 
 /* ---- share (X) ---- */
@@ -1084,16 +1115,16 @@ function shareX(){
   else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\n"'+d.tag+'"\nWhat is your love-dog?';
   else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n"'+d.tag+'"\n당신의 연애견은?';
   else text='我的恋爱犬是【'+d.breed+'】('+current+')！🐾\n「'+d.tag+'」\n你的恋爱犬是哪只？';
-  const url=resultUrl(current);
+  const url=shareUrl(current);
   window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url)+'&hashtags='+encodeURIComponent(i.hashtag),'_blank');
 }
 function shareLine(){
   const d=LOC[L][current];let text;
-  if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\nあなたの恋は何わんこ？\n'+resultUrl(current);
-  else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\nWhat is your love-dog?\n'+resultUrl(current);
-  else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n당신의 연애견은?\n'+resultUrl(current);
-  else text='我的恋爱犬是【'+d.breed+'】('+current+')！🐾\n你的恋爱犬是哪只？\n'+resultUrl(current);
-  window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(resultUrl(current))+'&text='+encodeURIComponent(text),'_blank');
+  if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\nあなたの恋は何わんこ？\n'+shareUrl(current);
+  else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\nWhat is your love-dog?\n'+shareUrl(current);
+  else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n당신의 연애견은?\n'+shareUrl(current);
+  else text='我的恋爱犬是【'+d.breed+'】('+current+')！🐾\n你的恋爱犬是哪只？\n'+shareUrl(current);
+  window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl(current))+'&text='+encodeURIComponent(text),'_blank');
 }
 function ensureKakao(){
   if(!KAKAO_JS_KEY){
@@ -1187,9 +1218,9 @@ function saveShareImg(){
         if(!blob)return;
         const file=new File([blob],'16lovedog_'+current+'.png',{type:'image/png'});
         const d=LOC[L][current],i=I();
-        const text=d.name+' / '+d.breed+' ('+current+')  #'+i.hashtag;
+        const text=d.name+' / '+d.breed+' ('+current+')  #'+i.hashtag+'\n'+shareUrl(current);
         if(navigator.canShare&&navigator.canShare({files:[file]})){
-          try{await navigator.share({files:[file],text:text});return;}catch(e){if(e&&e.name==='AbortError')return;}
+          try{await navigator.share({files:[file],text:text,url:shareUrl(current)});return;}catch(e){if(e&&e.name==='AbortError')return;}
         }
         const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();
       },'image/png');
