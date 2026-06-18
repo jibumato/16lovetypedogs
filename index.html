@@ -200,8 +200,8 @@ body{
 
 /* sections */
 .sec{margin-top:16px;background:var(--paper);border:1px solid var(--glass-bd);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px 20px}
-.sec h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--ink)}
-.sec h3 .dot{flex:none;width:34px;height:34px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--accent-soft);box-shadow:0 4px 10px -4px rgba(210,98,143,.3)}
+.sec h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:11px;margin-bottom:12px;color:var(--ink)}
+.sec h3 .dot{flex:none;width:42px;height:42px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(140deg,rgba(247,168,196,.28),rgba(201,166,240,.28));box-shadow:0 6px 14px -5px rgba(210,98,143,.34),inset 0 1px 0 rgba(255,255,255,.6)}
 .sec h3 .lbl{display:flex;flex-direction:column;line-height:1.15}
 .sec h3 .lbl .jp{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--ink-faint)}
 .sec p{font-size:14px;line-height:1.95;color:var(--ink);text-wrap:pretty}
@@ -387,6 +387,23 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-re span{font-size:11px;color:var(--ink-soft)}.lg-re span::before{content:"✓ ";color:var(--sj);font-weight:800}
 .lg-langs{margin-top:12px;font-size:12px;color:var(--ink-soft)}
 .lg-langs a{color:var(--pink-deep);text-decoration:underline;margin:0 4px;cursor:pointer;font-weight:700}
+
+/* ---- compatibility ranking TOP3（欠落していた定義を追加） ---- */
+.rank{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.rankrow{display:flex;align-items:center;gap:12px;min-width:0;background:rgba(255,255,255,.7);border:1px solid var(--glass-bd);border-radius:18px;padding:10px 13px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 10px 24px -18px rgba(150,120,180,.55)}
+.rankrow:hover{transform:translateY(-2px);box-shadow:0 16px 30px -18px rgba(150,120,180,.6)}
+.rankrow .medal{flex:none;font-size:24px;line-height:1}
+.rankrow .dog{flex:none;width:46px;height:46px;border-radius:13px;object-fit:cover;background:var(--accent-soft)}
+.rankrow .em{flex:none;font-size:30px;line-height:1}
+.rankinfo{flex:1 1 auto;min-width:0}
+.rankname{font-size:13.5px;font-weight:800;color:var(--ink);line-height:1.4;overflow:hidden;text-overflow:ellipsis}
+.rankbreed{font-size:11.5px;color:var(--ink-soft);font-weight:700}
+.rankscore{flex:none;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:22px;color:var(--pink-deep)}
+.rankrow.rank-locked{cursor:default;position:relative;overflow:hidden}
+.rankrow.rank-locked:hover{transform:none;box-shadow:0 10px 24px -18px rgba(150,120,180,.55)}
+.rank-blur-content{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:12px;filter:blur(5px);user-select:none;pointer-events:none}
+.rank-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding-right:13px;background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,.5))}
+.rank-buybtn{flex:none;white-space:nowrap;font-size:11.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:999px;padding:8px 14px;text-decoration:none;box-shadow:0 8px 16px -7px rgba(210,98,143,.6)}
 </style>
 
 
