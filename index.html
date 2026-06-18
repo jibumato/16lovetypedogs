@@ -285,6 +285,11 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 #shareCanvas{display:block;width:min(290px,76%);height:auto;margin:4px auto 12px;border-radius:24px;box-shadow:var(--shadow)}
 .share-cap{text-align:center;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin:0 0 10px}
 
+/* omikuji teaser banner on result page */
+.omk-teaser{margin-top:12px;background:linear-gradient(135deg,rgba(247,168,196,.18),rgba(201,166,240,.18));border:1.5px solid var(--pink);border-radius:18px;padding:16px 18px;text-align:center}
+.omk-teaser.done{border-color:var(--hair);opacity:.75}
+.omk-teaser small{display:block;font-size:12px;color:var(--ink-soft);margin-top:6px}
+
 /* dex */
 .dexgrid .tcell{cursor:pointer}
 .dexcell-lock{display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -591,10 +596,31 @@ const OMK={"levels": [{"lab": {"ja": "大吉", "en": "Great Luck", "ko": "대길
 const LKEYWORD=["ファー ポーチ", "犬 キーホルダー", "白 スニーカー レディース", "ベージュ 小物", "ハンドクリーム いい香り", "花 モチーフ ピアス", "肉球 ステッカー", "ベージュ マフラー レディース", "クリア ポーチ", "もこもこ 手袋", "桜色 ヘアアクセ", "リップ 秋色"];
 const ORDER=["INTJ", "INTP", "ENTJ", "ENTP", "INFJ", "INFP", "ENFJ", "ENFP", "ISTJ", "ISFJ", "ESTJ", "ESFJ", "ISTP", "ISFP", "ESTP", "ESFP"];
 const LOOP_TXT={
-  ja:{dexNew:'🎉 {breed}が図鑑に登録されたよ',dexSeen:'🐾 {breed}は図鑑に登録済み',dexProgress:'{n}/16 コンプリート',dexBtn:'図鑑を見る',nextHead:'次は友達と比べてみる？',nextText:'結果をシェアすると、友達はこの結果ページから見られるよ。',share:'Xでシェア',line:'LINEで送る',compat:'あの人との相性を見る',again:'自分ももう一度診断する',omikuji:'明日は恋愛おみくじも引けるよ。今日のラッキーわんこも図鑑に登録されます。'},
-  en:{dexNew:'🎉 {breed} was added to your Dog Dex',dexSeen:'🐾 {breed} is already in your Dog Dex',dexProgress:'{n}/16 collected',dexBtn:'Open Dog Dex',nextHead:'Compare with a friend next?',nextText:'When you share your result, friends land directly on this result page.',share:'Share on X',line:'Send on LINE',compat:'Check compatibility',again:'Take it again',omikuji:'Come back tomorrow for a love fortune. The lucky dog gets added to your Dex too.'},
-  ko:{dexNew:'🎉 {breed} 도감에 등록됐어요',dexSeen:'🐾 {breed}는 이미 도감에 있어요',dexProgress:'{n}/16 수집',dexBtn:'도감 보기',nextHead:'다음은 친구와 비교해 볼까요?',nextText:'결과를 공유하면 친구가 이 결과 페이지로 바로 들어와요.',share:'X에 공유',line:'LINE으로 보내기',kakao:'KakaoTalk 공유',compat:'그 사람과 궁합 보기',again:'다시 진단하기',omikuji:'내일은 연애 운세도 뽑을 수 있어요. 행운의 강아지도 도감에 등록돼요.'},
-  zh:{dexNew:'🎉 {breed} 已加入狗狗图鉴',dexSeen:'🐾 {breed} 已在图鉴中',dexProgress:'{n}/16 已收集',dexBtn:'查看图鉴',nextHead:'接下来和朋友比比看？',nextText:'分享结果后，朋友会直接打开这个结果页。',share:'分享到X',line:'发送到LINE',compat:'查看和TA的契合度',again:'我也再测一次',omikuji:'明天还能抽恋爱运势，幸运狗狗也会加入图鉴。'}
+  ja:{dexNew:'🎉 {breed}が図鑑に登録されたよ',dexSeen:'🐾 {breed}は図鑑に登録済み',dexProgress:'{n}/16 コンプリート',dexBtn:'図鑑を見る',
+      nextHead:'気になるあの人は何わんこ？🐾',
+      nextText:'この結果を送って、あの人にも診断してもらおう。一緒に相性チェックしたらもっと盛り上がるよ。',
+      share:'Xでシェア',line:'LINEでこの結果を送る',compat:'あの人との相性を見る',again:'自分ももう一度診断する',
+      omikuji:'明日は恋愛おみくじも引けるよ。ラッキーわんこが1匹ずつ図鑑に追加されていくよ🐶'},
+  en:{dexNew:'🎉 {breed} was added to your Dog Dex',dexSeen:'🐾 {breed} is already in your Dog Dex',dexProgress:'{n}/16 collected',dexBtn:'Open Dog Dex',
+      nextHead:'What\'s your crush\'s love-dog? 🐾',
+      nextText:'Send them this result and have them take the quiz too — then check your compatibility together!',
+      share:'Share on X',line:'Send result on LINE',compat:'Check compatibility',again:'Take it again',
+      omikuji:'Come back tomorrow for a love fortune — each lucky dog gets added to your Dex one by one 🐶'},
+  ko:{dexNew:'🎉 {breed} 도감에 등록됐어요',dexSeen:'🐾 {breed}는 이미 도감에 있어요',dexProgress:'{n}/16 수집',dexBtn:'도감 보기',
+      nextHead:'그 사람은 어떤 연애견일까? 🐾',
+      nextText:'이 결과를 보내서 그 사람도 진단해보게 해요. 같이 궁합도 보면 더 재미있어요!',
+      share:'X에 공유',line:'LINE으로 결과 보내기',kakao:'KakaoTalk 공유',compat:'그 사람과 궁합 보기',again:'다시 진단하기',
+      omikuji:'내일은 연애 운세도 뽑을 수 있어요. 행운의 강아지가 하나씩 도감에 추가돼요 🐶'},
+  zh:{dexNew:'🎉 {breed} 已加入狗狗图鉴',dexSeen:'🐾 {breed} 已在图鉴中',dexProgress:'{n}/16 已收集',dexBtn:'查看图鉴',
+      nextHead:'那个人是什么恋爱犬？🐾',
+      nextText:'把这个结果发给对方，让TA也来测一测——然后一起查查你们的契合度！',
+      share:'分享到X',line:'用LINE发送结果',compat:'查看和TA的契合度',again:'我也再测一次',
+      omikuji:'明天还能抽恋爱运势，幸运狗狗会一只一只加入图鉴哦 🐶'},
+  tw:{dexNew:'🎉 {breed} 已加入狗狗圖鑑',dexSeen:'🐾 {breed} 已在圖鑑中',dexProgress:'{n}/16 已收集',dexBtn:'查看圖鑑',
+      nextHead:'那個人是什麼戀愛犬？🐾',
+      nextText:'把這個結果發給對方，讓TA也來測一測——然後一起查查你們的契合度！',
+      share:'分享到X',line:'用LINE發送結果',compat:'查看和TA的契合度',again:'我也再測一次',
+      omikuji:'明天還能抽戀愛運勢，幸運狗狗會一隻一隻加入圖鑑喔 🐶'}
 };
 
 /* ============ LOGIC ============ */
@@ -627,7 +653,7 @@ function resultUrl(code){
 function shareUrl(code){
   if(L==='ko')return SITE_URL+'ko/'+code.toLowerCase()+'.html';
   if(L==='ja')return SITE_URL+'type-'+code.toLowerCase()+'.html';
-  if(L==='en'||L==='zh')return SITE_URL+L+'/'+code.toLowerCase()+'.html';
+  if(L==='en'||L==='zh'||L==='tw')return SITE_URL+L+'/'+code.toLowerCase()+'.html';
   return resultUrl(code);
 }
 function syncResultUrl(code){
@@ -824,10 +850,18 @@ function renderResult(code,stay){
   for(let k=0;k<LUCKY[L].length;k++){const ss=SEASON[k];if(ss==='all'||ss.indexOf(se)>=0)allow.push(k);}
   const luckyIdx=allow[(seed*3+cn*2+1)%allow.length];
   const lk=LUCKY[L][luckyIdx];
+  const omkDone=!!(omkGet()&&omkGet().date===omkToday()&&omkGet().r);
+  const OMK_CTA={ja:'🎴 今日の恋愛おみくじを引く',en:'🎴 Draw today\'s love fortune',ko:'🎴 오늘의 연애 운세 뽑기',zh:'🎴 抽今日恋爱运势',tw:'🎴 抽今日戀愛運勢'};
+  const OMK_DONE={ja:'✅ 今日のおみくじは引いたよ',en:'✅ Fortune drawn for today',ko:'✅ 오늘 운세는 뽑았어요',zh:'✅ 今日运势已抽',tw:'✅ 今日運勢已抽'};
+  const OMK_SUB={ja:'引くたびにラッキーわんこが図鑑に1匹ずつ追加 🐶',en:'Each draw adds a lucky dog to your Dex 🐶',ko:'뽑을 때마다 행운의 강아지가 도감에 추가돼요 🐶',zh:'每次抽签都会往图鉴里加一只幸运狗狗 🐶',tw:'每次抽籤都會往圖鑑裡加一隻幸運狗狗 🐶'};
+  const omkBtn=omkDone
+    ?'<div class="omk-teaser done"><span>'+OMK_DONE[L]+'</span><small>'+OMK_SUB[L]+'</small></div>'
+    :'<div class="omk-teaser" onclick="show(\'omikuji\')" style="cursor:pointer"><button class="btn" style="width:100%;pointer-events:none">'+OMK_CTA[L]+'</button><small>'+OMK_SUB[L]+'</small></div>';
   document.getElementById('daily').innerHTML=
      '<div class="dcard walk"><span class="ico">🐾</span><h4>'+i.h_walk+'</h4><p>'+w+'</p></div>'
     +'<div class="dcard lucky"><span class="ico">🍀</span><h4>'+i.h_lucky+'</h4><p>'+lk+'</p>'
-      +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[luckyIdx])+'">'+i.aff_item+'</a></div>';
+      +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[luckyIdx])+'">'+i.aff_item+'</a></div>'
+    +omkBtn;
   document.getElementById('affgoods').innerHTML=
      '<div class="sec mt"><h3><span class="dot">🛍</span>'+i.h_shop+'</h3><div class="shopchips">'
     +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LOC.ja[code].breed+' ぬいぐるみ')+'">'+LOC[L][code].breed+' '+i.w_plush+'</a>'
@@ -852,9 +886,10 @@ function renderResultNext(){
   const kakao=L==='ko'?'<button class="btn kakao-btn" style="display:block" onclick="shareKakao()">'+t.kakao+'</button>':'';
   document.getElementById('resultNext').innerHTML='<div class="result-next"><h3>'+t.nextHead+'</h3>'
     +'<p>'+t.nextText+'</p>'
-    +'<div class="sns">'+kakao+'<button class="btn line-btn" onclick="shareLine()">'+t.line+'</button>'
-    +'<button class="btn x-btn" onclick="shareX()">'+t.share+'</button>'
-    +'<button class="btn sub" onclick="goCompat()">'+t.compat+'</button></div>'
+    +'<div class="sns">'+kakao
+    +'<button class="btn line-btn" onclick="shareLine()">'+t.line+'</button>'
+    +'<button class="btn x-btn" onclick="shareX()">'+t.share+'</button></div>'
+    +'<button class="btn mt" style="width:100%" onclick="goCompat()">'+t.compat+' 💞</button>'
     +'<button class="btn ghost mt" onclick="startQuiz()">'+t.again+'</button>'
     +'<div class="note">'+t.omikuji+'</div></div>';
 }
