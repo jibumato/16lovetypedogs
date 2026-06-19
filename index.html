@@ -297,7 +297,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .navbtn{flex:1;font-family:inherit;font-weight:800;font-size:13px;color:var(--ink);background:var(--paper);
   border:1px solid var(--glass-bd);border-radius:16px;padding:14px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:3px}
 .navbtn:hover{transform:translateY(-2px)}
-#shareCanvas{display:block;width:min(290px,76%);height:auto;margin:4px auto 12px;border-radius:24px;box-shadow:var(--shadow)}
+#shareCanvas{display:none;width:min(290px,76%);height:auto;margin:4px auto 12px;border-radius:24px;box-shadow:var(--shadow)}
 .share-cap{text-align:center;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin:0 0 10px}
 
 /* omikuji teaser banner on result page */
@@ -970,7 +970,6 @@ function renderResult(code,stay){
   renderLoveGuide(code);
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
-  drawShareCard(code);
   if(!stay)show('result');
 }
 function renderDexNotice(code,wasNew,n){
