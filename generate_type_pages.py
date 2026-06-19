@@ -121,11 +121,11 @@ def get_group_members_html(mbti):
     for m_mbti, m_breed in members:
         if m_mbti == mbti:
             continue
-        img_src = f'/{m_mbti.lower()}.png'
+        img_src = f'/{m_mbti.lower()}.webp'
         href = f'/type-{m_mbti.lower()}.html'
         card = (
             f'<a class="typecard" href="{href}" style="border-bottom:4px solid {color}">'
-            f'<img src="{img_src}" alt="{m_breed}" style="width:54px;height:auto;border-radius:10px;margin-bottom:4px" onerror="this.style.display=\'none\'">'
+            f'<img loading="lazy" decoding="async" src="{img_src}" alt="{m_breed}" style="width:54px;height:auto;border-radius:10px;margin-bottom:4px" onerror="this.style.display=\'none\'">'
             f'<span class="code">{m_mbti}</span><br>'
             f'<span style="font-size:11px;color:#3a2e28">{m_breed}</span>'
             f'</a>'
@@ -274,7 +274,7 @@ footer a{{color:var(--ink-soft)}}
   </div>
 
   <div class="card clearfix" style="border-top:6px solid {color}">
-    <img class="dogimg" src="/{mbti_lower}.png" alt="{breed}の恋愛タイプ" onerror="this.style.display='none'">
+    <img class="dogimg" decoding="async" width="640" height="640" src="/{mbti_lower}.webp" alt="{breed}の恋愛タイプ" onerror="this.style.display='none'">
     <p style="font-size:12px;font-weight:800;color:{color};letter-spacing:.1em;margin-bottom:4px">🐾 恋愛血統書 / {mbti} · {role}</p>
     <h1 style="font-size:clamp(18px,5vw,24px);font-weight:800;margin-bottom:4px">{name}</h1>
     <p style="font-size:17px;font-weight:700;color:#6b5648;margin-bottom:10px">犬種：{breed}</p>

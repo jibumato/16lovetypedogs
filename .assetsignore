@@ -1,3 +1,22 @@
 .git
 *.py
 node_modules
+*.pdf
+# 重いソース犬画像(1254px PNG)はOGP/型ページ生成のビルド入力用。
+# 配信ランタイムは最適化済み /*.webp を使うため配信から除外。
+intj.png
+intp.png
+entj.png
+entp.png
+infj.png
+infp.png
+enfj.png
+enfp.png
+istj.png
+isfj.png
+estj.png
+esfj.png
+istp.png
+isfp.png
+estp.png
+esfp.png

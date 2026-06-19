@@ -631,10 +631,10 @@ const KAKAO_JS_KEY='';
 let L='ja',current=null,qi=0,score={},hist=[],loadTimer=null;
 
 function I(){return I18N[L];}
-function imgPath(code){return '/'+code.toLowerCase()+'.png';}
+function imgPath(code){return '/'+code.toLowerCase()+'.webp';}
 function dogImg(code){
   const em=BASE[code].em, br=LOC[L][code].breed;
-  return '<img class="dog" src="'+imgPath(code)+'" alt="'+br+'" onerror="this.outerHTML=\'<span class=em>'+em+'</span>\'">';
+  return '<img loading="lazy" decoding="async" class="dog" src="'+imgPath(code)+'" alt="'+br+'" onerror="this.outerHTML=\'<span class=em>'+em+'</span>\'">';
 }
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
 function loopText(){return LOOP_TXT[L]||LOOP_TXT.ja;}
@@ -1060,9 +1060,9 @@ function renderLoveGuide(code){
     </div>
     <div class="lg-divider" style="margin-top:24px"><h3 style="font-size:15px">${g.pagesHead}</h3><div class="sub">${g.pagesSub}</div></div>
     <div class="lg-thumbs">
-      <div class="pg"><img src="${imgPath(code)}" alt=""><div class="bd">${g.th0}</div></div>
-      <div class="pg bl"><img src="${imgPath(top.c)}" alt=""><div class="bd">${g.th1}</div></div>
-      <div class="pg bl"><img src="${imgPath(code)}" alt=""><div class="bd">${g.th2}</div></div>
+      <div class="pg"><img loading="lazy" decoding="async" src="${imgPath(code)}" alt=""><div class="bd">${g.th0}</div></div>
+      <div class="pg bl"><img loading="lazy" decoding="async" src="${imgPath(top.c)}" alt=""><div class="bd">${g.th1}</div></div>
+      <div class="pg bl"><img loading="lazy" decoding="async" src="${imgPath(code)}" alt=""><div class="bd">${g.th2}</div></div>
     </div>
     <div class="lg-divider" style="margin-top:24px"><h3 style="font-size:16px">${g.cmpHead}</h3><div class="sub">${g.cmpSub}</div></div>
     <table class="lg-cmp">
