@@ -1188,6 +1188,29 @@ function block(ic,title,body){return '<div class="sec"><h3><span class="dot">'+i
 function hex(g){return {NT:'#f3edfb',NF:'#fff1f3',SJ:'#eef9f3',SP:'#fff6e9'}[g];}
 
 /* ---- compatibility ---- */
+const ARCH={
+ ja:{INTJ:"戦略家チワワ",INTP:"天才肌シュナウザー",ENTJ:"リーダーのコーギー",ENTP:"自由な発想のJRテリア",INFJ:"洞察のキャバリア",INFP:"夢見るマルチーズ",ENFJ:"面倒見ゴールデン",ENFP:"明るいプードル",ISTJ:"誠実な柴犬",ISFJ:"献身的なシーズー",ESTJ:"しっかり者ボストン",ESFJ:"世話好きラブラドール",ISTP:"クールなダックス",ISFP:"マイペースなフレブル",ESTP:"行動派ビーグル",ESFP:"盛り上げ役ポメ"},
+ en:{INTJ:"Strategist Chihuahua",INTP:"Genius Schnauzer",ENTJ:"Leader Corgi",ENTP:"Free-thinking Jack Russell",INFJ:"Insightful Cavalier",INFP:"Dreamy Maltese",ENFJ:"Caring Golden",ENFP:"Bright Poodle",ISTJ:"Dependable Shiba",ISFJ:"Devoted Shih Tzu",ESTJ:"No-nonsense Boston",ESFJ:"Caretaking Labrador",ISTP:"Cool Dachshund",ISFP:"Easygoing Frenchie",ESTP:"Action-loving Beagle",ESFP:"Life-of-the-party Pom"},
+ ko:{INTJ:"전략가 치와와",INTP:"천재형 슈나우저",ENTJ:"리더 코기",ENTP:"자유로운 잭 러셀",INFJ:"통찰의 카발리에",INFP:"꿈꾸는 말티즈",ENFJ:"잘 챙기는 골든",ENFP:"밝은 푸들",ISTJ:"성실한 시바견",ISFJ:"헌신적인 시츄",ESTJ:"똑부러지는 보스턴",ESFJ:"잘 돌보는 래브라도",ISTP:"쿨한 닥스훈트",ISFP:"마이페이스 프렌치불도그",ESTP:"행동파 비글",ESFP:"분위기 메이커 포메"},
+ zh:{INTJ:"策略家吉娃娃",INTP:"天才型雪纳瑞",ENTJ:"领袖柯基",ENTP:"自由思考的杰克罗素",INFJ:"富洞察的查理王",INFP:"爱做梦的马尔济斯",ENFJ:"爱照顾人的金毛",ENFP:"开朗的贵宾犬",ISTJ:"可靠的柴犬",ISFJ:"奉献的西施",ESTJ:"干练的波士顿梗",ESFJ:"热心的拉布拉多",ISTP:"高冷的腊肠",ISFP:"随性的法斗",ESTP:"行动派比格",ESFP:"气氛担当博美"},
+ tw:{INTJ:"策略家吉娃娃",INTP:"天才型雪納瑞",ENTJ:"領袖柯基",ENTP:"自由思考的傑克羅素",INFJ:"富洞察的查理王",INFP:"愛做夢的馬爾濟斯",ENFJ:"愛照顧人的金毛",ENFP:"開朗的貴賓犬",ISTJ:"可靠的柴犬",ISFJ:"奉獻的西施",ESTJ:"幹練的波士頓梗",ESFJ:"熱心的拉布拉多",ISTP:"高冷的臘腸",ISFP:"隨性的法鬥",ESTP:"行動派比格",ESFP:"氣氛擔當博美"}
+};
+const DYN={
+ ja:{g_same:"似た者同士、自然体で長く一緒にいられる安心ペア",opp:"正反対だからこそ強く惹かれ合う、刺激的な凸凹ペア",sn_same:"物事の見方や話のテンポが近く、一緒にいてラクな相性",comp:"足りないところを自然に補い合える、バランス型のペア",mix:"違いを楽しめれば、どんどん深まっていく好相性"},
+ en:{g_same:"two of a kind—an easy, lasting pair who can just be themselves",opp:"total opposites who strongly attract—an exciting odd-couple",sn_same:"you see things and talk at a similar pace—an easy, comfy match",comp:"you naturally fill in each other's gaps—a well-balanced pair",mix:"enjoy your differences and the chemistry keeps deepening"},
+ ko:{g_same:"닮은 사람끼리, 자연스럽게 오래 함께할 수 있는 안심 페어",opp:"정반대라서 더 강하게 끌리는 자극적인 커플",sn_same:"사물을 보는 눈과 대화 템포가 비슷해 함께 있으면 편한 궁합",comp:"부족한 부분을 자연스럽게 채워주는 밸런스형 페어",mix:"다름을 즐기면 점점 깊어지는 좋은 궁합"},
+ zh:{g_same:"同类型的两位，自在又能长久相处的安心搭档",opp:"正因截然相反而强烈吸引，充满刺激的反差搭档",sn_same:"看事情和聊天节奏相近，在一起很轻松的契合",comp:"自然地互补彼此的不足，平衡型的一对",mix:"懂得欣赏彼此不同，就会越来越深的好契合"},
+ tw:{g_same:"同類型的兩位，自在又能長久相處的安心搭檔",opp:"正因截然相反而強烈吸引，充滿刺激的反差搭檔",sn_same:"看事情和聊天節奏相近，在一起很輕鬆的契合",comp:"自然地互補彼此的不足，平衡型的一對",mix:"懂得欣賞彼此不同，就會越來越深的好契合"}
+};
+const CONN={ja:["と","。"],en:[" & "," — "],ko:[" × ",". "],zh:["与","。"],tw:["與","。"]};
+function grp(t){return t[1]==='N'?(t[2]==='T'?'NT':'NF'):(t[3]==='J'?'SJ':'SP');}
+function genHeadline(a,b,s){
+  const A=ARCH[L]||ARCH.ja,D=DYN[L]||DYN.ja,C=CONN[L]||CONN.ja;
+  const ei=a[0]===b[0],sn=a[1]===b[1],tf=a[2]===b[2],jp=a[3]===b[3];
+  let key=(grp(a)===grp(b))?'g_same':(!ei&&!sn&&!tf&&!jp)?'opp':sn?'sn_same':(!tf&&!ei)?'comp':'mix';
+  const emo=s>=82?'💕':s>=70?'✨':s>=58?'🌱':'🤝';
+  return A[a]+C[0]+A[b]+C[1]+D[key]+emo;
+}
 function compatScore(a,b){
   if(a===b)return[70,BANDS[L].same];
   const key=[a,b].sort().join('|');
@@ -1200,9 +1223,7 @@ function compatScore(a,b){
   const sorted=[a,b].sort().join('');
   s+=((sorted.charCodeAt(0)+sorted.charCodeAt(5))%7)-3;
   s=Math.max(40,Math.min(97,s));
-  const B=BANDS[L];
-  const msg=s>=82?B.b82:s>=70?B.b70:s>=58?B.b58:B.low;
-  return[s,msg];
+  return[s,genHeadline(a,b,s)];
 }
 const AX={
  ja:{ei_d_good:"外向と内向で、にぎやかさと落ち着きのバランスが取れる",tf_d_good:"論理と感情を、お互いがちょうどよく補い合える",jp_d_good:"計画派とのびのび派で、足りない部分を埋め合える",
