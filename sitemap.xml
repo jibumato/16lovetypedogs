@@ -612,4 +612,40 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://16lovetypedogs.com/ranking-marriage-en.html</loc>
+    <lastmod>2026-06-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://16lovetypedogs.com/ranking-marriage.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://16lovetypedogs.com/ranking-marriage-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16lovetypedogs.com/ranking-marriage-en.html"/>
+  </url>
+  <url>
+    <loc>https://16lovetypedogs.com/ranking-jealousy-en.html</loc>
+    <lastmod>2026-06-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://16lovetypedogs.com/ranking-jealousy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://16lovetypedogs.com/ranking-jealousy-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16lovetypedogs.com/ranking-jealousy-en.html"/>
+  </url>
+  <url>
+    <loc>https://16lovetypedogs.com/ranking-devotion-en.html</loc>
+    <lastmod>2026-06-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://16lovetypedogs.com/ranking-devotion.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://16lovetypedogs.com/ranking-devotion-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16lovetypedogs.com/ranking-devotion-en.html"/>
+  </url>
+  <url>
+    <loc>https://16lovetypedogs.com/ranking-dokidoki-en.html</loc>
+    <lastmod>2026-06-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://16lovetypedogs.com/ranking-dokidoki.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://16lovetypedogs.com/ranking-dokidoki-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16lovetypedogs.com/ranking-dokidoki-en.html"/>
+  </url>
 </urlset>
