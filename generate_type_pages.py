@@ -201,6 +201,12 @@ def generate_page(mbti):
 <title>{page_title}</title>
 <meta name="description" content="{meta_desc}">
 <link rel="canonical" href="{page_url}">
+<link rel="alternate" hreflang="ja" href="https://16lovetypedogs.com/type-{mbti_lower}.html">
+<link rel="alternate" hreflang="en" href="https://16lovetypedogs.com/type-{mbti_lower}-en.html">
+<link rel="alternate" hreflang="ko" href="https://16lovetypedogs.com/type-{mbti_lower}-ko.html">
+<link rel="alternate" hreflang="zh-Hans" href="https://16lovetypedogs.com/type-{mbti_lower}-zh.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://16lovetypedogs.com/type-{mbti_lower}-tw.html">
+<link rel="alternate" hreflang="x-default" href="https://16lovetypedogs.com/type-{mbti_lower}.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{page_title}">
 <meta property="og:description" content="{og_desc}">
