@@ -756,7 +756,7 @@ function show(id){
 }
 
 /* ---- quiz ---- */
-function startQuiz(){qi=0;score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};hist=[];show('quiz');renderQ();}
+function startQuiz(){qi=0;score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};hist=[];show('quiz');renderQ();gtag('event','quiz_start',{language:L});}
 function renderQ(){
   const Q=QUIZ[L],q=Q[qi];
   document.getElementById('qtext').textContent=q.t;
@@ -823,6 +823,7 @@ function revealResult(code){
 function renderResult(code,stay){
   current=code;
   syncResultUrl(code);
+  if(!stay)gtag('event','quiz_complete',{mbti_type:code,language:L});
   const d=LOC[L][code],g=BASE[code].g,col=GROUP[g],i=I();
   const cert=document.getElementById('cert');
   cert.style.setProperty('--tint',hex(g));
@@ -1244,6 +1245,7 @@ function shareX(){
   };
   const text=T[L]||T.ja;
   const url=shareUrl(current);
+  gtag('event','share',{method:'twitter',content_type:'result',item_id:current});
   window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url)+'&hashtags='+encodeURIComponent(i.hashtag),'_blank');
 }
 function shareLine(){
@@ -1253,6 +1255,7 @@ function shareLine(){
   else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n당신의 연애견은?\n'+shareUrl(current);
   else if(L==='tw')text='我的戀愛犬是【'+d.breed+'】('+current+'）！🐾\n你的戀愛犬是哪隻？\n'+shareUrl(current);
   else text='我的恋爱犬是【'+d.breed+'】('+current+'）！🐾\n你的恋爱犬是哪只？\n'+shareUrl(current);
+  gtag('event','share',{method:'line',content_type:'result',item_id:current});
   window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl(current))+'&text='+encodeURIComponent(text),'_blank');
 }
 function ensureKakao(){
@@ -1270,6 +1273,7 @@ function ensureKakao(){
 function shareKakao(){
   if(L!=='ko')return;
   if(!ensureKakao())return;
+  gtag('event','share',{method:'kakao',content_type:'result',item_id:current});
   const d=LOC.ko[current],url=resultUrl(current),slug=current.toLowerCase();
   Kakao.Share.sendDefault({
     objectType:'feed',
@@ -1348,6 +1352,7 @@ function saveShareImg(){
         const file=new File([blob],'16lovedog_'+current+'.png',{type:'image/png'});
         const d=LOC[L][current],i=I();
         const text=d.name+' / '+d.breed+' ('+current+')  #'+i.hashtag+'\n'+shareUrl(current);
+        gtag('event','share',{method:'native_or_download',content_type:'result_image',item_id:current});
         if(navigator.canShare&&navigator.canShare({files:[file]})){
           try{await navigator.share({files:[file],text:text,url:shareUrl(current)});return;}catch(e){if(e&&e.name==='AbortError')return;}
         }
