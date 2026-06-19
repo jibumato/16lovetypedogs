@@ -348,7 +348,7 @@ footer a{{color:var(--ink-soft)}}
       "description": "{article_desc}",
       "url": "{page_url}",
       "datePublished": "2025-01-01",
-      "dateModified": "2026-06-16",
+      "dateModified": "2026-06-19",
       "publisher": {{"@type":"Organization","name":"16わんこ恋愛診断","url":"https://16lovetypedogs.com"}},
       "mainEntityOfPage": "{page_url}"
     }},
