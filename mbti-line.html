@@ -54,6 +54,14 @@ nav a:hover{border-color:var(--pink);text-decoration:none;color:var(--pink-deep)
 footer{margin-top:50px;padding:24px 16px;text-align:center;font-size:11.5px;color:var(--ink-soft);border-top:2px solid var(--beige);line-height:1.9}
 footer a{color:var(--ink-soft)}
 @media(max-width:480px){.card{padding:20px 14px}.type-row{grid-template-columns:1fr;gap:6px}}
+
+.share-card{margin-top:22px}
+.share-btns{display:flex;gap:10px;flex-wrap:wrap}
+.share-btn{display:inline-block;border-radius:999px;padding:11px 26px;font-weight:800;font-size:14px;text-align:center;text-decoration:none;cursor:pointer}
+.share-btn.line{background:#06C755;color:#fff}
+.share-btn.line:hover{opacity:.88;text-decoration:none}
+.share-btn.tw{background:#000;color:#fff}
+.share-btn.tw:hover{opacity:.80;text-decoration:none}
 </style>
 </head>
 <body>
@@ -228,6 +236,19 @@ footer a{color:var(--ink-soft)}
     <div class="notice">本コンテンツはエンターテインメントです。心理学・医学的な診断ではありません。</div>
     <a class="btn-diag" href="/">あなたのタイプを無料診断</a>
   </div>
+
+  <div class="card share-card">
+    <h2>この記事をシェアする</h2>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">「当たってる！」と思ったら友達に送ってみよう🐾</p>
+    <div class="share-btns">
+      <a class="share-btn line" id="share-line" href="#" onclick="shareToLine(event)">LINEで送る</a>
+      <a class="share-btn tw" id="share-tw" href="#" onclick="shareToX(event)">X(Twitter)でシェア</a>
+    </div>
+  </div>
+<script>
+function shareToLine(e){e.preventDefault();var u=encodeURIComponent(location.href);window.open('https://social-plugins.line.me/lineit/share?url='+u,'_blank','noopener');}
+function shareToX(e){e.preventDefault();var u=encodeURIComponent(location.href);var t=encodeURIComponent(document.title+' #MBTI #恋愛診断 #16わんこ恋愛診断');window.open('https://twitter.com/intent/tweet?url='+u+'&text='+t,'_blank','noopener');}
+</script>
 
   <div class="card">
     <h2>関連記事</h2>
