@@ -74,33 +74,64 @@
     <p class="sub">あなたの状況を選んで、タイプ別の答えをすぐ見つけよう</p>
   </div>
 
-  <!-- Flow Guide -->
+  <!-- Flow Guide SVG -->
   <div class="flow-card">
     <h2>💡 悩み別フローガイド</h2>
-    <div style="margin-bottom:10px">
-      <p style="font-size:12.5px;font-weight:800;margin-bottom:6px;color:var(--ink)">🌸 片思い → 付き合う までの流れ</p>
-      <div class="flow-steps">
-        <div class="flow-step"><a href="/mbti-suki-na-hito.html">好きな人への態度</a></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step"><a href="/mbti-myuari.html">脈あり確認</a></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step"><a href="/mbti-approach.html">アプローチ</a></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step"><a href="/mbti-kokuhaku.html">告白</a></div>
-      </div>
-    </div>
-    <div>
-      <p style="font-size:12.5px;font-weight:800;margin-bottom:6px;color:var(--ink)">💔 別れ → 立ち直り の流れ</p>
-      <div class="flow-steps">
-        <div class="flow-step"><a href="/mbti-sameru.html">冷める兆候</a></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step"><a href="/mbti-kenka.html">ケンカ・すれ違い</a></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step"><a href="/mbti-shitsuren.html">失恋</a></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step"><a href="/mbti-fukuen.html">復縁</a></div>
-      </div>
-    </div>
+    <!-- 片思い Flow -->
+    <p style="font-size:12.5px;font-weight:800;margin-bottom:8px;color:var(--ink)">🌸 片思い → 付き合う までの流れ</p>
+    <svg viewBox="0 0 320 56" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;margin-bottom:14px;font-family:'M PLUS Rounded 1c',sans-serif">
+      <!-- Step boxes -->
+      <a href="/mbti-suki-na-hito.html">
+        <rect x="1" y="12" width="66" height="32" rx="10" fill="#fff" stroke="#f4b8cb" stroke-width="1.5"/>
+        <text x="34" y="25" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">好きな人</text>
+        <text x="34" y="37" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">への態度</text>
+      </a>
+      <polygon points="70,28 78,24 78,32" fill="#e58aa0"/>
+      <a href="/mbti-myuari.html">
+        <rect x="80" y="12" width="62" height="32" rx="10" fill="#fff" stroke="#f4b8cb" stroke-width="1.5"/>
+        <text x="111" y="25" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">脈あり</text>
+        <text x="111" y="37" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">確認</text>
+      </a>
+      <polygon points="144,28 152,24 152,32" fill="#e58aa0"/>
+      <a href="/mbti-approach.html">
+        <rect x="154" y="12" width="62" height="32" rx="10" fill="#fff" stroke="#f4b8cb" stroke-width="1.5"/>
+        <text x="185" y="25" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">アプロー</text>
+        <text x="185" y="37" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">チ方法</text>
+      </a>
+      <polygon points="218,28 226,24 226,32" fill="#e58aa0"/>
+      <a href="/mbti-kokuhaku.html">
+        <rect x="228" y="8" width="68" height="40" rx="10" fill="#e58aa0"/>
+        <text x="262" y="26" font-size="8.5" fill="#fff" text-anchor="middle" font-weight="800">告白</text>
+        <text x="262" y="40" font-size="8.5" fill="#fff" text-anchor="middle" font-weight="800">成功！🎉</text>
+      </a>
+    </svg>
+    <!-- 別れ Flow -->
+    <p style="font-size:12.5px;font-weight:800;margin-bottom:8px;color:var(--ink)">💔 別れ → 立ち直り の流れ</p>
+    <svg viewBox="0 0 320 56" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;font-family:'M PLUS Rounded 1c',sans-serif">
+      <a href="/mbti-sameru.html">
+        <rect x="1" y="12" width="66" height="32" rx="10" fill="#fff" stroke="#7eb8d4" stroke-width="1.5"/>
+        <text x="34" y="25" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">冷める</text>
+        <text x="34" y="37" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">兆候</text>
+      </a>
+      <polygon points="70,28 78,24 78,32" fill="#7eb8d4"/>
+      <a href="/mbti-kenka.html">
+        <rect x="80" y="12" width="62" height="32" rx="10" fill="#fff" stroke="#7eb8d4" stroke-width="1.5"/>
+        <text x="111" y="25" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">ケンカ</text>
+        <text x="111" y="37" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">すれ違い</text>
+      </a>
+      <polygon points="144,28 152,24 152,32" fill="#7eb8d4"/>
+      <a href="/mbti-shitsuren.html">
+        <rect x="154" y="12" width="62" height="32" rx="10" fill="#fff" stroke="#7eb8d4" stroke-width="1.5"/>
+        <text x="185" y="25" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">失恋</text>
+        <text x="185" y="37" font-size="8.5" fill="#3a2e28" text-anchor="middle" font-weight="700">立ち直り</text>
+      </a>
+      <polygon points="218,28 226,24 226,32" fill="#7eb8d4"/>
+      <a href="/mbti-fukuen.html">
+        <rect x="228" y="8" width="68" height="40" rx="10" fill="#7eb8d4"/>
+        <text x="262" y="26" font-size="8.5" fill="#fff" text-anchor="middle" font-weight="800">復縁</text>
+        <text x="262" y="40" font-size="8.5" fill="#fff" text-anchor="middle" font-weight="800">チャレンジ</text>
+      </a>
+    </svg>
   </div>
 
   <!-- 片思い系 -->
