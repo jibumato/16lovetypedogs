@@ -380,6 +380,9 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-traps li:last-child{border-bottom:0}
 .lg-no{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--accent-soft);color:var(--pink-deep);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .lg-lock{color:var(--pink-deep);font-size:12px;margin-left:auto;font-weight:700}
+.lg-traps li.lg-trap-open{align-items:flex-start}
+.lg-trap-body{display:flex;flex-direction:column;gap:2px;flex:1 1 auto;min-width:0}
+.lg-trap-desc{font-size:11.5px;font-weight:400;color:var(--ink-soft);line-height:1.55}
 .lg-hint{font-size:11px;color:var(--ink-soft);margin-top:8px}
 .lg-peek.lk::after{content:"🔒";position:absolute;top:13px;right:14px;font-size:13px}
 .lg-thumbs{display:flex;gap:8px;justify-content:center;margin:20px 0 4px}
@@ -1120,6 +1123,8 @@ const GUIDE_I18N={
     re:["购买后即刻阅读","手机/电脑通用","无额外收费"], other:"用其他语言阅读：" },
 };
 
+const TRAP1DESC={"ja":{"INTJ":"好きなほど態度がそっけなくなり、本当の気持ちを言葉にできずすれ違ってしまいがち。","INTP":"相手のサインや空気の変化に気づきにくく、好意や不満を見落としてしまいがち。","ENTJ":"よかれと思って先回りしすぎて、相手のペースや気持ちを置き去りにしてしまいがち。","ENTP":"刺激を求めるあまり、安定した関係に物足りなさを感じて気持ちが移りやすい。","INFJ":"不満や弱音をひとりで抱え込み、限界までため込んでから一気にあふれてしまいがち。","INFP":"相手を理想化しすぎて、現実とのギャップに勝手に傷ついてしまいがち。","ENFJ":"相手を優先しすぎて自分を後回しにし、気づけば見返りのない我慢を重ねてしまいがち。","ENFP":"その日の気分で態度が変わりやすく、相手を振り回してしまうことがある。","ISTJ":"気持ちの伝え方がわからず、愛情があるのに冷たく見えてすれ違ってしまいがち。","ISFJ":"我慢して尽くしすぎるあまり、本音を言えずにひとりでしんどくなってしまいがち。","ESTJ":"正論や段取りで進めすぎて、相手の気持ちより「正しさ」を優先してしまいがち。","ESFJ":"かまってほしい気持ちが強く、不安になると相手を試すような言動をしてしまいがち。","ISTP":"感情表現が少なく、好きでも無関心に見えて相手を不安にさせてしまいがち。","ISFP":"衝突を避けて相手に合わせすぎ、自分の本音を飲み込んでしまいがち。","ESTP":"勢いで距離を詰めすぎて、相手の心の準備を置き去りにしてしまいがち。","ESFP":"ひとりが苦手で、寂しさからかまってほしさが空回りしてしまいがち。"},"en":{"INTJ":"The more you like someone, the cooler you act — your true feelings stay unspoken and you drift apart.","INTP":"You can miss subtle signals and shifts in mood, overlooking both affection and discontent.","ENTJ":"Meaning well, you take charge too much and leave your partner's pace and feelings behind.","ENTP":"Craving stimulation, you can feel restless in a stable relationship and let your heart wander.","INFJ":"You bottle up complaints and worries alone until they suddenly overflow all at once.","INFP":"You idealize your partner so much that you get hurt by the gap with reality.","ENFJ":"You put your partner first and yourself last, quietly piling up unrewarded patience.","ENFP":"Your mood can swing day to day, sometimes leaving your partner feeling tossed around.","ISTJ":"Unsure how to show feelings, you can seem cold even when you care — and drift apart.","ISFJ":"You endure and give too much, struggling alone because you can't voice your true feelings.","ESTJ":"You push logic and plans so hard that you put being right ahead of their feelings.","ESFJ":"Craving attention, you can start testing your partner whenever anxiety creeps in.","ISTP":"With little expression, you can look indifferent even when smitten, leaving them uneasy.","ISFP":"Avoiding conflict, you over-adapt to your partner and swallow your own true feelings.","ESTP":"You close the distance on impulse, leaving your partner's heart no time to catch up.","ESFP":"You hate being alone, and loneliness can make your need for attention backfire."},"ko":{"INTJ":"좋아할수록 태도가 무뚝뚝해져서, 진심을 말로 못 해 엇갈리기 쉬워요.","INTP":"상대의 신호나 분위기 변화를 잘 못 알아채, 호감도 불만도 놓치기 쉬워요.","ENTJ":"좋은 마음에 너무 앞서 나가서, 상대의 페이스와 감정을 뒤로 미루기 쉬워요.","ENTP":"자극을 원한 나머지 안정된 관계에 싫증을 느껴 마음이 옮겨가기 쉬워요.","INFJ":"불만이나 약한 소리를 혼자 끌어안다가 한계까지 쌓인 뒤 한꺼번에 터지기 쉬워요.","INFP":"상대를 너무 이상화해서, 현실과의 차이에 혼자 상처받기 쉬워요.","ENFJ":"상대를 우선하고 자신을 뒤로 미뤄, 어느새 보답 없는 인내를 거듭하기 쉬워요.","ENFP":"그날 기분에 따라 태도가 달라져 상대를 휘두르게 될 때가 있어요.","ISTJ":"마음을 표현하는 법을 몰라, 사랑하면서도 차갑게 보여 엇갈리기 쉬워요.","ISFJ":"참고 너무 헌신하다가, 본심을 말 못 해 혼자 힘들어지기 쉬워요.","ESTJ":"정론과 계획을 너무 앞세워, 상대의 마음보다 '옳음'을 우선하기 쉬워요.","ESFJ":"관심받고 싶은 마음이 커서, 불안하면 상대를 시험하는 말을 하기 쉬워요.","ISTP":"감정 표현이 적어, 좋아해도 무관심해 보여 상대를 불안하게 하기 쉬워요.","ISFP":"충돌을 피하려 상대에게 너무 맞추다, 자신의 본심을 삼키기 쉬워요.","ESTP":"기세로 거리를 너무 좁혀, 상대의 마음의 준비를 놓치기 쉬워요.","ESFP":"혼자를 못 견뎌, 외로움에 관심받고 싶은 마음이 헛도는 일이 있어요."},"zh":{"INTJ":"越喜欢越故作冷淡，真心说不出口，容易错过彼此。","INTP":"不太能察觉对方的信号和情绪变化，容易忽略好感和不满。","ENTJ":"出于好意太爱包办，容易把对方的节奏和心情抛在脑后。","ENTP":"太想要新鲜感，容易对稳定的关系感到乏味而心动他人。","INFJ":"把不满和软弱独自憋着，攒到极限后容易一次性爆发。","INFP":"把对方理想化过头，容易因现实落差而独自受伤。","ENFJ":"太以对方为先、把自己放后，不知不觉积累没有回报的忍耐。","ENFP":"容易因当天心情而改变态度，有时会让对方被牵着走。","ISTJ":"不知道怎么表达感情，明明在乎却显得冷淡，容易错过彼此。","ISFJ":"太忍耐太付出，说不出真心话，容易一个人撑得很累。","ESTJ":"太爱讲道理和安排，容易把对错看得比对方的心情更重。","ESFJ":"太想被关注，一不安就容易说出试探对方的话。","ISTP":"表达很少，喜欢也像是无所谓，容易让对方不安。","ISFP":"为了避免冲突太迁就对方，容易把自己的真心咽下去。","ESTP":"凭一时冲动拉近距离，容易把对方的心理准备抛在后头。","ESFP":"受不了孤单，寂寞时想被关注的心情容易适得其反。"},"tw":{"INTJ":"越喜歡越故作冷淡，真心說不出口，容易錯過彼此。","INTP":"不太能察覺對方的訊號和情緒變化，容易忽略好感和不滿。","ENTJ":"出於好意太愛包辦，容易把對方的步調和心情拋在腦後。","ENTP":"太想要新鮮感，容易對穩定的關係感到乏味而心動他人。","INFJ":"把不滿和軟弱獨自憋著，累積到極限後容易一次爆發。","INFP":"把對方理想化過頭，容易因現實落差而獨自受傷。","ENFJ":"太以對方為先、把自己放後，不知不覺累積沒有回報的忍耐。","ENFP":"容易因當天心情而改變態度，有時會讓對方被牽著走。","ISTJ":"不知道怎麼表達感情，明明在乎卻顯得冷淡，容易錯過彼此。","ISFJ":"太忍耐太付出，說不出真心話，容易一個人撐得很累。","ESTJ":"太愛講道理和安排，容易把對錯看得比對方的心情更重。","ESFJ":"太想被關注，一不安就容易說出試探對方的話。","ISTP":"表達很少，喜歡也像是無所謂，容易讓對方不安。","ISFP":"為了避免衝突太遷就對方，容易把自己的真心吞下去。","ESTP":"憑一時衝動拉近距離，容易把對方的心理準備拋在後頭。","ESFP":"受不了孤單，寂寞時想被關注的心情容易適得其反。"}};
+function trap1desc(code){ const t=TRAP1DESC[L]||TRAP1DESC.ja; return (t&&t[code])||''; }
 function renderLoveGuide(code){
   const g=GUIDE_I18N[L]||GUIDE_I18N.ja, d=LOC[L][code], i=I();
   /* ベスト相性1位を算出（自分以外で最高スコア） */
@@ -1131,6 +1136,7 @@ function renderLoveGuide(code){
              guideTrap(code,2, d.cons[2]||"すれ違い") ];
   /* 脈ありサイン（INFP実データ、他はhookを流用） */
   const sign=guideSign(code, d.hook||"");
+  const td0=trap1desc(code);
   const cut=Math.max(6,Math.floor(sign.length*0.42));
   const sQ=sign.slice(0,cut), sB=sign.slice(cut)||"…";
 
@@ -1153,7 +1159,7 @@ function renderLoveGuide(code){
       <div class="lg-peek lk" onclick="guideToCta()">
         <span class="lg-tag g">${g.tagTrap}</span>
         <ul class="lg-traps">
-          <li><span class="lg-no">1</span><span>${tr[0]}</span><span class="lg-lock">${g.open}</span></li>
+          <li class="lg-trap-open"><span class="lg-no">1</span><div class="lg-trap-body"><span class="lg-trap-name">${tr[0]}</span>${td0?`<span class="lg-trap-desc">${td0}</span>`:""}</div><span class="lg-lock">${g.open}</span></li>
           <li><span class="lg-no">2</span><span class="lg-blur">${tr[1]}</span><span class="lg-lock">🔒</span></li>
           <li><span class="lg-no">3</span><span class="lg-blur">${tr[2]}</span><span class="lg-lock">🔒</span></li>
         </ul>
