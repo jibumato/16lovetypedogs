@@ -843,7 +843,8 @@ function applyStatic(){
   setText('t-omkhead',i.omk_head);setText('t-omkback',i.back_top);
   setText('t-linebtn',loopText().line);
   setText('t-kakaobtn',loopText().kakao||'');
-  document.querySelectorAll('.kakao-btn').forEach(b=>b.style.display=L==='ko'?'block':'none');
+  document.querySelectorAll('.kakao-btn').forEach(b=>b.style.display=(L==='ko'&&KAKAO_JS_KEY)?'block':'none');
+  (function(){var lb=document.getElementById('t-linebtn');if(lb)lb.style.display=(L==='ja'||L==='tw')?'':'none';})();
   document.getElementById('t-footer').innerHTML=i.footer.replace(/\n/g,'<br>')+'<br>'+i.aff_disclosure
     +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
     +'<br>© '+i.title;
@@ -1038,13 +1039,9 @@ function renderDexNotice(code,wasNew,n){
 }
 function renderResultNext(){
   const t=loopText();
-  const kakao=L==='ko'?'<button class="btn kakao-btn" style="display:block" onclick="shareKakao()">'+t.kakao+'</button>':'';
   document.getElementById('resultNext').innerHTML='<div class="result-next"><h3>'+t.nextHead+'</h3>'
     +'<p>'+t.nextText+'</p>'
-    +'<div class="sns">'+kakao
-    +'<button class="btn line-btn" onclick="shareLine()">'+t.line+'</button>'
-    +'<button class="btn x-btn" onclick="shareX()">'+t.share+'</button></div>'
-    +'<button class="btn mt" style="width:100%" onclick="goCompat()">'+t.compat+' 💞</button>'
+    +'<button class="btn" style="width:100%" onclick="goCompat()">'+t.compat+' 💞</button>'
     +'<button class="btn ghost mt" onclick="startQuiz()">'+t.again+'</button>'
     +'<div class="note">'+t.omikuji+'</div></div>';
 }
@@ -1384,7 +1381,7 @@ function runCompat(){
    +'<div class="cd-row cd-good"><span class="cd-ic">🐾</span><div><b>'+cx.date+'</b>'+et.date+'</div></div>'
    +'<div class="cd-row cd-tip"><span class="cd-ic">💬</span><div><b>'+cx.comm+'</b>'+et.comm+'</div></div>'
    +'</div></div>'
-   +'<div class="sns mt"><button class="btn line-btn" onclick="shareCompat('+"'line'"+')">'+cs.line+'</button>'
+   +'<div class="sns mt">'+((L==='ja'||L==='tw')?'<button class="btn line-btn" onclick="shareCompat('+"'line'"+')">'+cs.line+'</button>':'')
    +'<button class="btn x-btn" onclick="shareCompat('+"'x'"+')">'+cs.x+'</button>'
    +'<button class="btn sub" onclick="saveCompatImg()">'+cs.img+'</button></div></div>';
 }
