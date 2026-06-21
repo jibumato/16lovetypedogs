@@ -249,6 +249,20 @@ body{
 .cd-good{background:#f3fbf6}.cd-good b{color:#1a8a5a}
 .cd-watch{background:#fff6f0}.cd-watch b{color:#c97a2a}
 .cd-tip{background:#f7f3fc}.cd-tip b{color:#8a5ac0}
+.cx-sec{margin-top:18px;text-align:left}
+.cx-sec h4{font-size:13.5px;font-weight:800;color:var(--ink);margin:0 0 9px}
+.cx-axis{display:flex;flex-direction:column;gap:9px}
+.cx-row{background:var(--paper);border:1px solid var(--glass-bd);border-radius:13px;padding:10px 12px}
+.cx-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.cx-cat{font-size:12px;font-weight:800;color:var(--ink-soft);flex:1}
+.cx-tag{font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.cx-tag.sim{background:rgba(146,215,182,.22);color:#2f9b6e}
+.cx-tag.comp{background:rgba(126,184,212,.22);color:#3a82ac}
+.cx-tag.care{background:rgba(244,192,111,.28);color:#c0801a}
+.cx-chips{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.cx-chip{font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--pink-deep)}
+.cx-vs{font-size:10px;color:var(--ink-faint);font-weight:800}
+.cx-note{font-size:12px;color:var(--ink);line-height:1.6}
 
 /* share */
 .shareblock{margin-top:16px}
@@ -1264,6 +1278,30 @@ const AX={
   sn_d:"一個偏具體現實、一個偏直覺未來，話題層次容易錯位（契合度的關鍵）",tf_d:"一個重邏輯解決、一個重共情，吵架時需要磨合",jp_d:"計畫派對隨機應變派，節奏不同",ei_d:"想黏在一起的程度與想獨處的程度容易有差",all_s:"太相似了，新鮮感和火花要靠你們刻意製造",
   t_sn:"把對方的視角「翻譯」成『原來TA是這樣看的』，很快就能合拍",t_tf:"吵架時試著『先共情，再講解決辦法』",t_jp:"大方向一起定、細節留彈性，兩人都自在",t_ei:"一開始就談好相處時間與各自時間，關係更穩定",t_def:"差異是分工不是缺點，常溝通就會越來越深"}
 };
+const AXIS_META={"ja":{"cat":{"ei":"エネルギーの充電","sn":"ものの見方","tf":"心の決め方","jp":"生活のリズム"},"sim":"似てる","comp":"補い合う","care":"伸びしろ","w":{"E":"外向","I":"内向","N":"直観","S":"感覚","T":"思考","F":"感情","J":"計画","P":"探索"}},"en":{"cat":{"ei":"Recharging","sn":"How you see things","tf":"How you decide","jp":"Daily rhythm"},"sim":"Alike","comp":"Complement","care":"Growth area","w":{"E":"Extro","I":"Intro","N":"Intuit","S":"Sense","T":"Think","F":"Feel","J":"Judge","P":"Percv"}},"ko":{"cat":{"ei":"에너지 충전","sn":"사물을 보는 눈","tf":"마음을 정하는 법","jp":"생활 리듬"},"sim":"비슷해요","comp":"서로 보완","care":"성장 포인트","w":{"E":"외향","I":"내향","N":"직관","S":"감각","T":"사고","F":"감정","J":"계획","P":"탐색"}},"zh":{"cat":{"ei":"能量充电","sn":"看事情的角度","tf":"做决定的方式","jp":"生活节奏"},"sim":"相似","comp":"互补","care":"成长空间","w":{"E":"外向","I":"内向","N":"直觉","S":"实感","T":"思考","F":"情感","J":"计划","P":"探索"}},"tw":{"cat":{"ei":"能量充電","sn":"看事情的角度","tf":"做決定的方式","jp":"生活節奏"},"sim":"相似","comp":"互補","care":"成長空間","w":{"E":"外向","I":"內向","N":"直覺","S":"實感","T":"思考","F":"情感","J":"計劃","P":"探索"}}};
+const DATE_TIP={"ja":{"EE":"二人とも外向型。お出かけやイベントなど、アクティブなデートで一気に距離が縮まる🎡","II":"二人ともインドア派。おうちで映画やまったり過ごす時間が、何より落ち着くデートに🏠","mix":"お出かけ派とおうち派のミックス。外デートとおうちデートを交互に楽しむとちょうどいい🍿"},"en":{"EE":"Both extroverts—outings and events bring you closer fast. Go be active together 🎡","II":"Both homebodies—movies and lazy days at home make the comfiest dates 🏠","mix":"One outgoing, one homey—alternate between going out and staying in 🍿"},"ko":{"EE":"둘 다 외향형. 나들이나 이벤트 같은 액티브한 데이트로 단숨에 가까워져요 🎡","II":"둘 다 집순이·집돌이. 집에서 영화 보고 느긋하게 보내는 시간이 가장 편한 데이트 🏠","mix":"외향파와 집순이의 믹스. 바깥 데이트와 집 데이트를 번갈아 즐기면 딱 좋아요 🍿"},"zh":{"EE":"两人都是外向型。出游、活动等动感约会能让你们迅速升温 🎡","II":"两人都是宅型。在家看电影、慵懒度过的时光，才是最安心的约会 🏠","mix":"外出派与居家派的组合。外出约会和居家约会轮流来，刚刚好 🍿"},"tw":{"EE":"兩人都是外向型。出遊、活動等動感約會能讓你們迅速升溫 🎡","II":"兩人都是宅型。在家看電影、慵懶度過的時光，才是最安心的約會 🏠","mix":"外出派與居家派的組合。外出約會和居家約會輪流來，剛剛好 🍿"}};
+const COMM_TIP={"ja":{"TT":"二人とも論理派。話は早いけど、ときどき『気持ちの共有』を足すと優しさがちゃんと伝わる💬","FF":"二人とも感情派。察し合えるからこそ、こまめな『好き』の言葉で愛が育つ💞","mix":"論理派×感情派。結論より先に“気持ち”を受け止め合うと、すれ違いがぐっと減る🤝"},"en":{"TT":"Both logical—efficient, but a little 'feelings check-in' lets your kindness land 💬","FF":"Both feelers—you read each other well, so frequent 'I like you's grow your love 💞","mix":"Logic meets feeling—acknowledge emotions before conclusions and you'll clash far less 🤝"},"ko":{"TT":"둘 다 논리파. 대화는 빠르지만 가끔 '감정 공유'를 더하면 다정함이 잘 전해져요 💬","FF":"둘 다 감정파. 서로 잘 헤아리니, 자주 '좋아해' 말하면 사랑이 자라요 💞","mix":"논리파×감정파. 결론보다 먼저 '감정'을 받아주면 어긋남이 확 줄어요 🤝"},"zh":{"TT":"两人都是逻辑派。沟通高效，但偶尔加点“分享心情”，温柔才传得到 💬","FF":"两人都是情感派。彼此能体察，多说“喜欢你”，爱意会慢慢长大 💞","mix":"逻辑派×情感派。先接住“情绪”再谈结论，误会会少很多 🤝"},"tw":{"TT":"兩人都是邏輯派。溝通高效，但偶爾加點「分享心情」，溫柔才傳得到 💬","FF":"兩人都是情感派。彼此能體察，多說「喜歡你」，愛意會慢慢長大 💞","mix":"邏輯派×情感派。先接住「情緒」再談結論，誤會會少很多 🤝"}};
+const CXL={"ja":{"axis":"🧭 4軸でみる二人の相性","love":"💞 ふたりの恋愛","extra":"🎯 もっと仲良くなるヒント","date":"デートスタイル","comm":"コミュニケーション"},"en":{"axis":"🧭 Your 4-axis compatibility","love":"💞 The two of you in love","extra":"🎯 Tips to grow closer","date":"Date style","comm":"Communication"},"ko":{"axis":"🧭 4가지 축으로 보는 궁합","love":"💞 두 사람의 연애","extra":"🎯 더 가까워지는 힌트","date":"데이트 스타일","comm":"커뮤니케이션"},"zh":{"axis":"🧭 四维度看你们的契合","love":"💞 你们的恋爱","extra":"🎯 更亲密的小提示","date":"约会风格","comm":"沟通"},"tw":{"axis":"🧭 四維度看你們的契合","love":"💞 你們的戀愛","extra":"🎯 更親密的小提示","date":"約會風格","comm":"溝通"}};
+function axisBreakdown(a,b){
+  const ax=AX[L]||AX.ja, m=AXIS_META[L]||AXIS_META.ja, w=m.w;
+  const defs=[[0,'ei','ei_s','ei_d_good',false],[1,'sn','sn_s','sn_d',true],[2,'tf','tf_s','tf_d_good',false],[3,'jp','jp_s','jp_d_good',false]];
+  return defs.map(function(D){
+    const idx=D[0],key=D[1],la=a[idx],lb=b[idx],same=(la===lb);
+    let tc,tt,note;
+    if(same){tc='sim';tt=m.sim;note=ax[D[2]];}
+    else if(D[4]){tc='care';tt=m.care;note=ax[D[3]];}
+    else{tc='comp';tt=m.comp;note=ax[D[3]];}
+    return '<div class="cx-row"><div class="cx-top"><span class="cx-cat">'+m.cat[key]+'</span><span class="cx-tag '+tc+'">'+tt+'</span></div>'
+      +'<div class="cx-chips"><span class="cx-chip">'+w[la]+' '+la+'</span><span class="cx-vs">×</span><span class="cx-chip">'+w[lb]+' '+lb+'</span></div>'
+      +'<div class="cx-note">'+note+'</div></div>';
+  }).join('');
+}
+function extraTips(a,b){
+  const e=(a[0]==='E'&&b[0]==='E')?'EE':(a[0]==='I'&&b[0]==='I')?'II':'mix';
+  const t=(a[2]==='T'&&b[2]==='T')?'TT':(a[2]==='F'&&b[2]==='F')?'FF':'mix';
+  const dt=DATE_TIP[L]||DATE_TIP.ja, ct=COMM_TIP[L]||COMM_TIP.ja;
+  return {date:dt[e],comm:ct[t]};
+}
 function compatDetail(a,b){
   const x=AX[L]||AX.ja;
   const ei=a[0]===b[0],sn=a[1]===b[1],tf=a[2]===b[2],jp=a[3]===b[3];
@@ -1300,18 +1338,24 @@ function runCompat(){
   compatState={a:a,b:b,s:s,msg:msg};
   const d=compatDetail(a,b);
   const cdL={ja:{g:'いいところ',w:'気をつけたいこと',t:'うまくいくコツ'},en:{g:'What works',w:'Watch out for',t:'How to make it work'},ko:{g:'좋은 점',w:'주의할 점',t:'잘 지내는 법'},zh:{g:'契合亮点',w:'要注意的',t:'相处秘诀'},tw:{g:'契合亮點',w:'要注意的',t:'相處祕訣'}}[L]||{g:'いいところ',w:'気をつけたいこと',t:'うまくいくコツ'};
+  const cx=CXL[L]||CXL.ja, axisHtml=axisBreakdown(a,b), et=extraTips(a,b);
   document.getElementById('compatResult').innerHTML=
    '<div class="compat-pick mt"><div class="pair">'+dogImg(a)+'<span class="heart">💞</span>'+dogImg(b)+'</div>'
    +'<div class="score-ring"><div class="num">'+s+'<span style="font-size:24px">%</span></div>'
    +'<div class="lbl">'+LOC[L][a].breed+' × '+LOC[L][b].breed+'</div></div>'
    +'<p style="text-align:center;font-size:15px;margin-top:10px">'+msg+'</p>'
-   +'<div class="compat-detail">'
+   +'<div class="cx-sec"><h4>'+cx.axis+'</h4><div class="cx-axis">'+axisHtml+'</div></div>'
+   +'<div class="cx-sec"><h4>'+cx.love+'</h4><div class="compat-detail">'
    +'<div class="cd-row cd-good"><span class="cd-ic">✨</span><div><b>'+cdL.g+'</b>'+d.good+'</div></div>'
    +'<div class="cd-row cd-watch"><span class="cd-ic">⚠️</span><div><b>'+cdL.w+'</b>'+d.watch+'</div></div>'
    +'<div class="cd-row cd-tip"><span class="cd-ic">💡</span><div><b>'+cdL.t+'</b>'+d.tip+'</div></div>'
-   +'</div>'
-   +'<div class="sns mt"><button class="btn line-btn" onclick="shareCompat(\'line\')">'+cs.line+'</button>'
-   +'<button class="btn x-btn" onclick="shareCompat(\'x\')">'+cs.x+'</button>'
+   +'</div></div>'
+   +'<div class="cx-sec"><h4>'+cx.extra+'</h4><div class="compat-detail">'
+   +'<div class="cd-row cd-good"><span class="cd-ic">🐾</span><div><b>'+cx.date+'</b>'+et.date+'</div></div>'
+   +'<div class="cd-row cd-tip"><span class="cd-ic">💬</span><div><b>'+cx.comm+'</b>'+et.comm+'</div></div>'
+   +'</div></div>'
+   +'<div class="sns mt"><button class="btn line-btn" onclick="shareCompat('+"'line'"+')">'+cs.line+'</button>'
+   +'<button class="btn x-btn" onclick="shareCompat('+"'x'"+')">'+cs.x+'</button>'
    +'<button class="btn sub" onclick="saveCompatImg()">'+cs.img+'</button></div></div>';
 }
 let compatState=null;
