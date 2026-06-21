@@ -418,9 +418,11 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-cmp tr:last-child td{border-bottom:0}
 .lg-cmp .x{color:var(--ink-faint)}.lg-cmp .o{color:var(--sj)}
 .lg-cta{margin-top:24px;background:var(--accent-soft);border:1px solid var(--glass-bd);border-radius:24px;padding:24px 18px;text-align:center;box-shadow:var(--shadow)}
-.lg-price{display:flex;align-items:baseline;justify-content:center;gap:5px;margin-bottom:2px}
+.lg-price{display:flex;align-items:baseline;justify-content:center;flex-wrap:wrap;gap:5px;margin-bottom:2px}
 .lg-now{font-weight:800;font-size:34px;color:var(--pink-deep)}
 .lg-yen{font-size:16px;font-weight:800;color:var(--pink-deep)}
+.lg-off{background:var(--pink-deep);color:#fff;font-size:12px;font-weight:800;border-radius:6px;padding:2px 8px;letter-spacing:.03em;align-self:center}
+.lg-orig{font-size:18px;color:#9c8676;text-decoration:line-through;font-weight:700;align-self:center}
 .lg-tax{font-size:11px;color:var(--ink-soft)}
 .lg-pages{font-size:12px;color:var(--ink);margin:7px 0 16px}.lg-pages b{color:var(--pink-deep)}
 .lg-buy{display:block;width:100%;padding:16px 12px;border:0;border-radius:16px;cursor:pointer;font-family:inherit;font-size:16px;font-weight:800;color:#fff;text-decoration:none;line-height:1.4;background:var(--accent);box-shadow:0 14px 30px -10px rgba(220,120,170,.55);-webkit-tap-highlight-color:transparent}
@@ -1146,7 +1148,7 @@ const STRIPE_LINKS={
   ESTP:'https://buy.stripe.com/14A3cubsRfuP8hz4vG8Ra0J',
   ESFP:'https://buy.stripe.com/00w4gy2WldmH41j8LW8Ra0K'
 };
-const GUIDE_CFG={ price:"680" };
+const GUIDE_CFG={ price:"944", orig:"1180", off:"20%OFF" };
 /* タイプコード → Payment Link を返す */
 function guideBuyUrl(code,lang){
   return STRIPE_LINKS[code]||'#';
@@ -1307,7 +1309,7 @@ function renderLoveGuide(code){
       <tbody>${rowsHtml}</tbody>
     </table>
     <div class="lg-cta">
-      <div class="lg-price"><span class="lg-now">${GUIDE_CFG.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span></div>
+      <div class="lg-price"><span class="lg-off">${GUIDE_CFG.off}</span><span class="lg-orig">${GUIDE_CFG.orig}${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span><span class="lg-now">${GUIDE_CFG.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span></div>
       <div class="lg-tax">${g.tax}</div>
       <div class="lg-pages">${g.pages}<b>${g.pagesB}</b>${g.pagesAf||''}</div>
       <a class="lg-buy" id="lgBuy" href="${guideBuyUrl(code,L)}">${g.buy}<span class="s">${d.breed}（${code}）${g.buySub}</span></a>

@@ -13,7 +13,9 @@
 
   /* ---- 設定 ---- */
   var UPSELL_PAGE = "https://16lovetypedogs.com/love-guide"; /* upsell_v2.htmlのURL */
-  var PRICE       = "680円";
+  var PRICE       = "944円";
+  var PRICE_ORIG  = "1180円";
+  var PRICE_OFF   = "20%OFF";
 
   /* ---- タイプ解決 ---- */
   var sc   = document.currentScript;
@@ -88,7 +90,9 @@
     ".wanko-price{",
     "  font-size:13px;color:#9c7430;margin:0 0 14px;",
     "}",
-    ".wanko-price strong{font-size:20px;}",
+    ".wanko-price strong{font-size:20px;color:#e58aa0;}",
+    ".wanko-price .wanko-off{display:inline-block;background:#e58aa0;color:#fff;font-size:11px;font-weight:800;border-radius:5px;padding:1px 6px;margin-right:5px;}",
+    ".wanko-price .wanko-orig{text-decoration:line-through;color:#b6a596;margin-right:5px;}",
   ].join("");
   document.head.appendChild(style);
 
@@ -100,7 +104,7 @@
     '  <div class="wanko-eyebrow">PREMIUM EDITION ・ 16わんこ恋愛診断</div>',
     '  <div class="wanko-hed">続きは、<em>あなたのタイプ専用</em>の恋愛トリセツで。</div>',
     '  <div class="wanko-sub">' + copy + '</div>',
-    '  <div class="wanko-price">買い切り <strong>' + PRICE + '</strong>（税込）</div>',
+    '  <div class="wanko-price"><span class="wanko-off">' + PRICE_OFF + '</span>買い切り <span class="wanko-orig">' + PRICE_ORIG + '</span><strong>' + PRICE + '</strong>（税込）</div>',
     '  <a class="wanko-btn" href="' + url + '">',
     '    あなたのタイプ専用のトリセツを見る',
     '    <small>全16タイプ相性・LINE攻略・30日プランまで全14ページ</small>',

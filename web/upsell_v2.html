@@ -106,9 +106,11 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);
 .ctable .o{color:var(--mint);}
 .cta{margin-top:28px;background:var(--paper);border:1.5px solid var(--gold-line);
   border-radius:18px;padding:22px 18px;text-align:center;box-shadow:var(--shadow);}
-.cta .price-row{display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:3px;}
+.cta .price-row{display:flex;align-items:baseline;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:3px;}
 .cta .now{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;color:var(--pink-deep);}
 .cta .yen{font-size:17px;font-weight:700;color:var(--pink-deep);}
+.cta .off{align-self:center;background:var(--pink-deep);color:#fff;font-size:12px;font-weight:800;border-radius:6px;padding:2px 8px;letter-spacing:.03em;}
+.cta .orig{align-self:center;font-size:19px;font-weight:700;color:var(--ink-soft);text-decoration:line-through;}
 .cta .tax{font-size:11px;color:var(--ink-soft);}
 .cta .pages{font-size:12px;color:var(--ink);margin-bottom:16px;margin-top:7px;}
 .cta .pages b{color:var(--gold-deep);}
@@ -175,7 +177,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);
     </table>
   </section>
   <section class="cta">
-    <div class="price-row"><span class="now serif">680</span><span class="yen">円</span></div>
+    <div class="price-row"><span class="off">20%OFF</span><span class="orig">1180円</span><span class="now serif">944</span><span class="yen">円</span></div>
     <div class="tax">税込・買い切り / ダウンロードPDF</div>
     <div class="pages">フルカラー<b>全14ページ</b>・スマホでも読みやすいA4縦</div>
     <a class="btn" id="buyBtn" href="#">
