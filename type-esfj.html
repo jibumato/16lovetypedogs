@@ -67,6 +67,10 @@ nav a:hover{border-color:var(--pink);text-decoration:none;color:var(--pink-deep)
 footer{margin-top:50px;padding:24px 16px;text-align:center;font-size:11.5px;color:var(--ink-soft);border-top:2px solid var(--beige);line-height:1.9}
 footer a{color:var(--ink-soft)}
 @media(max-width:480px){.dogimg{width:110px}.card{padding:20px 14px}}
+
+.pbar{display:inline-flex;gap:4px;vertical-align:middle}
+.pbar i{width:20px;height:9px;border-radius:5px;background:#ece2ea;display:inline-block}
+.pbar i.on{background:linear-gradient(90deg,#f7a8c4,#e58aa0)}
 </style>
 </head>
 <body>
@@ -97,7 +101,7 @@ footer a{color:var(--ink-soft)}
 
   <div class="card">
     <h2>恋愛ステータス</h2>
-    <table style="width:100%;border-collapse:collapse"><tr><td style="padding:5px 8px;font-weight:700">一途度</td><td style="padding:5px 8px"><span class="pstars">★★★★☆</span></td></tr><tr><td style="padding:5px 8px;font-weight:700">尽くし度</td><td style="padding:5px 8px"><span class="pstars">★★★★★</span></td></tr><tr><td style="padding:5px 8px;font-weight:700">結婚向き</td><td style="padding:5px 8px"><span class="pstars">★★★★☆</span></td></tr><tr><td style="padding:5px 8px;font-weight:700">嫉妬深さ</td><td style="padding:5px 8px"><span class="pstars">★★★★★</span></td></tr><tr><td style="padding:5px 8px;font-weight:700">ドキドキ度</td><td style="padding:5px 8px"><span class="pstars">★★★☆☆</span></td></tr></table>
+    <table style="width:100%;border-collapse:collapse"><tr><td style="padding:5px 8px;font-weight:700">一途度</td><td style="padding:5px 8px"><span class="pbar" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td></tr><tr><td style="padding:5px 8px;font-weight:700">尽くし度</td><td style="padding:5px 8px"><span class="pbar" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td></tr><tr><td style="padding:5px 8px;font-weight:700">結婚向き</td><td style="padding:5px 8px"><span class="pbar" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td></tr><tr><td style="padding:5px 8px;font-weight:700">嫉妬深さ</td><td style="padding:5px 8px"><span class="pbar" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td></tr><tr><td style="padding:5px 8px;font-weight:700">ドキドキ度</td><td style="padding:5px 8px"><span class="pbar" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td></tr></table>
   </div>
 
   <div class="card">
