@@ -249,3 +249,25 @@ Find your love-dog type → link in bio (free quiz)
 #MBTI #INFP #MBTImemes #personalitytype #lovequiz
 #16lovetypedogs #MBTIlove #relatable #dogsofinstagram
 ```
+
+---
+
+## 한국어 "연애 특징" 카드 (한국 유입용)
+
+`ad-aruaru-ko-{type}.png` (1080×1350, 전 16유형) — 각 유형의 강아지와 함께 연애 특징을 담은 한국어 버전.
+
+### 한국어 캡션 예시 (INFP)
+```
+INFP 연애 특징 🐾 (말티즈 타입)
+
+・망상 속에서 연애가 이미 완결
+・너무 좋아서 오히려 피함
+・이상이 높아 현실과 갭에 고민
+・한번 좋아하면 깊고 길게
+
+내 주변 INFP 소환 🥹
+내 연애견 유형은? → 프로필 링크에서 무료 진단
+
+#MBTI #INFP #연애 #성격유형 #심리테스트
+#16연애견진단 #MBTI연애 #강아지 #공감
+```
