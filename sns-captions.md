@@ -227,3 +227,25 @@ MBTI×견종으로 보는 연애 유형 진단 💘
 `ad-aruaru-story-{type}.png`（1080×1920・全16タイプ）— ストーリーズ／リール用の縦長版。
 犬イラストを大きく配置。リンクスタンプ＋「シェアしてね」で二次拡散を促進。
 - フィード版（4:5）と組み合わせ、フィード投稿→ストーリーで再告知の二段構えが効果的。
+
+---
+
+## English "Love Quirks" cards (overseas reach)
+
+`ad-aruaru-en-{type}.png` (1080×1350, all 16 types) — English version of the relatable "love quirks" cards with each type's dog.
+
+### English caption example (INFP)
+```
+INFP in Love 🐾 (Maltese type)
+
+・The whole romance plays out in their head
+・Likes you so much they avoid you
+・High ideals vs. reality struggle
+・Loves deeply and for a long time
+
+Tag an INFP who needs to see this 🥹
+Find your love-dog type → link in bio (free quiz)
+
+#MBTI #INFP #MBTImemes #personalitytype #lovequiz
+#16lovetypedogs #MBTIlove #relatable #dogsofinstagram
+```
