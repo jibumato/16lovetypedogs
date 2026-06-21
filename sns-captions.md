@@ -99,3 +99,50 @@ MBTI×犬種の恋愛タイプ診断、やってみて💘
 - ハッシュタグは10〜15個程度。広め＋ニッチ＋タイプ別を混ぜる。
 - 投稿時間帯の目安：平日21〜23時、休日昼〜夜。
 - 多言語アカウントを分ける場合、英語版・韓国語版の診断ページ（/?lang=en, /?lang=ko）も同様に展開可能。
+
+---
+
+## 多言語 広告素材（海外アカウント用）
+
+| ファイル | 言語 | サイズ | 用途 |
+|---|---|---|---|
+| `ad-instagram-feed-en.png` | English | 1080×1350 | IG feed (4:5) |
+| `ad-instagram-story-en.png` | English | 1080×1920 | IG story/reel |
+| `ad-instagram-feed-ko.png` | 한국어 | 1080×1350 | IG 피드 |
+| `ad-instagram-story-ko.png` | 한국어 | 1080×1920 | IG 스토리/릴스 |
+
+### English caption (Instagram)
+```
+Which dog are you? 🐾
+
+A love-style quiz based on MBTI x dog breeds 💘
+Just 12 questions reveal your love personality!
+
+Loyal Chihuahua? Devoted Golden? Free-spirited Poodle? 🐶
+
+▼ Take the free quiz (link in bio)
+@(your account)
+
+Check compatibility with your crush too 💌
+
+#MBTI #MBTItest #lovequiz #personalitytest #MBTIlove
+#dogsofinstagram #quiz #relationships #INFP #ENFP
+```
+
+### 한국어 캡션 (Instagram)
+```
+당신은 어떤 강아지? 🐾
+
+MBTI×견종으로 보는 연애 유형 진단 💘
+단 12문항으로 내 연애 스타일을 알 수 있어요!
+
+일편단심 치와와? 헌신하는 골든? 자유로운 푸들? 🐶
+
+▼ 무료 진단은 프로필 링크에서
+@(계정명)
+
+좋아하는 사람과의 궁합도 체크 💌
+
+#MBTI #MBTI테스트 #연애테스트 #성격테스트 #심리테스트
+#강아지 #16연애견진단 #INFP #ENFP #연애
+```
