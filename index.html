@@ -92,7 +92,7 @@ body{
 .hero{text-align:center;padding:30px 6px 8px}
 .hero .paws{display:none}
 .hero-logo{display:none}
-.hero.has-logo .hero-logo{display:block;margin:10px auto 2px;max-width:430px}
+.hero.logo-ja-on .logo-ja,.hero.logo-en-on .logo-en{display:block;margin:10px auto 2px;max-width:430px}
 .hero.has-logo .hero-logo img{width:100%;height:auto;display:block;border-radius:18px}
 .hero.has-logo h1{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .hero h1{
@@ -467,7 +467,8 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
   <section id="top" class="screen active">
     <div class="hero">
       <div class="eyebrow">🐾 MBTI × 🐶</div>
-      <picture class="hero-logo"><source srcset="logo-hero.webp" type="image/webp"><img src="logo-hero.jpg" width="960" height="640" alt="16わんこ恋愛診断｜あなたの恋愛タイプを16のわんこが診断" fetchpriority="high"></picture>
+      <picture class="hero-logo logo-ja"><source srcset="logo-hero.webp" type="image/webp"><img src="logo-hero.jpg" width="960" height="640" alt="16わんこ恋愛診断｜あなたの恋愛タイプを16のわんこが診断" fetchpriority="high"></picture>
+      <picture class="hero-logo logo-en"><source srcset="logo-hero-en.webp" type="image/webp"><img src="logo-hero-en.jpg" width="960" height="640" alt="16 Love Type Dogs｜Find Your Love Dog Type" fetchpriority="high"></picture>
       <h1><span id="t-title">16わんこ恋愛診断</span><small id="t-sub">あなたの恋を、かわいい犬種で診断</small></h1>
       <p class="lead" id="t-lead">MBTI（16タイプ性格診断）であなたの恋愛タイプを16種類の犬種にたとえて無料診断。気になるあの人との相性チェックもできます。</p>
       <p class="hint" id="t-hint">⏱ 約1分・全12問 ／ 🆓 無料・登録不要 ／ 🔓 結果ですぐ相性チェック</p>
@@ -803,7 +804,7 @@ function applyStatic(){
   document.documentElement.lang=L;
   document.title=i.title;
   setText('t-title',i.title);setText('t-sub',i.sub);setText('t-lead',i.lead);
-  (function(){var hero=document.querySelector('#top .hero');if(hero)hero.classList.toggle('has-logo',L==='ja');})();
+  (function(){var hero=document.querySelector('#top .hero');if(!hero)return;hero.classList.toggle('has-logo',L==='ja'||L==='en');hero.classList.toggle('logo-ja-on',L==='ja');hero.classList.toggle('logo-en-on',L==='en');})();
   setText('t-start',i.start);setText('t-shortcut',i.shortcut);
   (function(){const he=document.getElementById('t-hint');if(!he)return;const parts=i.hint.split(/[・·•/｜|]/).map(s=>s.trim()).filter(Boolean);const ems=['⏱','🆓','🔓'];if(parts.length>=2){he.className='assure';he.innerHTML=parts.slice(0,3).map((p,idx)=>'<span>'+(ems[idx]||'🐾')+' '+p+'</span>').join('');}else{he.className='hint';he.textContent=i.hint;}})();
   setText('t-qback',i.back);
