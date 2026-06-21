@@ -51,6 +51,12 @@
 
   var copy = COPY[type] || "あなたのタイプ専用の恋愛トリセツ。";
   var url  = UPSELL_PAGE + "?type=" + type + "&lang=" + lang;
+  var COUPON_NOTE = {
+    ja: 'クーポンコード「DISCOUNT20」を使うとこの価格になります。',
+    en: 'Use coupon code "DISCOUNT20" to get this price.',
+    ko: '쿠폰 코드 "DISCOUNT20"을 입력하면 이 가격이 됩니다.',
+    zh: '使用优惠码“DISCOUNT20”即可享受此价格。'
+  }[lang] || 'クーポンコード「DISCOUNT20」を使うとこの価格になります。';
 
   /* ---- スタイル注入 ---- */
   var style = document.createElement("style");
@@ -93,6 +99,7 @@
     ".wanko-price strong{font-size:20px;color:#e58aa0;}",
     ".wanko-price .wanko-off{display:inline-block;background:#e58aa0;color:#fff;font-size:11px;font-weight:800;border-radius:5px;padding:1px 6px;margin-right:5px;}",
     ".wanko-price .wanko-orig{text-decoration:line-through;color:#b6a596;margin-right:5px;}",
+    ".wanko-coupon{display:inline-block;font-size:11.5px;font-weight:700;color:#e58aa0;background:#fff0f5;border:1px dashed #e58aa0;border-radius:8px;padding:4px 9px;margin:0 0 14px;}",
   ].join("");
   document.head.appendChild(style);
 
@@ -105,6 +112,7 @@
     '  <div class="wanko-hed">続きは、<em>あなたのタイプ専用</em>の恋愛トリセツで。</div>',
     '  <div class="wanko-sub">' + copy + '</div>',
     '  <div class="wanko-price"><span class="wanko-off">' + PRICE_OFF + '</span>買い切り <span class="wanko-orig">' + PRICE_ORIG + '</span><strong>' + PRICE + '</strong>（税込）</div>',
+    '  <div class="wanko-coupon">🎟 ' + COUPON_NOTE + '</div>',
     '  <a class="wanko-btn" href="' + url + '">',
     '    あなたのタイプ専用のトリセツを見る',
     '    <small>全16タイプ相性・LINE攻略・30日プランまで全14ページ</small>',
