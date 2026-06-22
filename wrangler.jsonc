@@ -4,7 +4,8 @@
   "main": "worker.js",
   "assets": {
     "directory": "./",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page"
   }
   // 診断数カウンタを使う場合は、KV名前空間を作成して以下を追記:
   //   npx wrangler kv namespace create COUNTER
