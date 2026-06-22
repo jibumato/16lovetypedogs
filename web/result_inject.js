@@ -58,10 +58,10 @@
     zh: '使用优惠码“DISCOUNT20”即可享受此价格。'
   }[lang] || 'クーポンコード「DISCOUNT20」を使うとこの価格になります。';
   var JP_ONLY = {
-    ja: '※恋愛攻略書は現在、日本語版のみの販売です。',
-    en: '* The love guide is currently sold in Japanese only.',
-    ko: '* 연애 공략서는 현재 일본어판만 판매 중입니다.',
-    zh: '* 恋爱攻略书目前仅提供日文版。'
+    ja: '🇯🇵 恋愛攻略書は現在、日本語版のみの<u>限定販売</u>です',
+    en: '🇯🇵 The love guide is currently available in <u>Japanese only</u>.',
+    ko: '🇯🇵 연애 공략서는 현재 <u>일본어판 한정 판매</u> 중입니다.',
+    zh: '🇯🇵 恋爱攻略书目前<u>仅限日文版发售</u>。'
   }[lang] || '※恋愛攻略書は現在、日本語版のみの販売です。';
 
   /* ---- スタイル注入 ---- */
@@ -106,7 +106,7 @@
     ".wanko-price .wanko-off{display:inline-block;background:#e58aa0;color:#fff;font-size:11px;font-weight:800;border-radius:5px;padding:1px 6px;margin-right:5px;}",
     ".wanko-price .wanko-orig{text-decoration:line-through;color:#b6a596;margin-right:5px;}",
     ".wanko-coupon{display:inline-block;font-size:11.5px;font-weight:700;color:#e58aa0;background:#fff0f5;border:1px dashed #e58aa0;border-radius:8px;padding:4px 9px;margin:0 0 8px;}",
-    ".wanko-jponly{font-size:11px;color:#9c8676;margin:0 0 14px;}",
+    ".wanko-jponly{font-size:13px;font-weight:800;color:#e58aa0;background:#fff0f5;border:2px solid #e58aa0;border-radius:12px;padding:10px 12px;margin:0 auto 14px;line-height:1.45;}",
   ].join("");
   document.head.appendChild(style);
 
