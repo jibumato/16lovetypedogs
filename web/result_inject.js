@@ -52,11 +52,11 @@
   var copy = COPY[type] || "あなたのタイプ専用の恋愛トリセツ。";
   var url  = UPSELL_PAGE + "?type=" + type + "&lang=" + lang;
   var COUPON_NOTE = {
-    ja: 'モバイル版は、リンク先の右上の詳細からクーポンコード「DISCOUNT20」を使うとこの価格になります。',
-    en: 'On mobile, open the details at the top right of the linked page and use coupon code "DISCOUNT20" to get this price.',
-    ko: '모바일 버전은 연결된 페이지 우측 상단의 상세에서 쿠폰 코드 "DISCOUNT20"을 입력하면 이 가격이 됩니다.',
-    zh: '手机版请在链接页面右上角的详情中使用优惠码“DISCOUNT20”即可享受此价格。'
-  }[lang] || 'モバイル版は、リンク先の右上の詳細からクーポンコード「DISCOUNT20」を使うとこの価格になります。';
+    ja: 'プロモーションコード「DISCOUNT20」を使うとこの価格になります。（モバイル版はリンク先の右上の詳細から利用できます。）',
+    en: 'Use promotion code "DISCOUNT20" to get this price. (On mobile, access it from the details at the top right of the linked page.)',
+    ko: '프로모션 코드 "DISCOUNT20"을 입력하면 이 가격이 됩니다.（모바일 버전은 연결된 페이지 우측 상단의 상세에서 이용할 수 있습니다.）',
+    zh: '使用促销代码“DISCOUNT20”即可享受此价格。（手机版可在链接页面右上角的详情中使用。）'
+  }[lang] || 'プロモーションコード「DISCOUNT20」を使うとこの価格になります。（モバイル版はリンク先の右上の詳細から利用できます。）';
   var JP_ONLY = {
     ja: '🇯🇵 恋愛攻略書は現在、日本語版のみの<u>限定販売</u>です',
     en: '🇯🇵 The love guide is currently available in <u>Japanese only</u>.',
