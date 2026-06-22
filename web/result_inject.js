@@ -63,6 +63,12 @@
     ko: '🇯🇵 연애 공략서는 현재 <u>일본어판 한정 판매</u> 중입니다.',
     zh: '🇯🇵 恋爱攻略书目前<u>仅限日文版发售</u>。'
   }[lang] || '※恋愛攻略書は現在、日本語版のみの販売です。';
+  var REFUND = {
+    ja: '🛡 内容にご満足いただけなければ全額返金します',
+    en: '🛡 Not satisfied? Full refund, guaranteed.',
+    ko: '🛡 만족하지 못하셨다면 전액 환불해 드립니다',
+    zh: '🛡 如不满意，全额退款保证'
+  }[lang] || '🛡 内容にご満足いただけなければ全額返金します';
 
   /* ---- スタイル注入 ---- */
   var style = document.createElement("style");
@@ -107,6 +113,7 @@
     ".wanko-price .wanko-orig{text-decoration:line-through;color:#b6a596;margin-right:5px;}",
     ".wanko-coupon{display:inline-block;font-size:11.5px;font-weight:700;color:#e58aa0;background:#fff0f5;border:1px dashed #e58aa0;border-radius:8px;padding:4px 9px;margin:0 0 8px;}",
     ".wanko-jponly{font-size:13px;font-weight:800;color:#e58aa0;background:#fff0f5;border:2px solid #e58aa0;border-radius:12px;padding:10px 12px;margin:0 auto 14px;line-height:1.45;}",
+    ".wanko-refund{font-size:12.5px;font-weight:800;color:#5bb89a;background:#f1faf5;border:1px solid #5bb89a;border-radius:10px;padding:9px 12px;margin:0 auto 12px;}",
   ].join("");
   document.head.appendChild(style);
 
@@ -121,6 +128,7 @@
     '  <div class="wanko-price"><span class="wanko-off">' + PRICE_OFF + '</span>買い切り <span class="wanko-orig">' + PRICE_ORIG + '</span><strong>' + PRICE + '</strong>（税込）</div>',
     '  <div class="wanko-coupon">🎟 ' + COUPON_NOTE + '</div>',
     '  <div class="wanko-jponly">' + JP_ONLY + '</div>',
+    '  <div class="wanko-refund">' + REFUND + '</div>',
     '  <a class="wanko-btn" href="' + url + '">',
     '    あなたのタイプ専用のトリセツを見る',
     '    <small>全16タイプ相性・LINE攻略・30日プランまで全14ページ</small>',

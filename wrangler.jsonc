@@ -1,7 +1,12 @@
 {
   "name": "16lovetypedogs",
   "compatibility_date": "2026-06-17",
+  "main": "worker.js",
   "assets": {
-    "directory": "./"
+    "directory": "./",
+    "binding": "ASSETS"
   }
+  // 診断数カウンタを使う場合は、KV名前空間を作成して以下を追記:
+  //   npx wrangler kv namespace create COUNTER
+  // "kv_namespaces": [{ "binding": "COUNTER", "id": "<作成されたid>" }]
 }

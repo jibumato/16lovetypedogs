@@ -117,6 +117,8 @@ body{
 .btn.sub{background:rgba(255,255,255,.66);color:var(--pink-deep);border:1px solid var(--glass-bd);box-shadow:var(--shadow);font-size:15px;padding:15px}
 .btn.ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid var(--glass-bd);box-shadow:none;font-size:15px;padding:15px;font-weight:800}
 .hint{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:2px}
+.diag-count{display:inline-block;margin:10px auto 2px;padding:6px 14px;border-radius:999px;background:#fff0f5;border:1px solid var(--pink);color:var(--pink-deep);font-size:12.5px;font-weight:800;text-align:center}
+.diag-count b{font-weight:800}
 
 /* ---- quiz ---- */
 .qhead{text-align:center;padding:22px 0 4px}
@@ -448,6 +450,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-buy:active{transform:translateY(1px)}
 .lg-buy .s{display:block;font-size:11px;font-weight:600;opacity:.95;margin-top:3px}
 .lg-jponly{font-size:13px;font-weight:800;color:var(--pink-deep);background:#fff0f5;border:2px solid var(--pink-deep);border-radius:12px;padding:10px 12px;margin-top:10px;line-height:1.45}
+.lg-refund{margin-top:10px;font-size:12.5px;font-weight:800;color:var(--sj);background:#f1faf5;border:1px solid var(--sj);border-radius:10px;padding:8px 12px}
 .lg-re{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 14px;margin-top:14px}
 .lg-re span{font-size:11px;color:var(--ink-soft)}.lg-re span::before{content:"✓ ";color:var(--sj);font-weight:800}
 .lg-langs{margin-top:12px;font-size:12px;color:var(--ink-soft)}
@@ -497,6 +500,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       <h1><span id="t-title">16わんこ恋愛診断</span><small id="t-sub">あなたの恋を、かわいい犬種で診断</small></h1>
       <p class="lead" id="t-lead">MBTI（16タイプ性格診断）であなたの恋愛タイプを16種類の犬種にたとえて無料診断。気になるあの人との相性チェックもできます。</p>
       <p class="hint" id="t-hint">⏱ 約1分・全12問 ／ 🆓 無料・登録不要 ／ 🔓 結果ですぐ相性チェック</p>
+      <div class="diag-count" id="diagCount" hidden></div>
       <button class="btn" id="t-start" onclick="startQuiz()">診断をはじめる 🐾</button>
       <button class="btn sub" id="t-shortcut" onclick="show('shortcut')">MBTIがわかる人はこちら</button>
       <div class="navrow">
@@ -1039,9 +1043,38 @@ function buildGrid(){
 }
 function pickType(c){revealResult(c);}
 
+/* ---- 診断数カウンタ（Cloudflare Worker + KV） ---- */
+function recordDiagnosis(){
+  try{
+    if(window.gtag) gtag('event','diagnosis_complete',{lang:L});
+    if(sessionStorage.getItem('diag_counted')) return;
+    sessionStorage.setItem('diag_counted','1');
+    fetch('/api/diagnoses',{method:'POST'}).then(r=>r.json()).then(d=>{
+      if(d&&typeof d.count==='number') renderDiagCount(d.count);
+    }).catch(function(){});
+  }catch(e){}
+}
+function renderDiagCount(n){
+  var SHOW_MIN=100; /* これ未満は表示しない（弱い社会的証明を避ける） */
+  var el=document.getElementById('diagCount');
+  if(!el||typeof n!=='number'||n<SHOW_MIN) return;
+  var label={ja:'これまで<b>'+n.toLocaleString()+'</b>人が診断しました',
+    en:'<b>'+n.toLocaleString()+'</b> people have taken the quiz',
+    ko:'지금까지 <b>'+n.toLocaleString()+'</b>명이 진단했어요',
+    zh:'已有 <b>'+n.toLocaleString()+'</b> 人完成测验',
+    tw:'已有 <b>'+n.toLocaleString()+'</b> 人完成測驗'}[L]||('🐾 '+n.toLocaleString());
+  el.innerHTML='🐾 '+label; el.hidden=false;
+}
+function loadDiagCount(){
+  try{ fetch('/api/diagnoses').then(r=>r.json()).then(d=>{
+    if(d&&typeof d.count==='number') renderDiagCount(d.count);
+  }).catch(function(){}); }catch(e){}
+}
+
 /* ---- suspense reveal ---- */
 function revealResult(code){
   current=code;
+  recordDiagnosis();
   const msgs=I().loading;
   const el=document.getElementById('load-msg');
   const dogEl=document.getElementById('load-dog');
@@ -1248,7 +1281,7 @@ const GUIDE_I18N={
       ["恋愛の罠と対策","1つだけ","3つ＋抜け道"],["LINE・メッセージ攻略","x","シーン別例文"],
       ["相手からの脈ありサイン","x","相手タイプ別"],["結婚観・長続きの条件","x","条件チェック"],
       ["30日アクションプラン","x","o"],["書き込みワークシート","x","2枚つき"]],
-    tax:"税込・買い切り / ダウンロードPDF", coupon:"プロモーションコード「DISCOUNT20」を使うとこの価格になります。（モバイル版はリンク先の右上の詳細から利用できます。）", jpOnly:"🇯🇵 恋愛攻略書は現在、日本語版のみの<u>限定販売</u>です", pages:"フルカラー", pagesB:"全16ページ", pagesAf:"・スマホでも読みやすいA4縦",
+    tax:"税込・買い切り / ダウンロードPDF", coupon:"プロモーションコード「DISCOUNT20」を使うとこの価格になります。（モバイル版はリンク先の右上の詳細から利用できます。）", jpOnly:"🇯🇵 恋愛攻略書は現在、日本語版のみの<u>限定販売</u>です", refund:"🛡 内容にご満足いただけなければ全額返金します", pages:"フルカラー", pagesB:"全16ページ", pagesAf:"・スマホでも読みやすいA4縦",
     buy:"あなたのタイプ専用のトリセツを受け取る", buySub:"版 ・ 今すぐダウンロード",
     re:["購入後すぐ読める","スマホ／PC対応","追加課金なし"], other:"他の言語で読む：" },
   en:{ eyebrow:"PREMIUM EDITION", head1:"The rest is in your ", headAc:"type-only", head2:" love manual.",
@@ -1267,7 +1300,7 @@ const GUIDE_I18N={
       ["Love traps & fixes","just 1","3 + solutions"],["Chat / message tips","x","scene examples"],
       ["Signs they like you","x","per type"],["Marriage & longevity","x","checklist"],
       ["30-day action plan","x","o"],["Worksheets","x","2 sheets"]],
-    tax:"Tax incl. / one-time / PDF download", coupon:"Use promotion code \"DISCOUNT20\" to get this price. (On mobile, access it from the details at the top right of the linked page.)", jpOnly:"🇯🇵 The love guide is currently available in <u>Japanese only</u>.", pages:"Full color ", pagesB:"16 pages", pagesAf:" · A4 portrait",
+    tax:"Tax incl. / one-time / PDF download", coupon:"Use promotion code \"DISCOUNT20\" to get this price. (On mobile, access it from the details at the top right of the linked page.)", jpOnly:"🇯🇵 The love guide is currently available in <u>Japanese only</u>.", refund:"🛡 Not satisfied? Full refund, guaranteed.", pages:"Full color ", pagesB:"16 pages", pagesAf:" · A4 portrait",
     buy:"Get your type-only love manual", buySub:" edition · download now",
     re:["Read instantly","Phone & PC","No extra charge"], other:"Read in another language: " },
   ko:{ eyebrow:"PREMIUM EDITION", head1:"이어지는 건, ", headAc:"당신 타입 전용", head2:" 연애 설명서로.",
@@ -1286,7 +1319,7 @@ const GUIDE_I18N={
       ["연애 함정과 대책","1개만","3개+해결법"],["메시지 공략","x","상황별 예문"],
       ["상대의 호감 신호","x","상대 타입별"],["결혼관·오래가는 조건","x","조건 체크"],
       ["30일 액션 플랜","x","o"],["작성 워크시트","x","2장"]],
-    tax:"세금 포함·단건 구매 / PDF 다운로드", coupon:"프로모션 코드 \"DISCOUNT20\"을 입력하면 이 가격이 됩니다.（모바일 버전은 연결된 페이지 우측 상단의 상세에서 이용할 수 있습니다.）", jpOnly:"🇯🇵 연애 공략서는 현재 <u>일본어판 한정 판매</u> 중입니다.", pages:"풀컬러 ", pagesB:"전 16페이지", pagesAf:"·휴대폰에서도 읽기 쉬운 A4 세로",
+    tax:"세금 포함·단건 구매 / PDF 다운로드", coupon:"프로모션 코드 \"DISCOUNT20\"을 입력하면 이 가격이 됩니다.（모바일 버전은 연결된 페이지 우측 상단의 상세에서 이용할 수 있습니다.）", jpOnly:"🇯🇵 연애 공략서는 현재 <u>일본어판 한정 판매</u> 중입니다.", refund:"🛡 만족하지 못하셨다면 전액 환불해 드립니다", pages:"풀컬러 ", pagesB:"전 16페이지", pagesAf:"·휴대폰에서도 읽기 쉬운 A4 세로",
     buy:"내 타입 전용 설명서 받기", buySub:" 버전 · 지금 다운로드",
     re:["구매 후 바로 열람","휴대폰·PC 지원","추가 결제 없음"], other:"다른 언어로 읽기: " },
   zh:{ eyebrow:"PREMIUM EDITION", head1:"接下来，请看", headAc:"专属你类型", head2:"的恋爱说明书。",
@@ -1305,7 +1338,7 @@ const GUIDE_I18N={
       ["恋爱陷阱与对策","仅1个","3个+破解"],["消息攻略","x","分场景范例"],
       ["对方喜欢你的信号","x","按对方类型"],["婚恋观·长久条件","x","条件清单"],
       ["30天行动计划","x","o"],["填写练习表","x","2张"]],
-    tax:"含税·买断 / PDF下载", coupon:"使用促销代码“DISCOUNT20”即可享受此价格。（手机版可在链接页面右上角的详情中使用。）", jpOnly:"🇯🇵 恋爱攻略书目前<u>仅限日文版发售</u>。", pages:"全彩 ", pagesB:"共16页", pagesAf:"·手机也好读的A4竖版",
+    tax:"含税·买断 / PDF下载", coupon:"使用促销代码“DISCOUNT20”即可享受此价格。（手机版可在链接页面右上角的详情中使用。）", jpOnly:"🇯🇵 恋爱攻略书目前<u>仅限日文版发售</u>。", refund:"🛡 如不满意，全额退款保证", pages:"全彩 ", pagesB:"共16页", pagesAf:"·手机也好读的A4竖版",
     buy:"领取专属你类型的说明书", buySub:" 版 · 立即下载",
     re:["购买后即刻阅读","手机/电脑通用","无额外收费"], other:"用其他语言阅读：" },
 };
@@ -1377,6 +1410,7 @@ function renderLoveGuide(code){
       <div class="lg-pages">${g.pages}<b>${g.pagesB}</b>${g.pagesAf||''}</div>
       <a class="lg-buy" id="lgBuy" href="${guideBuyUrl(code,L)}" onclick="trackCheckout('${code}','${L}')">${g.buy}<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
       ${g.jpOnly?`<div class="lg-jponly">${g.jpOnly}</div>`:''}
+      ${g.refund?`<div class="lg-refund">${g.refund}</div>`:''}
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}</div>
       <div class="lg-langs">${g.other}
         <a onclick="guideLang('en')">English</a>・<a onclick="guideLang('ko')">한국어</a>・<a onclick="guideLang('zh')">简体</a>・<a onclick="guideLang('tw')">繁體</a></div>
@@ -1797,7 +1831,7 @@ function renderOmikuji(r,animate){
     const p=params.get('lang');if(LANGS.includes(p))L=p;
     initialType=validType(params.get('type'));
   }catch(e){}
-  applyStatic();buildGrid();buildSelects();
+  applyStatic();buildGrid();buildSelects();loadDiagCount();
   if(initialType)renderResult(initialType);
 })();
 </script>
