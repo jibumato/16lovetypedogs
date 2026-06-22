@@ -21,6 +21,17 @@
   .btn{display:inline-block;margin-top:6px;padding:13px 22px;border-radius:13px;font-size:15px;font-weight:700;color:#fff;text-decoration:none;background:linear-gradient(135deg,#e0779a,#d35d85);box-shadow:0 6px 18px rgba(211,93,133,.32)}
   .sub{display:block;margin-top:14px;font-size:12px}
   .sub a{color:var(--pink-deep)}
+  .fb{margin-top:22px;padding-top:20px;border-top:1px dashed var(--pink);text-align:center}
+  .fb-q{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:10px}
+  .stars{display:flex;justify-content:center;gap:4px;margin-bottom:12px}
+  .stars button{background:none;border:none;font-size:30px;line-height:1;cursor:pointer;color:#e6d3c4;padding:0 2px;-webkit-tap-highlight-color:transparent}
+  .stars button.on{color:#f5b301}
+  .fb textarea,.fb input{width:100%;border:1.5px solid var(--pink);border-radius:12px;padding:10px 12px;font-family:inherit;font-size:13px;margin-bottom:10px;resize:vertical;background:#fff}
+  .fb textarea{min-height:70px}
+  .fb-send{width:100%;padding:12px;border:none;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#e0779a,#d35d85);cursor:pointer}
+  .fb-send:disabled{opacity:.5}
+  .fb-consent{font-size:10.5px;color:var(--ink-soft);margin:10px 0 0;line-height:1.6}
+  .fb-done{margin-top:22px;padding-top:20px;border-top:1px dashed var(--pink);font-size:14px;font-weight:700;color:var(--pink-deep)}
 </style>
 </head>
 <body>
@@ -34,6 +45,22 @@
     </div>
     <a class="btn" href="/">🐶 診断トップにもどる</a>
     <span class="sub"><a href="/ranking-index.html">恋愛ランキングまとめを見る →</a></span>
+
+    <div class="fb" id="fbBox">
+      <div class="fb-q">よかったら、ひとこと感想を聞かせてください 🙏</div>
+      <div class="stars" id="stars" role="radiogroup" aria-label="満足度">
+        <button type="button" data-v="1" aria-label="星1">★</button>
+        <button type="button" data-v="2" aria-label="星2">★</button>
+        <button type="button" data-v="3" aria-label="星3">★</button>
+        <button type="button" data-v="4" aria-label="星4">★</button>
+        <button type="button" data-v="5" aria-label="星5">★</button>
+      </div>
+      <textarea id="fbComment" maxlength="1000" placeholder="使ってみた感想（任意）"></textarea>
+      <input id="fbName" type="text" maxlength="40" placeholder="ニックネーム（任意）">
+      <button class="fb-send" id="fbSend">感想を送る</button>
+      <p class="fb-consent">※いただいた感想は、ニックネームとともにサイトでご紹介する場合があります。</p>
+    </div>
+    <div class="fb-done" id="fbDone" hidden>感想をありがとうございました！🐾</div>
   </div>
 <script>
 (function(){
@@ -55,6 +82,34 @@
       });
     }
   }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var rating = 0;
+  var stars = document.getElementById('stars');
+  if (stars) stars.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    rating = parseInt(b.dataset.v, 10) || 0;
+    Array.prototype.forEach.call(stars.children, function(el,i){ el.classList.toggle('on', i < rating); });
+  });
+  var send = document.getElementById('fbSend');
+  if (send) send.addEventListener('click', function(){
+    var comment = (document.getElementById('fbComment') || {}).value || '';
+    var name = (document.getElementById('fbName') || {}).value || '';
+    if (!rating && !comment.trim()) { alert('星または感想を入力してください'); return; }
+    send.disabled = true;
+    var type = (new URLSearchParams(location.search).get('type') || '').toUpperCase();
+    var finish = function(){
+      var box = document.getElementById('fbBox'); if (box) box.hidden = true;
+      var d = document.getElementById('fbDone'); if (d) d.hidden = false;
+      try { if (window.gtag) gtag('event','submit_review',{ rating: rating }); } catch(e){}
+    };
+    fetch('/api/feedback', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ rating: rating, comment: comment, name: name, type: type })
+    }).then(finish).catch(finish);
+  });
 })();
 </script>
 </body>
