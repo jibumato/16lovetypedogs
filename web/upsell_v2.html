@@ -476,7 +476,10 @@ if (!T) {
       location:'love_guide_page'
     }); }catch(e){}
   }
-  const buyUrl = (lang) => STRIPE_LINKS[T.code] || "#";
+  const buyUrl = (lang) => {
+    const u = STRIPE_LINKS[T.code];
+    return u ? u + (u.includes("?") ? "&" : "?") + "prefilled_promo_code=DISCOUNT20" : "#";
+  };
   $("#buyBtn").href = buyUrl("ja");
   $("#buyBtn").addEventListener("click", trackCheckout);
   $("#buySub").textContent = `${T.dog}（${T.code}）版 ・ 今すぐダウンロード`;

@@ -1236,9 +1236,10 @@ const STRIPE_LINKS={
   ESFP:'https://buy.stripe.com/28E00igNbfuP7dv3rC8Ra0Z'
 };
 const GUIDE_CFG={ price:"944", orig:"1180", off:"20%OFF" };
-/* タイプコード → Payment Link を返す */
+/* タイプコード → Payment Link を返す（プロモコードを自動プリフィル） */
 function guideBuyUrl(code,lang){
-  return STRIPE_LINKS[code]||'#';
+  var u=STRIPE_LINKS[code]; if(!u) return '#';
+  return u+(u.indexOf('?')<0?'?':'&')+'prefilled_promo_code=DISCOUNT20';
 }
 /* 購入クリック計測（決済はStripe外部のため、離脱前にbegin_checkoutを発火） */
 function trackCheckout(code,lang){
