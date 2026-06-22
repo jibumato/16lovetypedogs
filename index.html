@@ -387,6 +387,12 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .seo-static .seo-links li{font-size:13px;line-height:1.9}
 .seo-static a{color:var(--pink-deep);font-weight:700;text-decoration:none}
 .seo-static a:hover{text-decoration:underline}
+.seo-static details.seo-acc{margin:4px 0 12px;border:1px solid var(--hair);border-radius:12px;background:#fff8fb}
+.seo-static details.seo-acc summary{cursor:pointer;list-style:none;padding:11px 14px;font-size:13px;font-weight:800;color:var(--pink-deep)}
+.seo-static details.seo-acc summary::-webkit-details-marker{display:none}
+.seo-static details.seo-acc summary::after{content:"▼";float:right;font-size:10px;opacity:.7}
+.seo-static details.seo-acc[open] summary::after{content:"▲"}
+.seo-static details.seo-acc .seo-links{margin-top:0;padding-top:4px}
 
 /* 恋愛攻略書 upsell */
 .lg-wrap{margin-top:24px}
@@ -633,6 +639,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <p><a href="/types.html">→ 16タイプ一覧をくわしく見る</a></p>
     <h2>MBTI恋愛コラム・お役立ち記事</h2>
     <p>気になる人との恋を進めたいときに役立つ、MBTIタイプ別の恋愛コラムです。告白・片思い・ケンカ・復縁など、シーン別のヒントを犬種になぞらえて解説しています。</p>
+    <details class="seo-acc"><summary>恋愛コラム記事をすべて見る（70本以上）</summary>
     <ul class="seo-links">
       <li><a href="/mbti-unmei.html">MBTI恋愛で運命を信じるランキング</a></li>
       <li><a href="/mbti-keisan.html">MBTI恋愛で計算高い・天然ランキング</a></li>
@@ -703,7 +710,9 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       <li><a href="/mbti-sameru.html">MBTIタイプ別「冷める瞬間・冷める理由」</a></li>
       <li><a href="/mbti-uwaki.html">MBTIタイプ別「浮気しやすい・しにくい理由」</a></li>
     </ul>
-    <h2>English MBTI Love Guides</h2>
+    </details>
+    <h2>多言語の恋愛ガイド（English / 한국어 / 简体 / 繁體）</h2>
+    <details class="seo-acc"><summary>多言語ガイドをすべて見る（80本以上）</summary>
     <ul class="seo-links">
       <li><a href="/mbti-compatibility-en.html">MBTI Love Compatibility: Best &amp; Worst Matches for All 16 Types</a></li>
       <li><a href="/mbti-love-at-first-sight-en.html">MBTI Types Most Likely to Fall in Love at First Sight</a></li>
@@ -789,6 +798,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       <li><a href="/mbti-dating-tips-zh.html">MBTI 恋爱攻略：16种类型的追求技巧与禁忌 (简体中文)</a></li>
       <li><a href="/mbti-dating-tips-tw.html">MBTI 戀愛攻略：16種類型的追求技巧與禁忌 (繁體中文)</a></li>
     </ul>
+    </details>
     <h2>恋愛タイプ別ランキング</h2>
     <ul class="seo-links">
       <li><a href="/ranking-index.html">💖 MBTI恋愛ランキング大全（テーマ別まとめ）</a></li>
