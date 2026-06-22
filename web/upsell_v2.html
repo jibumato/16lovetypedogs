@@ -114,8 +114,8 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);
 .cta .off{align-self:center;background:var(--pink-deep);color:#fff;font-size:12px;font-weight:800;border-radius:6px;padding:2px 8px;letter-spacing:.03em;}
 .cta .orig{align-self:center;font-size:19px;font-weight:700;color:var(--ink-soft);text-decoration:line-through;}
 .cta .tax{font-size:11px;color:var(--ink-soft);}
-.cta .coupon-note{display:inline-block;margin-top:6px;font-size:12px;font-weight:800;color:var(--pink-deep);background:#fff0f5;border:1px dashed var(--pink-deep);border-radius:8px;padding:5px 10px;}
-.cta .jp-only{font-size:13px;font-weight:800;color:var(--pink-deep);background:#fff0f5;border:2px solid var(--pink-deep);border-radius:12px;padding:10px 12px;margin-top:10px;line-height:1.45;}
+.cta .coupon-note{font-size:11.5px;color:var(--ink-soft);margin-top:8px;}
+.cta .jp-only{font-size:11.5px;color:var(--pink-deep);font-weight:700;margin-top:10px;}
 .cta .pages{font-size:12px;color:var(--ink);margin-bottom:16px;margin-top:7px;}
 .cta .pages b{color:var(--gold-deep);}
 .btn{display:block;width:100%;padding:15px 10px;border:0;border-radius:13px;cursor:pointer;
@@ -126,7 +126,6 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);
   -webkit-tap-highlight-color:transparent;}
 .btn:active{transform:translateY(1px);box-shadow:0 3px 10px rgba(211,93,133,.3);}
 .btn .sm{display:block;font-size:11px;font-weight:500;opacity:.92;margin-top:2px;letter-spacing:.03em;}
-.refund{font-size:13px;font-weight:800;color:#5bb89a;background:#f1faf5;border:1px solid #5bb89a;border-radius:10px;padding:9px 12px;margin-top:10px;}
 .reassure{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 14px;margin-top:14px;}
 .reassure span{font-size:11px;color:var(--ink-soft);}
 .reassure span::before{content:"✓ ";color:var(--mint);font-weight:700;}
@@ -184,17 +183,16 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);
   <section class="cta">
     <div class="price-row"><span class="off">20%OFF</span><span class="orig">1180円</span><span class="now serif">944</span><span class="yen">円</span></div>
     <div class="tax">税込・買い切り / ダウンロードPDF</div>
-    <div class="coupon-note">🎟 プロモーションコード「DISCOUNT20」を使うとこの価格になります。（モバイル版はリンク先の右上の詳細から利用できます。）</div>
-    <div class="jp-only">🇯🇵 恋愛攻略書は現在、日本語版のみの<u>限定販売</u>です</div>
-    <div class="refund">🛡 内容にご満足いただけなければ全額返金します</div>
     <div class="pages">フルカラー<b>全14ページ</b>・スマホでも読みやすいA4縦</div>
     <a class="btn" id="buyBtn" href="#">
       あなたのタイプ専用のトリセツを受け取る
       <span class="sm" id="buySub"></span>
     </a>
+    <div class="coupon-note">🎟 944円はプロモコード適用後の価格です</div>
     <div class="reassure">
-      <span>購入後すぐ読める</span><span>スマホ／PC対応</span><span>追加課金なし</span>
+      <span>購入後すぐ読める</span><span>スマホ／PC対応</span><span>追加課金なし</span><span>満足保証・全額返金</span>
     </div>
+    <div class="jp-only">🇯🇵 攻略書は現在、日本語版のみの限定販売です</div>
     <div class="langs">
       他の言語で読む：
       <a data-lang="en">English</a>・<a data-lang="ko">한국어</a>・<a data-lang="zh">中文</a>
