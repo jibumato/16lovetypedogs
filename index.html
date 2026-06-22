@@ -1207,6 +1207,14 @@ const GUIDE_CFG={ price:"944", orig:"1180", off:"20%OFF" };
 function guideBuyUrl(code,lang){
   return STRIPE_LINKS[code]||'#';
 }
+/* 購入クリック計測（決済はStripe外部のため、離脱前にbegin_checkoutを発火） */
+function trackCheckout(code,lang){
+  try{ if(window.gtag) gtag('event','begin_checkout',{
+    currency:'JPY', value:Number(GUIDE_CFG.price)||944, coupon:'DISCOUNT20',
+    items:[{item_id:code,item_name:'love-guide',price:Number(GUIDE_CFG.price)||944,quantity:1}],
+    lang:lang, location:'index_guide'
+  }); }catch(e){}
+}
 /* 攻略書チラ見せデータ（INFPは実コンテンツを多言語で、他はフォールバック） */
 const GUIDE={
   INFP:{
@@ -1367,7 +1375,7 @@ function renderLoveGuide(code){
       <div class="lg-tax">${g.tax}</div>
       <div class="lg-coupon">🎟 ${g.coupon||''}</div>
       <div class="lg-pages">${g.pages}<b>${g.pagesB}</b>${g.pagesAf||''}</div>
-      <a class="lg-buy" id="lgBuy" href="${guideBuyUrl(code,L)}">${g.buy}<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
+      <a class="lg-buy" id="lgBuy" href="${guideBuyUrl(code,L)}" onclick="trackCheckout('${code}','${L}')">${g.buy}<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
       ${g.jpOnly?`<div class="lg-jponly">${g.jpOnly}</div>`:''}
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}</div>
       <div class="lg-langs">${g.other}

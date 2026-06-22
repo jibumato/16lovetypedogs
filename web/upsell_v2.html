@@ -7,6 +7,8 @@
 <meta property="og:site_name" content="16わんこ恋愛診断">
 <meta name="twitter:card" content="summary_large_image">
 <title id="pageTitle">恋愛攻略書 ｜ 16わんこ恋愛診断</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C3W7FBQRCD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-C3W7FBQRCD');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
@@ -464,9 +466,23 @@ if (!T) {
   ).join("");
 
   /* 購入リンク */
+  const PRICE_VAL = 944;
+  function trackCheckout(){
+    try{ if(window.gtag) gtag('event','begin_checkout',{
+      currency:'JPY', value:PRICE_VAL, coupon:'DISCOUNT20',
+      items:[{item_id:T.code,item_name:'love-guide',price:PRICE_VAL,quantity:1}],
+      location:'love_guide_page'
+    }); }catch(e){}
+  }
   const buyUrl = (lang) => STRIPE_LINKS[T.code] || "#";
   $("#buyBtn").href = buyUrl("ja");
+  $("#buyBtn").addEventListener("click", trackCheckout);
   $("#buySub").textContent = `${T.dog}（${T.code}）版 ・ 今すぐダウンロード`;
+  /* ページ閲覧（ファネル: view_item） */
+  try{ if(window.gtag) gtag('event','view_item',{
+    currency:'JPY', value:PRICE_VAL,
+    items:[{item_id:T.code,item_name:'love-guide',price:PRICE_VAL,quantity:1}]
+  }); }catch(e){}
 
   /* ロック要素タップ → CTAスクロール */
   document.querySelectorAll("[data-cta]").forEach(el => {
@@ -484,6 +500,7 @@ if (!T) {
   document.querySelectorAll(".langs a").forEach(a => {
     a.addEventListener("click", e => {
       e.preventDefault();
+      trackCheckout();
       location.href = buyUrl(a.dataset.lang);
     });
   });

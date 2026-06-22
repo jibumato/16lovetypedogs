@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ご購入ありがとうございます ｜ 16わんこ恋愛診断</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C3W7FBQRCD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-C3W7FBQRCD');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--pink:#f4b8cb;--pink-deep:#e58aa0;--ink:#3a2e28;--ink-soft:#7a6258;--bg:#fff9f5;--shadow:0 4px 18px rgba(100,60,40,.10)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Zen Maru Gothic',sans-serif;background:var(--bg);color:var(--ink);line-height:1.8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{max-width:440px;width:100%;background:#fff;border:1.5px solid var(--pink);border-radius:24px;padding:34px 26px;text-align:center;box-shadow:var(--shadow)}
+  .mark{font-size:46px;line-height:1}
+  h1{font-size:20px;font-weight:700;margin:14px 0 8px}
+  p{font-size:14px;color:var(--ink-soft);margin-bottom:14px}
+  .note{font-size:12.5px;color:var(--ink-soft);background:var(--bg);border-radius:12px;padding:12px 14px;margin:14px 0}
+  .btn{display:inline-block;margin-top:6px;padding:13px 22px;border-radius:13px;font-size:15px;font-weight:700;color:#fff;text-decoration:none;background:linear-gradient(135deg,#e0779a,#d35d85);box-shadow:0 6px 18px rgba(211,93,133,.32)}
+  .sub{display:block;margin-top:14px;font-size:12px}
+  .sub a{color:var(--pink-deep)}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="mark">🐾💌</div>
+    <h1>ご購入ありがとうございます！</h1>
+    <p>あなたのタイプ専用の恋愛攻略書をお届けします。</p>
+    <div class="note">
+      ご登録のメールアドレスに、Stripeからの決済確認メールをお送りしています。
+      恋愛攻略書（PDF）のご案内もあわせてご確認ください。
+    </div>
+    <a class="btn" href="/">🐶 診断トップにもどる</a>
+    <span class="sub"><a href="/ranking-index.html">恋愛ランキングまとめを見る →</a></span>
+  </div>
+<script>
+(function(){
+  try{
+    var p = new URLSearchParams(location.search);
+    var type = (p.get('type')||'').toUpperCase();
+    /* Stripe Payment Link はリダイレクト時に session_id を自動付与 */
+    var tx = p.get('session_id') || p.get('transaction_id') || ('tx-'+Date.now());
+    var value = Number(p.get('value')) || 1180; /* 既定は通常価格。クーポン適用時は ?value=944 を付与 */
+    /* リロードによる二重計上を防止（同一取引IDは1回のみ） */
+    var key = 'purchase_'+tx;
+    if(!sessionStorage.getItem(key)){
+      sessionStorage.setItem(key,'1');
+      if(window.gtag) gtag('event','purchase',{
+        transaction_id: tx,
+        currency:'JPY',
+        value: value,
+        items:[{item_id: type||'love-guide', item_name:'love-guide', price:value, quantity:1}]
+      });
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

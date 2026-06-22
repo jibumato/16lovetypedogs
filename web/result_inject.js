@@ -149,6 +149,20 @@
     anchor.parentNode.insertBefore(div, anchor.nextSibling);
   }
 
+  /* ---- 計測: 結果ページ→攻略書ページへの遷移クリック（ファネル） ---- */
+  var btn = div.querySelector(".wanko-btn");
+  if (btn) {
+    btn.addEventListener("click", function () {
+      try {
+        if (window.gtag) gtag("event", "select_promotion", {
+          promotion_name: "love-guide-upsell",
+          creative_slot: "result_inject",
+          items: [{ item_id: type, item_name: "love-guide" }]
+        });
+      } catch (e) {}
+    });
+  }
+
   /* ---- Google Fonts が未読み込みの場合に読み込む ---- */
   if (!document.querySelector("link[href*='Zen+Maru+Gothic']")) {
     var lnk = document.createElement("link");
