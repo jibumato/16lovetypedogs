@@ -205,7 +205,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);
 /* ===================================================
    全16タイプデータ
    使い方: ?type=INFP のURLパラメータで切り替え
-   Stripeリンク: STRIPE.base を実URLに差し替え
+   Stripeリンク: STRIPE_LINKS をタイプ別の実URLに差し替え
    =================================================== */
 const TYPE_DATA = {
   INFP:{ code:"INFP", label:"仲介者", dog:"マルチーズ", emoji:"🐶", pedigree:"4172",
@@ -339,7 +339,24 @@ const TYPE_DATA = {
 };
 
 /* ===== Stripe Payment Links ===== */
-const STRIPE = { base:"https://buy.stripe.com/XXXXXXXX" }; /* ← 差し替え */
+const STRIPE_LINKS = {
+  INTJ:"https://buy.stripe.com/dRm7sKeF382n0P78LW8Ra0S",
+  INTP:"https://buy.stripe.com/3cI00icwVbezcxPgeo8Ra0T",
+  ENTJ:"https://buy.stripe.com/5kQeVcdAZ1DZ7dvaU48Ra0U",
+  ENTP:"https://buy.stripe.com/00w7sKaoN5Uf1Tb3rC8Ra0V",
+  INFJ:"https://buy.stripe.com/fZu00i2Wl5UfbtL9Q08Ra0O",
+  INFP:"https://buy.stripe.com/4gM7sKgNbaav1TbaU48Ra0N",
+  ENFJ:"https://buy.stripe.com/eVqcN4eF31DZcxP0fq8Ra0Q",
+  ENFP:"https://buy.stripe.com/00waEW54tdmHeFX7HS8Ra0R",
+  ISTJ:"https://buy.stripe.com/3cIaEWfJ74QbapH2ny8Ra10",
+  ISFJ:"https://buy.stripe.com/fZufZg9kJfuP2Xfe6g8Ra0W",
+  ESTJ:"https://buy.stripe.com/bJefZg54tdmH55n5zK8Ra12",
+  ESFJ:"https://buy.stripe.com/cNi5kC40p3M7dBTe6g8Ra0Y",
+  ISTP:"https://buy.stripe.com/8x214maoNfuPcxPd2c8Ra11",
+  ISFP:"https://buy.stripe.com/fZu4gy54t1DZ69r0fq8Ra0X",
+  ESTP:"https://buy.stripe.com/9B614m0Od82n41j4vG8Ra13",
+  ESFP:"https://buy.stripe.com/28E00igNbfuP7dv3rC8Ra0Z"
+};
 
 /* ===== サムネ (INFP版PDF実画像・全タイプ共通フォーマット見本) ===== */
 /* 本番運用時: 各タイプのサムネをここに追加するか外部CDNから読む */
@@ -447,14 +464,7 @@ if (!T) {
   ).join("");
 
   /* 購入リンク */
-  const buyUrl = (lang) => {
-    try {
-      const u = new URL(STRIPE.base);
-      u.searchParams.set("type", T.code);
-      u.searchParams.set("lang", lang || "ja");
-      return u.toString();
-    } catch { return "#"; }
-  };
+  const buyUrl = (lang) => STRIPE_LINKS[T.code] || "#";
   $("#buyBtn").href = buyUrl("ja");
   $("#buySub").textContent = `${T.dog}（${T.code}）版 ・ 今すぐダウンロード`;
 
