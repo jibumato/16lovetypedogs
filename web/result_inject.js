@@ -57,6 +57,12 @@
     ko: '쿠폰 코드 "DISCOUNT20"을 입력하면 이 가격이 됩니다.',
     zh: '使用优惠码“DISCOUNT20”即可享受此价格。'
   }[lang] || 'クーポンコード「DISCOUNT20」を使うとこの価格になります。';
+  var JP_ONLY = {
+    ja: '※恋愛攻略書は現在、日本語版のみの販売です。',
+    en: '* The love guide is currently sold in Japanese only.',
+    ko: '* 연애 공략서는 현재 일본어판만 판매 중입니다.',
+    zh: '* 恋爱攻略书目前仅提供日文版。'
+  }[lang] || '※恋愛攻略書は現在、日本語版のみの販売です。';
 
   /* ---- スタイル注入 ---- */
   var style = document.createElement("style");
@@ -99,7 +105,8 @@
     ".wanko-price strong{font-size:20px;color:#e58aa0;}",
     ".wanko-price .wanko-off{display:inline-block;background:#e58aa0;color:#fff;font-size:11px;font-weight:800;border-radius:5px;padding:1px 6px;margin-right:5px;}",
     ".wanko-price .wanko-orig{text-decoration:line-through;color:#b6a596;margin-right:5px;}",
-    ".wanko-coupon{display:inline-block;font-size:11.5px;font-weight:700;color:#e58aa0;background:#fff0f5;border:1px dashed #e58aa0;border-radius:8px;padding:4px 9px;margin:0 0 14px;}",
+    ".wanko-coupon{display:inline-block;font-size:11.5px;font-weight:700;color:#e58aa0;background:#fff0f5;border:1px dashed #e58aa0;border-radius:8px;padding:4px 9px;margin:0 0 8px;}",
+    ".wanko-jponly{font-size:11px;color:#9c8676;margin:0 0 14px;}",
   ].join("");
   document.head.appendChild(style);
 
@@ -113,6 +120,7 @@
     '  <div class="wanko-sub">' + copy + '</div>',
     '  <div class="wanko-price"><span class="wanko-off">' + PRICE_OFF + '</span>買い切り <span class="wanko-orig">' + PRICE_ORIG + '</span><strong>' + PRICE + '</strong>（税込）</div>',
     '  <div class="wanko-coupon">🎟 ' + COUPON_NOTE + '</div>',
+    '  <div class="wanko-jponly">' + JP_ONLY + '</div>',
     '  <a class="wanko-btn" href="' + url + '">',
     '    あなたのタイプ専用のトリセツを見る',
     '    <small>全16タイプ相性・LINE攻略・30日プランまで全14ページ</small>',
