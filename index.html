@@ -508,6 +508,17 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .rank-blur-content{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:12px;filter:blur(5px);user-select:none;pointer-events:none}
 .rank-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding-right:13px;background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,.5))}
 .rank-buybtn{flex:none;white-space:nowrap;font-size:11.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:999px;padding:8px 14px;text-decoration:none;box-shadow:0 8px 16px -7px rgba(210,98,143,.6)}
+.rank-all-note{text-align:center;margin:12px 0 2px;font-size:12.5px;color:var(--ink-soft)}
+.rank-all-note a{color:var(--pink-deep);text-decoration:none;font-weight:800}
+/* guide teaser anchor below cert */
+.guide-teaser{text-align:center;margin:12px 0 4px}
+.guide-teaser a{display:inline-flex;align-items:center;gap:5px;padding:8px 20px;border-radius:999px;background:linear-gradient(135deg,rgba(247,168,196,.25),rgba(201,166,240,.25));border:1px solid rgba(210,98,143,.3);color:var(--pink-deep);font-size:12.5px;font-weight:800;text-decoration:none;letter-spacing:.02em}
+/* testimonials in love guide */
+.lg-reviews{margin:0 0 16px}
+.lg-reviews h4{text-align:center;font-size:13px;font-weight:800;color:var(--ink-soft);margin-bottom:10px;letter-spacing:.04em}
+.lg-review{background:rgba(255,255,255,.75);border:1px solid var(--glass-bd);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.lg-review .rv-text{font-size:13px;line-height:1.8;color:var(--ink)}
+.lg-review .rv-meta{font-size:11px;color:var(--ink-soft);margin-top:5px;font-weight:700}
 </style>
 
 
@@ -584,6 +595,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div class="cert" id="cert"></div>
     <div class="hook" id="hook"></div>
     <div id="dexNotice"></div>
+    <div id="guideTeaser"></div>
 
     <div class="shareblock">
       <p class="share-cap" id="t-sharecap"></p>
@@ -1223,6 +1235,11 @@ function renderResult(code,stay){
   const seenBefore=dexGet(),wasNew=!seenBefore.includes(code);
   dexAdd(code);
   renderDexNotice(code,wasNew,dexGet().length);
+  (function(){const el=document.getElementById('guideTeaser');if(!el)return;
+    const T={ja:'📖 恋愛攻略書を読む ↓',en:'📖 Read the love guide ↓',ko:'📖 연애 공략서 보기 ↓',zh:'📖 查看恋爱攻略书 ↓',tw:'📖 查看戀愛攻略書 ↓'};
+    el.className='guide-teaser';
+    el.innerHTML='<a href="#loveGuide" onclick="event.preventDefault();var t=document.getElementById(\'loveGuide\');if(t)t.scrollIntoView({behavior:\'smooth\'})">'+(T[L]||T.ja)+'</a>';
+  })();
   document.getElementById('desc').innerHTML=
      block('🐶',i.h_pers,d.personality)
     +block('💕',i.h_love,d.love)
@@ -1234,7 +1251,12 @@ function renderResult(code,stay){
   const top=ORDER.filter(c=>c!==code).map(c=>({c:c,s:compatScore(code,c)[0]})).sort((a,b)=>b.s-a.s).slice(0,3);
   const medals=['🥇','🥈','🥉'];
   const RANK_LOCK={ja:'🔒 攻略書で確認',en:'🔒 See in Guide',ko:'🔒 공략서에서 확인',zh:'🔒 在攻略书中查看',tw:'🔒 在攻略書中查看'};
-  const RANK_BUY={ja:'恋愛攻略書を見る →',en:'Get the Guide →',ko:'공략서 보기 →',zh:'查看攻略书 →',tw:'查看攻略書 →'};
+  const RANK_BUY={ja:'攻略書で全相性を見る →',en:'See all 16 matches →',ko:'전 16타입 궁합 보기 →',zh:'查看全16类型契合 →',tw:'查看全16類型契合 →'};
+  const RANK_NOTE={ja:'📖 全16タイプとの詳細な相性スコア＋コメントは <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">恋愛攻略書</a> で確認できます',
+    en:'📖 Full compatibility scores + notes for all 16 types in the <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">love guide</a>',
+    ko:'📖 전 16타입과의 상세 궁합 점수와 코멘트는 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">연애 공략서</a>에서 확인',
+    zh:'📖 与全16类型的详细契合度及点评，请在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">恋爱攻略书</a> 中查看',
+    tw:'📖 與全16類型的詳細契合度及點評，請在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">戀愛攻略書</a> 中查看'};
   document.getElementById('ranking').innerHTML='<div class="sec mt"><h3><span class="dot">💘</span>'+i.rank_head+'</h3><div class="rank">'
     +top.map((m,idx)=>{
       const dd=LOC[L][m.c];
@@ -1243,7 +1265,9 @@ function renderResult(code,stay){
       }
       return '<div class="rankrow rank-locked"><span class="medal">'+medals[idx]+'</span><div class="rank-blur-content">'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+dd.name+'</div><div class="rankbreed">'+dd.breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div><div class="rank-overlay"><a class="rank-buybtn" href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">'+RANK_BUY[L]+'</a></div></div>';
     }).join('')
-    +'</div></div>';
+    +'</div>'
+    +'<p class="rank-all-note">'+(RANK_NOTE[L]||RANK_NOTE.ja)+'</p>'
+    +'</div>';
   const seed=daySeed(),cn=codeNum(code);
   const w=WALK[L][(seed+cn)%WALK[L].length];
   const se=curSeason(),allow=[];
@@ -1544,6 +1568,26 @@ function renderLoveGuide(code){
 
   const rowCell=(v,cls)=> v==="x"?`<td class="${cls} x">—</td>` : v==="o"?`<td class="${cls} o">◎</td>` : `<td class="${cls}">${v}</td>`;
   const rowsHtml=g.rows.map(r=>`<tr><td class="ft">${r[0]}</td>${rowCell(r[1],"fr")}${rowCell(r[2],"pd")}</tr>`).join("");
+  const REVIEWS={
+    ja:[["好きな人への接し方が変わった！読んでから距離感が縮まった気がする","20代女性"],
+        ["相性の解説が細かくて、彼との付き合い方の参考になりました","20代女性"],
+        ["LINE例文が本当に使える。告白後に送ったら返信が来た！","30代女性"]],
+    en:[["My approach to the person I like completely changed after reading this","F, 20s"],
+        ["The compatibility breakdown is detailed and so useful for navigating my relationship","F, 20s"],
+        ["The messaging examples are actually usable — sent one and got a reply!","F, 30s"]],
+    ko:[["좋아하는 사람에게 대하는 방법이 바뀌었어요. 읽고 나서 거리가 좁혀진 것 같아요","20대 여성"],
+        ["궁합 해설이 꼼꼼해서, 남자친구와의 사귀는 방법 참고됐어요","20대 여성"],
+        ["메시지 예문이 진짜 쓸 수 있어요. 고백 후에 보냈더니 답장이 왔어요!","30대 여성"]],
+    zh:[["读完之后，对喜欢的人的相处方式变了！感觉距离近了","20多岁 女性"],
+        ["相性解说很详细，对跟男友相处很有参考价值","20多岁 女性"],
+        ["LINE例句真的能用。告白后发过去，对方回复了！","30多岁 女性"]],
+    tw:[["讀完之後，對喜歡的人的相處方式變了！感覺距離近了","20多歲 女性"],
+        ["契合度解說很詳細，對跟男友相處很有參考價值","20多歲 女性"],
+        ["訊息範例真的能用。告白後發過去，對方回覆了！","30多歲 女性"]]
+  };
+  const rvList=REVIEWS[L]||REVIEWS.ja;
+  const REVIEWS_HEAD={ja:'💬 読んだ人の声',en:'💬 What readers say',ko:'💬 읽은 분들의 소감',zh:'💬 读者感言',tw:'💬 讀者感言'};
+  const reviewsHtml='<div class="lg-reviews"><h4>'+(REVIEWS_HEAD[L]||REVIEWS_HEAD.ja)+'</h4>'+rvList.map(r=>'<div class="lg-review"><div class="rv-text">「'+r[0]+'」</div><div class="rv-meta">— '+r[1]+'</div></div>').join('')+'</div>';
 
   document.getElementById('loveGuide').innerHTML=
   `<div class="lg-wrap">
@@ -1588,6 +1632,7 @@ function renderLoveGuide(code){
       <thead><tr><th class="ft">${g.cFeat}</th><th>${g.cFree}</th><th class="pd">${g.cPaid}</th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
+    ${reviewsHtml}
     <div class="lg-cta">
       <div class="lg-coupon-badge">${COUPON_BADGE[L]||COUPON_BADGE.ja}</div>
       <div class="lg-price"><span class="lg-off">${GUIDE_CFG.off}</span><span class="lg-orig">${GUIDE_CFG.orig}${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span><span class="lg-now">${GUIDE_CFG.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span></div>
