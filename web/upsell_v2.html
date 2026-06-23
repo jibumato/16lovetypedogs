@@ -92,6 +92,11 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);
   font-size:9px;color:var(--gold-deep);border:1px solid var(--gold-line);
   border-radius:7px;padding:1px 7px;background:rgba(255,255,255,.92);white-space:nowrap;}
 .sample .pg.blurpg img{filter:blur(4px);}
+.readsample{margin-top:26px;}
+.readsample-fig{margin:16px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:var(--shadow);background:var(--paper);position:relative;}
+.readsample-fig>img{width:100%;display:block;}
+.readsample-fig::before{content:"📖 立ち読み";position:absolute;top:0;left:0;z-index:2;background:var(--gold-deep);color:#fff;font-size:11px;font-weight:700;padding:4px 13px 4px 12px;border-radius:0 0 12px 0;letter-spacing:.06em;}
+.readsample-fig figcaption{font-size:10.5px;color:var(--ink-soft);padding:10px 14px;background:var(--cream);text-align:center;line-height:1.6;}
 .compare{margin-top:30px;}
 .compare h3{text-align:center;font-size:17px;font-weight:700;margin-bottom:3px;}
 .compare .sub{text-align:center;font-size:11px;color:var(--ink-soft);margin-bottom:14px;}
@@ -164,15 +169,26 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);
     <p>無料版の3倍の情報量。下は攻略書の中身を少しだけお見せしています。</p>
   </div>
   <div class="peeks" id="peeks"></div>
+  <section class="readsample">
+    <div class="divider">
+      <span class="line">SAMPLE PAGE</span>
+      <h2>1ページ、<span class="accent">まるごと立ち読み</span></h2>
+      <p>実際の攻略書の中身です。これがあなたのタイプ専用で全14ページ。</p>
+    </div>
+    <figure class="readsample-fig">
+      <img src="img/sample-guide.webp" alt="恋愛攻略書サンプルページ（性格分析）" loading="lazy" width="920" height="1415">
+      <figcaption>※サンプルは「ゴールデン（ENFJ）」版の一部です。実際はあなたのタイプ専用の内容になります。</figcaption>
+    </figure>
+  </section>
   <section class="sample">
-    <h3>こんなページが全14ページ</h3>
+    <h3>ほかにも、こんなページが全14ページ</h3>
     <p>性格分析・全16タイプ相性・LINE攻略・ワークまで</p>
     <div class="pages">
       <div class="pg"><img id="thumb0" src="" alt="恋愛ステータス"><div class="badge">恋愛ステータス</div></div>
       <div class="pg blurpg"><img id="thumb1" src="" alt="全16タイプ相性"><div class="badge">全16タイプ相性</div></div>
       <div class="pg blurpg"><img id="thumb2" src="" alt="LINE攻略"><div class="badge">LINE攻略</div></div>
     </div>
-    <p class="sample-note">※画像はサンプル（INFP版）です。実際はあなたのタイプ専用の内容になります。</p>
+    <p class="sample-note">※画像はサンプルです。実際はあなたのタイプ専用の内容になります。</p>
   </section>
   <section class="compare">
     <h3>無料版とどう違う？</h3>
