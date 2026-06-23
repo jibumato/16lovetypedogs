@@ -1,4 +1,4 @@
-const CACHE = 'wanko-v2';
+const CACHE = 'wanko-v3';
 const STATIC = [
   '/', '/index.html', '/style.css',
   '/types.html', '/about.html', '/privacy.html',

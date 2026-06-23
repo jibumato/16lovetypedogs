@@ -585,6 +585,10 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div class="hook" id="hook"></div>
     <div id="dexNotice"></div>
 
+    <!-- 2. あなたの恋愛人格・傾向の詳細 -->
+    <div class="sec" id="desc"></div>
+
+    <!-- 3. シェア -->
     <div class="shareblock">
       <p class="share-cap" id="t-sharecap"></p>
       <canvas id="shareCanvas" width="1080" height="1920"></canvas>
@@ -596,19 +600,24 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       </div>
     </div>
 
+    <!-- 4. 相性ランキング TOP3 -->
     <div id="ranking"></div>
 
+    <!-- 5. 気になるあの人との相性は？（相性チェック・単一CTA） -->
     <div class="sec mt">
       <h3><span class="dot">💞</span><span id="t-ctah"></span></h3>
       <p id="t-ctap"></p>
-      <button class="btn sub mt" id="t-ctab" onclick="goCompat()"></button>
+      <button class="btn mt" id="t-ctab" onclick="goCompat()"></button>
     </div>
 
-    <div class="sec" id="desc"></div>
-    <div id="resultNext"></div>
+    <!-- 6. 恋愛攻略書（有料オファー） -->
     <div id="loveGuide"></div>
 
+    <!-- 7. 今日のおみくじ・散歩・ラッキーアイテム -->
     <div class="daily" id="daily"></div>
+
+    <!-- 8. 関連記事・ショップ -->
+    <div id="resultNext"></div>
     <div class="affgoods" id="affgoods"></div>
 
     <div class="bonus" style="display:none">
@@ -1281,13 +1290,9 @@ function renderDexNotice(code,wasNew,n){
     +'<button class="mini" onclick="openDex()">🐾 '+t.dexBtn+'</button></div>';
 }
 function renderResultNext(){
-  const t=loopText();
-  document.getElementById('resultNext').innerHTML='<div class="result-next"><h3>'+t.nextHead+'</h3>'
-    +'<p>'+t.nextText+'</p>'
-    +'<button class="btn" style="width:100%" onclick="goCompat()">'+t.compat+' 💞</button>'
-    +'<button class="btn ghost mt" onclick="startQuiz()">'+t.again+'</button>'
-    +'<div class="note">'+t.omikuji+'</div></div>'
-    +resultMoreHtml();
+  /* 相性CTA・「もう一度」・おみくじ導線は上部の単一CTA／#daily／最下部ボタンに統合済み。
+     ここは関連記事（回遊・SEOクロール）のみを描画する。 */
+  document.getElementById('resultNext').innerHTML=resultMoreHtml();
 }
 /* B: 診断結果 → 関連記事への動線（回遊・SEOクロール促進） */
 function resultMoreHtml(){
