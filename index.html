@@ -1256,7 +1256,7 @@ function renderResult(code,stay){
   const OMK_SUB={ja:'引くたびにラッキーわんこが図鑑に1匹ずつ追加 🐶',en:'Each draw adds a lucky dog to your Dex 🐶',ko:'뽑을 때마다 행운의 강아지가 도감에 추가돼요 🐶',zh:'每次抽签都会往图鉴里加一只幸运狗狗 🐶',tw:'每次抽籤都會往圖鑑裡加一隻幸運狗狗 🐶'};
   const omkBtn=omkDone
     ?'<div class="omk-teaser done"><span>'+OMK_DONE[L]+'</span><small>'+OMK_SUB[L]+'</small></div>'
-    :'<div class="omk-teaser" onclick="show(\'omikuji\')" style="cursor:pointer"><button class="btn" style="width:100%;pointer-events:none">'+OMK_CTA[L]+'</button><small>'+OMK_SUB[L]+'</small></div>';
+    :'<div class="omk-teaser" onclick="openOmikuji()" style="cursor:pointer"><button class="btn" style="width:100%;pointer-events:none">'+OMK_CTA[L]+'</button><small>'+OMK_SUB[L]+'</small></div>';
   document.getElementById('daily').innerHTML=
      '<div class="dcard walk"><span class="ico">🐾</span><h4>'+i.h_walk+'</h4><p>'+w+'</p></div>'
     +'<div class="dcard lucky"><span class="ico">🍀</span><h4>'+i.h_lucky+'</h4><p>'+lk+'</p>'
