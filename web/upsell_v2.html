@@ -395,7 +395,7 @@ if (!T) {
 } else {
   /* OGP動的セット */
   const ogTitle = `${T.dog}（${T.code}）の恋愛攻略書 | 16わんこ恋愛診断`;
-  const ogDesc  = `${T.oneline} 全16タイプ相性・LINE攻略・30日アクションプランまで全14ページ。`;
+  const ogDesc  = `${T.oneline} 全16タイプ相性・LINE攻略・書き込みワークシートまで全14ページ。`;
   document.title = ogTitle;
   [["og:title",ogTitle],["og:description",ogDesc],
    ["og:image",`${location.origin}/img/${T.code.toLowerCase()}.webp`],
@@ -467,7 +467,6 @@ if (!T) {
     ["LINE・メッセージ攻略","x","シーン別例文"],
     ["相手からの脈ありサイン","x","相手タイプ別"],
     ["結婚観・長続きの条件","x","条件チェック"],
-    ["30日アクションプラン","x","o"],
     ["書き込みワークシート","x","2枚つき"],
   ];
   const cell = (v,cls) => {
