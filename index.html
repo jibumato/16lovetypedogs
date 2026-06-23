@@ -117,6 +117,7 @@ body{
 .btn.sub{background:rgba(255,255,255,.66);color:var(--pink-deep);border:1px solid var(--glass-bd);box-shadow:var(--shadow);font-size:15px;padding:15px}
 .btn.ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid var(--glass-bd);box-shadow:none;font-size:15px;padding:15px;font-weight:800}
 .hint{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:2px}
+.sns-buzz{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(90deg,#1d9bf0,#c9a6f0);padding:5px 14px;border-radius:999px;margin:8px auto 0;letter-spacing:.03em}
 .diag-count{display:inline-block;margin:10px auto 2px;padding:6px 14px;border-radius:999px;background:#fff0f5;border:1px solid var(--pink);color:var(--pink-deep);font-size:12.5px;font-weight:800;text-align:center}
 [hidden]{display:none!important}
 .diag-count b{font-weight:800}
@@ -516,6 +517,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
   <section id="top" class="screen active">
     <div class="hero">
       <div class="eyebrow">🐾 MBTI × 🐶</div>
+      <div class="sns-buzz" id="t-snsbuzz">🔥 SNSで話題</div>
       <picture class="hero-logo logo-ja"><source srcset="logo-hero.webp" type="image/webp"><img src="logo-hero.jpg" width="960" height="640" alt="16わんこ恋愛診断｜あなたの恋愛タイプを16のわんこが診断" fetchpriority="high"></picture>
       <picture class="hero-logo logo-en"><source srcset="logo-hero-en.webp" type="image/webp"><img src="logo-hero-en.jpg" width="960" height="640" alt="16 Love Type Dogs｜Find Your Love Dog Type" fetchpriority="high"></picture>
       <picture class="hero-logo logo-ko"><source srcset="logo-hero-ko.webp" type="image/webp"><img src="logo-hero-ko.jpg" width="960" height="640" alt="16 연애견 진단｜당신의 연애 강아지 유형을 찾아보세요" fetchpriority="high"></picture>
@@ -961,6 +963,7 @@ function applyStatic(){
   document.documentElement.lang=L;
   document.title=i.title;
   setText('t-title',i.title);setText('t-sub',i.sub);setText('t-lead',i.lead);
+  setText('t-snsbuzz',SNS_BUZZ[L]||SNS_BUZZ.ja);
   (function(){var hero=document.querySelector('#top .hero');if(!hero)return;var langs=['ja','en','ko','zh','tw'];hero.classList.toggle('has-logo',langs.indexOf(L)>=0);langs.forEach(function(x){hero.classList.toggle('logo-'+x+'-on',L===x);});})();
   renderSeo();
   setText('t-start',i.start);setText('t-shortcut',i.shortcut);
@@ -1091,6 +1094,7 @@ function loadDiagCount(){
   }).catch(function(){}); }catch(e){}
 }
 
+const SNS_BUZZ={ja:'🔥 SNSで話題',en:'🔥 Trending on social',ko:'🔥 SNS에서 화제',zh:'🔥 社交媒体热议',tw:'🔥 社群媒體熱議'};
 /* ---- 分析シアター（段階的な「診断中」演出）---- */
 const LOAD_STEPS={
   ja:["性格のクセを分析中","恋愛傾向を計算中","相性パターンを照合中"],
