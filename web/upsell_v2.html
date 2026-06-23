@@ -426,8 +426,6 @@ if (!T) {
   /* チラ見せ */
   const tease1 = T.bestTeaser.slice(0,11);
   const tease2 = T.bestTeaser.slice(11);
-  const sign1  = T.signTeaser.slice(0,10);
-  const sign2  = T.signTeaser.slice(10);
   $("#peeks").innerHTML = `
     <div class="peek locked" data-cta>
       <span class="ptag">ベスト相性 1位</span>
@@ -447,10 +445,10 @@ if (!T) {
       <div class="hint">▶ 残り2つの罠と「抜け道（SOLUTION）」を攻略書で解説</div>
     </div>
     <div class="peek locked" data-cta>
-      <span class="ptag m">相手からの脈ありサイン</span>
-      <h4>あの人は、あなたをどう思ってる？</h4>
-      <div class="lockline">「${sign1}<span class="blur">${sign2}</span>」</div>
-      <div class="hint">▶ 相性上位タイプ別「脈あり・脈なしサイン」を攻略書で解説</div>
+      <span class="ptag m">ケンカ・倦怠期の乗り越え方</span>
+      <h4>すれ違いを、こじらせない。</h4>
+      <div class="lockline">3ステップ<span class="blur">仲直り法</span>で、こじれを最短で修復</div>
+      <div class="hint">▶ あなたのタイプ特有のケンカパターンと「3ステップ仲直り法」を攻略書で解説</div>
     </div>`;
 
   /* サムネ */
@@ -465,7 +463,7 @@ if (!T) {
     ["全16タイプ相性","上位3つだけ","全16＋コメント"],
     ["恋愛の罠と対策","1つだけ","3つ＋抜け道"],
     ["LINE・メッセージ攻略","x","シーン別例文"],
-    ["相手からの脈ありサイン","x","相手タイプ別"],
+    ["ケンカ・倦怠期の対処","x","3ステップ仲直り"],
     ["結婚観・長続きの条件","x","条件チェック"],
     ["書き込みワークシート","x","2枚つき"],
   ];
