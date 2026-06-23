@@ -302,7 +302,12 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 @keyframes pawglow{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
 .load-msg{font-size:16px;font-weight:800;color:var(--ink);margin-top:24px;min-height:2.6em;line-height:1.6}
 .load-bar{width:240px;height:10px;background:var(--track);border-radius:999px;margin:6px auto 0;overflow:hidden}
-.load-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:999px;animation:fillbar 2s ease forwards}
+.load-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:999px;animation:fillbar 2.4s ease forwards}
+.load-steps{list-style:none;max-width:280px;margin:18px auto 0;text-align:left;padding:0}
+.load-steps li{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:700;color:var(--ink-faint);padding:5px 0;transition:color .3s}
+.load-steps li.done{color:var(--ink)}
+.load-steps .lstep-ic{width:20px;height:20px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;background:var(--track);color:var(--ink-faint);transition:.3s}
+.load-steps li.done .lstep-ic{background:var(--accent);color:#fff}
 @keyframes fillbar{0%{width:0}to{width:100%}}
 
 /* daily extra cards */
@@ -449,6 +454,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-orig{font-size:18px;color:#9c8676;text-decoration:line-through;font-weight:700;align-self:center}
 .lg-tax{font-size:11px;color:var(--ink-soft)}
 .lg-coupon{font-size:11.5px;color:var(--ink-soft);margin-top:8px}
+.lg-coupon-badge{display:inline-block;background:linear-gradient(135deg,#ffe0ec,#fff0d8);border:1px dashed var(--pink-deep);color:var(--pink-deep);font-size:12px;font-weight:800;border-radius:999px;padding:6px 16px;margin:0 0 12px;letter-spacing:.02em}
 .lg-pages{font-size:12px;color:var(--ink);margin:7px 0 16px}.lg-pages b{color:var(--pink-deep)}
 .lg-buy{display:block;width:100%;padding:16px 12px;border:0;border-radius:16px;cursor:pointer;font-family:inherit;font-size:16px;font-weight:800;color:#fff;text-decoration:none;line-height:1.4;background:var(--accent);box-shadow:0 14px 30px -10px rgba(220,120,170,.55);-webkit-tap-highlight-color:transparent}
 .lg-buy:active{transform:translateY(1px)}
@@ -542,6 +548,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       <div class="load-paws"><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span></div>
       <div class="load-msg" id="load-msg"></div>
       <div class="load-bar"><i></i></div>
+      <ul class="load-steps" id="load-steps"></ul>
     </div>
   </section>
 
@@ -1074,6 +1081,15 @@ function loadDiagCount(){
   }).catch(function(){}); }catch(e){}
 }
 
+/* ---- 分析シアター（段階的な「診断中」演出）---- */
+const LOAD_STEPS={
+  ja:["性格のクセを分析中","恋愛傾向を計算中","相性パターンを照合中"],
+  en:["Analyzing your traits","Calculating your love style","Matching compatibility"],
+  ko:["성격 습관 분석 중","연애 성향 계산 중","궁합 패턴 대조 중"],
+  zh:["分析性格习惯中","计算恋爱倾向中","比对契合模式中"],
+  tw:["分析性格習慣中","計算戀愛傾向中","比對契合模式中"]
+};
+
 /* ---- suspense reveal ---- */
 function revealResult(code){
   current=code;
@@ -1086,6 +1102,16 @@ function revealResult(code){
   el.textContent=msgs[0];dogEl.textContent=dogs[0];
   const bar=document.querySelector('.load-bar i');
   if(bar){bar.style.animation='none';void bar.offsetWidth;bar.style.animation='';}
+  /* 分析ステップを描画→順にチェック */
+  const steps=LOAD_STEPS[L]||LOAD_STEPS.ja;
+  const stepsEl=document.getElementById('load-steps');
+  if(stepsEl){
+    stepsEl.innerHTML=steps.map((s,k)=>'<li id="lstep-'+k+'"><span class="lstep-ic">○</span>'+s+'</li>').join('');
+    steps.forEach((s,k)=>setTimeout(()=>{
+      const li=document.getElementById('lstep-'+k);
+      if(li){li.classList.add('done');const ic=li.querySelector('.lstep-ic');if(ic)ic.textContent='✓';}
+    },450+k*650));
+  }
   clearInterval(loadTimer);
   let idx=0,di=0;
   loadTimer=setInterval(()=>{
@@ -1093,7 +1119,7 @@ function revealResult(code){
     if(idx<msgs.length)el.textContent=msgs[idx];
     dogEl.textContent=dogs[di%dogs.length];
   },650);
-  setTimeout(()=>{clearInterval(loadTimer);renderResult(code);},2000);
+  setTimeout(()=>{clearInterval(loadTimer);renderResult(code);},2400);
 }
 
 /* ---- result ---- */
@@ -1239,6 +1265,13 @@ const STRIPE_LINKS={
   ESFP:'https://buy.stripe.com/28E00igNbfuP7dv3rC8Ra0Z'
 };
 const GUIDE_CFG={ price:"944", orig:"1180", off:"20%OFF" };
+const COUPON_BADGE={
+  ja:"🎟 20%OFFクーポン適用済み｜診断した方限定",
+  en:"🎟 20% OFF coupon applied · quiz-takers only",
+  ko:"🎟 20% 할인 쿠폰 적용됨 · 진단한 분 한정",
+  zh:"🎟 20%OFF优惠券已套用 · 仅限测验者",
+  tw:"🎟 20%OFF折價券已套用 · 僅限測驗者"
+};
 /* タイプコード → Payment Link を返す（プロモコードを自動プリフィル） */
 function guideBuyUrl(code,lang){
   var u=STRIPE_LINKS[code]; if(!u) return '#';
@@ -1418,6 +1451,7 @@ function renderLoveGuide(code){
       <tbody>${rowsHtml}</tbody>
     </table>
     <div class="lg-cta">
+      <div class="lg-coupon-badge">${COUPON_BADGE[L]||COUPON_BADGE.ja}</div>
       <div class="lg-price"><span class="lg-off">${GUIDE_CFG.off}</span><span class="lg-orig">${GUIDE_CFG.orig}${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span><span class="lg-now">${GUIDE_CFG.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span></div>
       <div class="lg-tax">${g.tax}</div>
       <div class="lg-pages">${g.pages}<b>${g.pagesB}</b>${g.pagesAf||''}</div>
