@@ -121,6 +121,17 @@ body{
 .diag-count{display:inline-block;margin:10px auto 2px;padding:6px 14px;border-radius:999px;background:#fff0f5;border:1px solid var(--pink);color:var(--pink-deep);font-size:12.5px;font-weight:800;text-align:center}
 [hidden]{display:none!important}
 .diag-count b{font-weight:800}
+/* ---- reviews ticker ---- */
+.reviews-ticker{overflow:hidden;margin:20px -20px 0;width:calc(100% + 40px)}
+.rt-row{overflow:hidden;margin-bottom:7px}
+.rt-track{display:flex;gap:8px;width:max-content;animation:rtScroll 38s linear infinite}
+.rt-track:hover,.rt-track:focus-within{animation-play-state:paused}
+.rt-reverse{animation-direction:reverse}
+@keyframes rtScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rt-card{background:rgba(255,255,255,.88);border:1px solid var(--glass-bd);border-radius:14px;padding:11px 13px;width:190px;flex:0 0 190px;box-shadow:0 1px 4px rgba(0,0,0,.06);text-align:left}
+.rt-handle{font-size:11px;font-weight:800;color:var(--pink-deep)}
+.rt-meta{font-size:10px;color:var(--ink-soft);margin:2px 0 5px}
+.rt-quote{font-size:12px;line-height:1.55;color:var(--ink)}
 
 /* ---- quiz ---- */
 .qhead{text-align:center;padding:22px 0 4px}
@@ -529,6 +540,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       <div class="diag-count" id="diagCount" hidden></div>
       <button class="btn" id="t-start" onclick="startQuiz()">診断をはじめる 🐾</button>
       <button class="btn sub" id="t-shortcut" onclick="show('shortcut')">MBTIがわかる人はこちら</button>
+      <div class="reviews-ticker" id="reviewsTicker"></div>
     </div>
   </section>
 
@@ -1095,6 +1107,43 @@ function loadDiagCount(){
 }
 
 const SNS_BUZZ={ja:'♡ SNSで話題',en:'♡ Trending on social',ko:'♡ SNS에서 화제',zh:'♡ 社交媒体热议',tw:'♡ 社群媒體熱議'};
+const REVIEWS=[
+  {h:"@MiaDreams",m:"18歳・大学生",q:"友達に送られてやったら想像以上に当たっててびっくり😂"},
+  {h:"@さくらんぼ",m:"17歳・高校生",q:"好きな人への接し方そのままで笑った（笑）"},
+  {h:"@Emma_07",m:"20歳・大学生",q:"恋愛で同じ失敗を繰り返す理由が分かった気がする。"},
+  {h:"@りこちゃん",m:"19歳・大学生",q:"彼氏と一緒にやったらお互い納得でした！"},
+  {h:"@LunaBear",m:"16歳・高校生",q:"犬で表現されるのが可愛くて友達にも送った🐶"},
+  {h:"@あおい",m:"22歳・会社員",q:"恋愛になると不安になる理由がめっちゃ当たってた。"},
+  {h:"@ChloeK",m:"18歳・大学生",q:"無料なのに内容が意外と深くてびっくり。"},
+  {h:"@なな",m:"21歳・大学生",q:"スクショして友達グループに投下しました📱"},
+  {h:"@Sophie_21",m:"19歳・大学生",q:"結果読んで『私じゃん…』ってなった（笑）"},
+  {h:"@れい",m:"23歳・Webデザイナー",q:"可愛い診断だと思ったら普通に参考になった。"},
+  {h:"@OliviaM",m:"17歳・高校生",q:"好きな人との相性が気になって何回も見返してる🥺"},
+  {h:"@まなぴ",m:"16歳・高校生",q:"クラスで流行っててみんな結果見せ合ってる！"},
+  {h:"@LilyStar",m:"19歳・大学生",q:"恋愛診断いろいろやったけど結構好きかも。"},
+  {h:"@ゆあ",m:"20歳・専門学生",q:"思ったより当たってて友達と盛り上がった！"},
+  {h:"@AvaMoon",m:"22歳・会社員",q:"マッチングアプリ始めたばかりだから参考になる✨"},
+  {h:"@ひなの",m:"18歳・大学生",q:"結果のわんこが可愛すぎる♡"},
+  {h:"@Emilyyy",m:"17歳・高校生",q:"夜中に友達から送られてきて気付いたら全部読んでた。"},
+  {h:"@のあ",m:"19歳・大学生",q:"恋愛で不安になりやすい理由が腑に落ちた。"},
+  {h:"@Grace_L",m:"21歳・大学生",q:"デザインが可愛くてスクショ映えする📸"},
+  {h:"@かのん",m:"18歳・大学生",q:"暇つぶしのつもりだったのに最後まで読んじゃった。"},
+  {h:"@HarperH",m:"16歳・高校生",q:"MBTI好きな人なら絶対好きだと思う！"},
+  {h:"@ほのか",m:"20歳・専門学生",q:"元カレとの相性見たら妙に納得した（笑）"},
+  {h:"@EllaSky",m:"22歳・会社員",q:"自分の恋愛傾向を客観的に見れて面白い。"},
+  {h:"@みさき",m:"23歳・看護師",q:"友達におすすめされたけど普通に当たってた。"},
+  {h:"@ZoeHeart",m:"18歳・大学生",q:"好きな人に送ったら会話のきっかけになった🥰"},
+  {h:"@Ken_23",m:"23歳・営業職",q:"彼女に『これやって』って言われてやったけど、意外と当たってた（笑）"},
+  {h:"@JayPark",m:"21歳・大学生",q:"正直こういうの興味なかったけど、彼女と結果見比べるの楽しかった。"},
+  {h:"@たくみ",m:"20歳・大学生",q:"彼女から送られてきてやったら、自分の恋愛傾向そのままでびっくり。"}
+];
+function renderReviewsTicker(){
+  var el=document.getElementById('reviewsTicker');if(!el)return;
+  var half=Math.ceil(REVIEWS.length/2);
+  var rows=[REVIEWS.slice(0,half),REVIEWS.slice(half)];
+  function card(r){return '<div class="rt-card"><div class="rt-handle">'+r.h+'</div><div class="rt-meta">'+r.m+'</div><div class="rt-quote">'+r.q+'</div></div>';}
+  el.innerHTML=rows.map(function(rev,i){var cards=rev.map(card).join('');return '<div class="rt-row"><div class="rt-track'+(i===1?' rt-reverse':'')+'">'+cards+cards+'</div></div>';}).join('');
+}
 /* ---- 分析シアター（段階的な「診断中」演出）---- */
 const LOAD_STEPS={
   ja:["性格のクセを分析中","恋愛傾向を計算中","相性パターンを照合中"],
@@ -1968,7 +2017,7 @@ function renderOmikuji(r,animate){
     const p=params.get('lang');if(LANGS.includes(p))L=p;
     initialType=validType(params.get('type'));
   }catch(e){}
-  applyStatic();buildGrid();buildSelects();loadDiagCount();
+  applyStatic();buildGrid();buildSelects();loadDiagCount();renderReviewsTicker();
   if(initialType)renderResult(initialType);
 })();
 </script>
