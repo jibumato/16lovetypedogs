@@ -427,6 +427,10 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-thumbs .pg{flex:1;max-width:120px;border-radius:12px;overflow:hidden;border:1px solid var(--glass-bd);box-shadow:var(--shadow);position:relative;background:#fff}
 .lg-thumbs .pg img{width:100%;display:block}
 .lg-thumbs .pg.bl img{filter:blur(3px)}
+.lg-sample{margin:14px 0 6px;border-radius:14px;overflow:hidden;border:1px solid var(--glass-bd);box-shadow:var(--shadow);background:#fff;position:relative}
+.lg-sample>img{width:100%;display:block}
+.lg-sample .lg-sample-tag{position:absolute;top:0;left:0;z-index:2;background:var(--pink-deep);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:0 0 12px 0;letter-spacing:.05em}
+.lg-sample figcaption{font-size:10.5px;color:var(--ink-soft);padding:9px 12px;background:#fdeef4;text-align:center;line-height:1.6}
 .lg-thumbs .pg .bd{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--pink-deep);background:rgba(255,255,255,.92);border-radius:6px;padding:1px 7px;white-space:nowrap;font-weight:700}
 .lg-cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;background:var(--paper);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--glass-bd);margin-top:8px}
 .lg-cmp th,.lg-cmp td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--hair)}
@@ -1274,7 +1278,9 @@ const GUIDE_I18N={
     tagSign:"ケンカ・倦怠期の乗り越え方", signQ:"すれ違いを、こじらせない。",
     signLine:"3ステップ<span class=\"lg-blur\">仲直り法</span>で、こじれを最短で修復",
     signHint:"▶ タイプ特有のケンカパターンと「3ステップ仲直り法」を攻略書で解説",
-    pagesHead:"こんなページが全14ページ", pagesSub:"性格分析・全16タイプ相性・LINE攻略・ワークまで",
+    sampleTag:"立ち読み", sampleHead:"1ページまるごと立ち読み", sampleSub:"実際の攻略書の中身です。これがあなたのタイプ専用で全14ページ。",
+    sampleCap:"※サンプルは「ゴールデン（ENFJ）」版の一部です。実際はあなたのタイプ専用の内容になります。",
+    pagesHead:"ほかにも、こんなページが全14ページ", pagesSub:"性格分析・全16タイプ相性・LINE攻略・ワークまで",
     th0:"恋愛人格", th1:"全16タイプ相性", th2:"LINE攻略",
     cmpHead:"無料版とどう違う？", cmpSub:"同じ診断結果でも、見える深さが変わります",
     cFeat:"内容", cFree:"無料版", cPaid:"恋愛攻略書",
@@ -1294,7 +1300,9 @@ const GUIDE_I18N={
     tagSign:"Surviving fights & slumps", signQ:"Don't let friction snowball.",
     signLine:"A 3-step <span class=\"lg-blur\">make-up method</span> to recover fast",
     signHint:"▶ Your type's fight patterns and the 3-step make-up method, in the guide",
-    pagesHead:"14 full pages like these", pagesSub:"Personality, all-16 compatibility, chat tips, worksheets",
+    sampleTag:"Sample", sampleHead:"Read a full sample page", sampleSub:"A real page from the guide. Yours is type-only, 14 pages in all.",
+    sampleCap:"*Sample is part of the \"Golden (ENFJ)\" edition. Your guide is tailored to your own type.",
+    pagesHead:"More pages like these — 14 in all", pagesSub:"Personality, all-16 compatibility, chat tips, worksheets",
     th0:"Personality", th1:"16-type chart", th2:"Chat tips",
     cmpHead:"How is it different?", cmpSub:"Same result, deeper insight",
     cFeat:"Content", cFree:"Free", cPaid:"Love Guide",
@@ -1314,7 +1322,9 @@ const GUIDE_I18N={
     tagSign:"싸움·권태기 극복법", signQ:"엇갈림, 키우지 않기.",
     signLine:"3단계 <span class=\"lg-blur\">화해법</span>으로 꼬인 마음을 최단 회복",
     signHint:"▶ 타입 특유의 싸움 패턴과 '3단계 화해법'을 공략서에서 해설",
-    pagesHead:"이런 페이지가 전 14페이지", pagesSub:"성격 분석·전 16타입 궁합·메시지 공략·워크까지",
+    sampleTag:"미리보기", sampleHead:"한 페이지 통째로 미리보기", sampleSub:"실제 공략서 내용입니다. 당신 타입 전용으로 전 14페이지.",
+    sampleCap:"※샘플은 '골든(ENFJ)' 버전의 일부입니다. 실제로는 당신 타입 전용 내용이 됩니다.",
+    pagesHead:"이 외에도, 이런 페이지가 전 14페이지", pagesSub:"성격 분석·전 16타입 궁합·메시지 공략·워크까지",
     th0:"연애 인격", th1:"전 16타입 궁합", th2:"메시지 공략",
     cmpHead:"무료판과 뭐가 다를까?", cmpSub:"같은 결과라도 보이는 깊이가 달라요",
     cFeat:"내용", cFree:"무료판", cPaid:"연애 공략서",
@@ -1334,7 +1344,9 @@ const GUIDE_I18N={
     tagSign:"吵架·倦怠期的化解", signQ:"别让小摩擦越闹越大。",
     signLine:"用3步<span class=\"lg-blur\">和好法</span>，最快修复闹别扭",
     signHint:"▶ 你的类型特有吵架模式与「3步和好法」，攻略书详解",
-    pagesHead:"这样的页面共14页", pagesSub:"性格分析·全16类型契合·消息攻略·练习表",
+    sampleTag:"试读", sampleHead:"整页试读", sampleSub:"这是攻略书的真实内容。专属你类型，共14页。",
+    sampleCap:"※样张为「黄金（ENFJ）」版的一部分。实际内容会按你的类型专属定制。",
+    pagesHead:"还有更多这样的页面，共14页", pagesSub:"性格分析·全16类型契合·消息攻略·练习表",
     th0:"恋爱人格", th1:"全16类型契合", th2:"消息攻略",
     cmpHead:"和免费版有何不同？", cmpSub:"同样的结果，看见的深度不同",
     cFeat:"内容", cFree:"免费版", cPaid:"恋爱攻略书",
@@ -1392,6 +1404,8 @@ function renderLoveGuide(code){
         <div class="lg-hint">${g.signHint}</div>
       </div>
     </div>
+    <div class="lg-divider" style="margin-top:22px"><span class="line">SAMPLE PAGE</span><h3 style="font-size:16px">${g.sampleHead}</h3><div class="sub">${g.sampleSub}</div></div>
+    <figure class="lg-sample"><span class="lg-sample-tag">📖 ${g.sampleTag}</span><img loading="lazy" decoding="async" src="/sample-guide.webp" alt="${g.sampleHead}" width="920" height="1415"><figcaption>${g.sampleCap}</figcaption></figure>
     <div class="lg-divider" style="margin-top:24px"><h3 style="font-size:15px">${g.pagesHead}</h3><div class="sub">${g.pagesSub}</div></div>
     <div class="lg-thumbs">
       <div class="pg"><img loading="lazy" decoding="async" src="${imgPath(code)}" alt=""><div class="bd">${g.th0}</div></div>
