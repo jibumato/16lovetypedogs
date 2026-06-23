@@ -1642,8 +1642,6 @@ function renderLoveGuide(code){
       <div class="lg-coupon">🎟 ${g.coupon||''}</div>
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}${g.refund?`<span>${g.refund}</span>`:''}</div>
       ${g.jpOnly?`<div class="lg-jponly">${g.jpOnly}</div>`:''}
-      <div class="lg-langs">${g.other}
-        <a onclick="guideLang('en')">English</a>・<a onclick="guideLang('ko')">한국어</a>・<a onclick="guideLang('zh')">简体</a>・<a onclick="guideLang('tw')">繁體</a></div>
     </div>
     <div class="lg-faq"><h4>${ge.faqHead}</h4>${ge.faq.map(f=>`<details><summary>${f[0]}</summary><div class="fa">${f[1]}</div></details>`).join('')}</div>
   </div>`;
