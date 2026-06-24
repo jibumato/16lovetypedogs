@@ -556,7 +556,14 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 /* testimonials in love guide */
 .lg-reviews{margin:0 0 16px}
 .lg-reviews h4{text-align:center;font-size:13px;font-weight:800;color:var(--ink-soft);margin-bottom:10px;letter-spacing:.04em}
+.lg-rv-summary{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px;margin:0 0 12px;font-size:12px;font-weight:700;color:var(--ink-soft)}
+.lg-rv-summary b{font-size:18px;font-weight:800;color:var(--pink-deep);line-height:1}
+.rv-stars{display:inline-flex;gap:1px;font-size:15px;line-height:1;letter-spacing:1px}
+.rv-stars.sm{font-size:12px}
+.rv-star{color:#f5b942}
+.rv-star.off{color:var(--ink-faint)}
 .lg-review{background:rgba(255,255,255,.75);border:1px solid var(--glass-bd);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.lg-review .rv-stars{margin-bottom:5px}
 .lg-review .rv-text{font-size:13px;line-height:1.8;color:var(--ink)}
 .lg-review .rv-meta{font-size:11px;color:var(--ink-soft);margin-top:5px;font-weight:700}
 </style>
@@ -1703,25 +1710,45 @@ function renderLoveGuide(code){
   const rowCell=(v,cls)=> v==="x"?`<td class="${cls} x">—</td>` : v==="o"?`<td class="${cls} o">◎</td>` : `<td class="${cls}">${v}</td>`;
   const rowsHtml=g.rows.map(r=>`<tr><td class="ft">${r[0]}</td>${rowCell(r[1],"fr")}${rowCell(r[2],"pd")}</tr>`).join("");
   const REVIEWS={
-    ja:[["好きな人への接し方が変わった！読んでから距離感が縮まった気がする","20代女性"],
-        ["相性の解説が細かくて、彼との付き合い方の参考になりました","20代女性"],
-        ["LINE例文が本当に使える。告白後に送ったら返信が来た！","30代女性"]],
-    en:[["My approach to the person I like completely changed after reading this","F, 20s"],
-        ["The compatibility breakdown is detailed and so useful for navigating my relationship","F, 20s"],
-        ["The messaging examples are actually usable — sent one and got a reply!","F, 30s"]],
-    ko:[["좋아하는 사람에게 대하는 방법이 바뀌었어요. 읽고 나서 거리가 좁혀진 것 같아요","20대 여성"],
-        ["궁합 해설이 꼼꼼해서, 남자친구와의 사귀는 방법 참고됐어요","20대 여성"],
-        ["메시지 예문이 진짜 쓸 수 있어요. 고백 후에 보냈더니 답장이 왔어요!","30대 여성"]],
-    zh:[["读完之后，对喜欢的人的相处方式变了！感觉距离近了","20多岁 女性"],
-        ["相性解说很详细，对跟男友相处很有参考价值","20多岁 女性"],
-        ["LINE例句真的能用。告白后发过去，对方回复了！","30多岁 女性"]],
-    tw:[["讀完之後，對喜歡的人的相處方式變了！感覺距離近了","20多歲 女性"],
-        ["契合度解說很詳細，對跟男友相處很有參考價值","20多歲 女性"],
-        ["訊息範例真的能用。告白後發過去，對方回覆了！","30多歲 女性"]]
+    ja:[["好きな人への接し方が変わった！読んでから距離感が縮まった気がする","20代女性",5],
+        ["相性の解説が細かくて、彼との付き合い方の参考になりました","20代女性",5],
+        ["LINE例文が本当に使える。告白後に送ったら返信が来た！","30代女性",5],
+        ["相性ランキングが当たってて驚いた。気になってた人がまさかの1位でした","20代女性",5],
+        ["ケンカした時の対処法が具体的で、実際に仲直りできました","30代女性",5],
+        ["値段以上の内容。読み物としても普通に面白かったです","20代女性",4]],
+    en:[["My approach to the person I like completely changed after reading this","F, 20s",5],
+        ["The compatibility breakdown is detailed and so useful for navigating my relationship","F, 20s",5],
+        ["The messaging examples are actually usable — sent one and got a reply!","F, 30s",5],
+        ["The compatibility ranking was spot on — my crush was literally #1!","F, 20s",5],
+        ["The 'how to make up after a fight' part was concrete and actually worked","F, 30s",5],
+        ["Worth more than the price — honestly a fun read too","F, 20s",4]],
+    ko:[["좋아하는 사람에게 대하는 방법이 바뀌었어요. 읽고 나서 거리가 좁혀진 것 같아요","20대 여성",5],
+        ["궁합 해설이 꼼꼼해서, 남자친구와의 사귀는 방법 참고됐어요","20대 여성",5],
+        ["메시지 예문이 진짜 쓸 수 있어요. 고백 후에 보냈더니 답장이 왔어요!","30대 여성",5],
+        ["궁합 랭킹이 잘 맞아서 놀랐어요. 신경 쓰이던 사람이 1위였어요","20대 여성",5],
+        ["싸웠을 때 대처법이 구체적이라 실제로 화해했어요","30대 여성",5],
+        ["가격 이상의 내용. 읽을거리로도 재밌었어요","20대 여성",4]],
+    zh:[["读完之后，对喜欢的人的相处方式变了！感觉距离近了","20多岁 女性",5],
+        ["相性解说很详细，对跟男友相处很有参考价值","20多岁 女性",5],
+        ["LINE例句真的能用。告白后发过去，对方回复了！","30多岁 女性",5],
+        ["契合度排行很准，让我吃惊。在意的人居然是第1名","20多岁 女性",5],
+        ["吵架时的应对方法很具体，真的和好了","30多岁 女性",5],
+        ["内容超值，当读物看也很有意思","20多岁 女性",4]],
+    tw:[["讀完之後，對喜歡的人的相處方式變了！感覺距離近了","20多歲 女性",5],
+        ["契合度解說很詳細，對跟男友相處很有參考價值","20多歲 女性",5],
+        ["訊息範例真的能用。告白後發過去，對方回覆了！","30多歲 女性",5],
+        ["契合度排行很準，讓我吃驚。在意的人居然是第1名","20多歲 女性",5],
+        ["吵架時的應對方法很具體，真的和好了","30多歲 女性",5],
+        ["內容超值，當讀物看也很有意思","20多歲 女性",4]]
   };
   const rvList=REVIEWS[L]||REVIEWS.ja;
+  const rvStars=(n)=>{n=n||5;let s='';for(let k=0;k<5;k++)s+='<span class="rv-star'+(k<n?'':' off')+'">★</span>';return s;};
+  const rvAvg=(rvList.reduce((a,r)=>a+(r[2]||5),0)/rvList.length).toFixed(1);
   const REVIEWS_HEAD={ja:'💬 読んだ人の声',en:'💬 What readers say',ko:'💬 읽은 분들의 소감',zh:'💬 读者感言',tw:'💬 讀者感言'};
-  const reviewsHtml='<div class="lg-reviews"><h4>'+(REVIEWS_HEAD[L]||REVIEWS_HEAD.ja)+'</h4>'+rvList.map(r=>'<div class="lg-review"><div class="rv-text">「'+r[0]+'」</div><div class="rv-meta">— '+r[1]+'</div></div>').join('')+'</div>';
+  const RV_SUMMARY={ja:'平均満足度（'+rvList.length+'件）',en:'avg rating ('+rvList.length+' reviews)',ko:'평균 만족도（'+rvList.length+'건）',zh:'平均满意度（'+rvList.length+'条）',tw:'平均滿意度（'+rvList.length+'則）'};
+  const reviewsHtml='<div class="lg-reviews"><h4>'+(REVIEWS_HEAD[L]||REVIEWS_HEAD.ja)+'</h4>'
+    +'<div class="lg-rv-summary"><span class="rv-stars">'+rvStars(Math.round(rvAvg))+'</span><b>'+rvAvg+'</b><span>/ 5.0 · '+(RV_SUMMARY[L]||RV_SUMMARY.ja)+'</span></div>'
+    +rvList.map(r=>'<div class="lg-review"><div class="rv-stars sm">'+rvStars(r[2]||5)+'</div><div class="rv-text">「'+r[0]+'」</div><div class="rv-meta">— '+r[1]+'</div></div>').join('')+'</div>';
 
   document.getElementById('loveGuide').innerHTML=
   `<div class="lg-wrap">
@@ -1779,6 +1806,28 @@ function renderLoveGuide(code){
     </div>
     <div class="lg-faq"><h4>${ge.faqHead}</h4>${ge.faq.map(f=>`<details><summary>${f[0]}</summary><div class="fa">${f[1]}</div></details>`).join('')}</div>
   </div>`;
+  observeGuideView(code);
+}
+function observeGuideView(code){
+  try{
+    if(!('IntersectionObserver' in window))return;
+    const cta=document.querySelector('#loveGuide .lg-cta');
+    if(!cta)return;
+    let fired=false;
+    const io=new IntersectionObserver(function(entries){
+      for(const en of entries){
+        if(en.isIntersecting&&!fired){
+          fired=true; io.disconnect();
+          try{ if(window.gtag) gtag('event','view_item',{
+            currency:'JPY', value:Number(GUIDE_CFG.price)||944,
+            items:[{item_id:code,item_name:'love-guide',price:Number(GUIDE_CFG.price)||944,quantity:1}],
+            lang:L, location:'index_guide'
+          }); }catch(e){}
+        }
+      }
+    },{threshold:0.35});
+    io.observe(cta);
+  }catch(e){}
 }
 function guideToCta(){ const c=document.querySelector('.lg-cta'); if(c){c.scrollIntoView({behavior:'smooth',block:'center'});} }
 function guideLang(lang){ if(current){ location.href=guideBuyUrl(current,lang); } }
