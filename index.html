@@ -996,7 +996,7 @@ const GROUP={NT:'var(--nt)',NF:'var(--nf)',SJ:'var(--sj)',SP:'var(--sp)'};
 const LANGS=['ja','en','ko','zh','tw'];
 const SITE_URL='https://16lovetypedogs.com/';
 const KAKAO_JS_KEY='';
-let L='ja',current=null,qi=0,score={},hist=[],loadTimer=null;
+let L='ja',current=null,qi=0,score={},hist=[],loadTimer=null,quizActive=false;
 
 function I(){return I18N[L];}
 function imgPath(code){return '/'+code.toLowerCase()+'.webp';}
@@ -1193,8 +1193,8 @@ async function navShare(){
 }
 
 /* ---- quiz ---- */
-function startQuiz(){qi=0;score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};hist=[];show('quiz');renderQ();gtag('event','quiz_start',{language:L});}
-function renderQ(){
+function startQuiz(){qi=0;score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};hist=[];quizActive=true;show('quiz');renderQ();gtag('event','quiz_start',{language:L});}
+function renderQ(dir){
   const Q=QUIZ[L],q=Q[qi];
   document.getElementById('qtext').textContent=q.t;
   document.getElementById('qcount').textContent='Q'+(qi+1)+' / '+Q.length;
@@ -1206,6 +1206,7 @@ function renderQ(){
     b.onclick=()=>pick(opt[1]);
     o.appendChild(b);
   });
+  try{if(window.gtag)gtag('event','quiz_progress',{question_num:qi+1,total:Q.length,direction:dir||'forward',language:L});}catch(e){}
 }
 function pick(delta){
   for(const k in delta)score[k]+=delta[k];
@@ -1213,15 +1214,26 @@ function pick(delta){
   if(qi<QUIZ[L].length-1){qi++;renderQ();}else finish();
 }
 function quizBack(){
-  if(qi===0){show('top');return;}
+  if(qi===0){quizActive=false;show('top');return;}
   qi--;const last=hist.pop();
   if(last)for(const k in last)score[k]-=last[k];
-  renderQ();
+  renderQ('back');
 }
 function finish(){
+  quizActive=false;
   const code=(score.E>=score.I?'E':'I')+(score.S>=score.N?'S':'N')+(score.T>=score.F?'T':'F')+(score.J>=score.P?'J':'P');
   current=code;revealResult(code);
 }
+
+/* ---- quiz abandon tracking ---- */
+(function(){
+  function fireAbandon(){
+    if(!quizActive)return;
+    try{if(window.gtag)gtag('event','quiz_abandon',{question_num:qi+1,language:L});}catch(e){}
+  }
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')fireAbandon();});
+  window.addEventListener('pagehide',fireAbandon);
+})();
 
 /* ---- shortcut grid ---- */
 function buildGrid(){
