@@ -82,7 +82,9 @@ body{
 @keyframes revealPop{0%{opacity:0;transform:scale(.45) rotate(-14deg)}70%{transform:scale(1.08) rotate(3deg)}100%{opacity:1;transform:none}}
 @keyframes bannerPop{0%{opacity:0;transform:scale(.6)}60%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
 @keyframes twinkle{0%,100%{opacity:.22;transform:scale(.75)}50%{opacity:1;transform:scale(1.12)}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
+  .rt-track{animation:rtScroll 38s linear infinite!important}
+  .rt-track.rt-reverse{animation-direction:reverse!important}}
 
 /* glass card helper applied via individual selectors */
 .card,.qcard,.cert,.compat-pick,.omk-card,.unlock,.result-next,.seo-static,.lg-peek,.lg-cta,.lg-cmp{
