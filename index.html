@@ -229,6 +229,10 @@ body{
 @media (max-width:360px){.announce .res-head{font-size:22px}}
 .confetti{position:absolute;top:0;left:-18px;right:-18px;height:440px;overflow:hidden;pointer-events:none;z-index:6}
 .confetti i{position:absolute;top:-14px;display:block}
+/* 桜吹雪（おみくじ） */
+.sakura-layer{position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden}
+.sakura-layer i{position:absolute;top:-26px;width:13px;height:11px;background:linear-gradient(135deg,#ffe1ec,#f6a8c6);border-radius:100% 0 100% 0;opacity:.92;box-shadow:0 1px 2px rgba(210,98,143,.18);will-change:transform,opacity}
+@keyframes sakuraFall{0%{opacity:0;transform:translate3d(0,-30px,0) rotateZ(0)}8%{opacity:1}25%{transform:translate3d(24px,26vh,0) rotateZ(95deg)}50%{transform:translate3d(-16px,52vh,0) rotateZ(185deg)}75%{transform:translate3d(22px,78vh,0) rotateZ(275deg)}95%{opacity:1}100%{opacity:0;transform:translate3d(-10px,106vh,0) rotateZ(365deg)}}
 
 /* sections */
 .sec{margin-top:16px;background:var(--paper);border:1px solid rgba(200,180,220,.3);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px 20px}
@@ -2165,6 +2169,26 @@ function drawOmikuji(){
            itemIdx:al2[Math.floor(Math.random()*al2.length)]};
   try{localStorage.setItem('omk16',JSON.stringify({date:omkToday(),r:r}));}catch(e){}
   renderOmikuji(r,true);
+  sakuraBurst();
+}
+function sakuraBurst(){
+  const layer=document.createElement('div');
+  layer.className='sakura-layer';
+  const cols=['#ffe1ec','#fbc9da','#f6a8c6','#ffd2e0','#f7b7d0'];
+  let html='';const N=34;
+  for(let k=0;k<N;k++){
+    const left=Math.round(Math.random()*100),
+          w=(10+Math.round(Math.random()*8)),
+          h=(w-2),
+          dur=(4.2+Math.random()*3.4).toFixed(2),
+          dl=(Math.random()*1.6).toFixed(2),
+          c1=cols[Math.floor(Math.random()*cols.length)],
+          c2=cols[Math.floor(Math.random()*cols.length)];
+    html+='<i style="left:'+left+'%;width:'+w+'px;height:'+h+'px;background:linear-gradient(135deg,'+c1+','+c2+');animation:sakuraFall '+dur+'s linear '+dl+'s forwards"></i>';
+  }
+  layer.innerHTML=html;
+  document.body.appendChild(layer);
+  setTimeout(function(){if(layer.parentNode)layer.parentNode.removeChild(layer);},9500);
 }
 function renderOmikuji(r,animate){
   const i=I(),lv=OMK.levels[r.lvl],col=OMK.colors[r.colorIdx],dd=LOC[L][r.dog];
