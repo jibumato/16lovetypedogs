@@ -125,7 +125,9 @@ body{
 [hidden]{display:none!important}
 .diag-count b{font-weight:800}
 /* ---- reviews ticker ---- */
-.reviews-ticker{overflow:hidden;margin:20px -20px 0;width:calc(100% + 40px)}
+.reviews-head{display:flex;align-items:center;justify-content:center;gap:10px;margin:24px 0 2px;font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--ink-soft)}
+.reviews-head::before,.reviews-head::after{content:"";height:1.5px;width:34px;background:linear-gradient(90deg,transparent,var(--pink),transparent)}
+.reviews-ticker{overflow:hidden;margin:10px -20px 0;width:calc(100% + 40px)}
 .rt-row{overflow:hidden;margin-bottom:7px}
 .rt-track{display:flex;gap:8px;width:max-content;animation:rtScroll 38s linear infinite}
 .rt-track:hover,.rt-track:focus-within{animation-play-state:paused}
@@ -608,6 +610,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       <div class="diag-count" id="diagCount" hidden></div>
       <button class="btn" id="t-start" onclick="startQuiz()">診断をはじめる 🐾</button>
       <button class="btn sub" id="t-shortcut" onclick="show('shortcut')">MBTIがわかる人はこちら</button>
+      <div class="reviews-head" id="t-reviewshead">🐾 みんなの診断レポート</div>
       <div class="reviews-ticker" id="reviewsTicker"></div>
     </div>
   </section>
@@ -1061,6 +1064,7 @@ function applyStatic(){
   document.title=i.title;
   setText('t-title',i.title);setText('t-sub',i.sub);setText('t-lead',i.lead);
   setText('t-snsbuzz',SNS_BUZZ[L]||SNS_BUZZ.ja);
+  setText('t-reviewshead',REVIEWS_HEAD_TICKER[L]||REVIEWS_HEAD_TICKER.ja);
   (function(){var hero=document.querySelector('#top .hero');if(!hero)return;var langs=['ja','en','ko','zh','tw'];hero.classList.toggle('has-logo',langs.indexOf(L)>=0);langs.forEach(function(x){hero.classList.toggle('logo-'+x+'-on',L===x);});})();
   renderSeo();
   setText('t-start',i.start);setText('t-shortcut',i.shortcut);
@@ -1276,6 +1280,7 @@ function loadDiagCount(){
 }
 
 const SNS_BUZZ={ja:'♡ SNSで話題',en:'♡ Trending on social',ko:'♡ SNS에서 화제',zh:'♡ 社交媒体热议',tw:'♡ 社群媒體熱議'};
+const REVIEWS_HEAD_TICKER={ja:'🐾 みんなの診断レポート',en:'🐾 Everyone’s Results',ko:'🐾 모두의 진단 리포트',zh:'🐾 大家的诊断报告',tw:'🐾 大家的診斷報告'};
 const REVIEWS=[
   {h:"@MiaDreams",m:"18歳・大学生",q:"友達に送られてやったら想像以上に当たっててびっくり😂"},
   {h:"@さくらんぼ",m:"17歳・高校生",q:"好きな人への接し方そのままで笑った（笑）"},
