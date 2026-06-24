@@ -222,9 +222,11 @@ body{
 .cert .stamp,.cert .corner{display:none}
 
 /* announce + confetti */
-.announce{text-align:center;margin:4px 0 16px;position:relative;z-index:1}
-.announce .pill{display:inline-flex;align-items:center;gap:9px;padding:9px 22px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;font-size:15px;letter-spacing:.1em;box-shadow:0 14px 30px -10px rgba(220,120,170,.55);animation:bannerPop .6s cubic-bezier(.2,1.3,.4,1) both}
+.announce{text-align:center;margin:4px 0 18px;position:relative;z-index:1}
+.announce .eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.18em;color:var(--pink-deep);background:var(--accent-soft);padding:6px 15px;border-radius:999px;animation:bannerPop .6s cubic-bezier(.2,1.3,.4,1) both}
+.announce .res-head{font-size:25px;font-weight:800;color:var(--ink);margin:14px 0 0;letter-spacing:.02em;line-height:1.3;animation:bannerPop .6s cubic-bezier(.2,1.3,.4,1) .08s both}
 .announce .sub{font-size:12.5px;font-weight:700;color:var(--ink-soft);margin:10px 0 0}
+@media (max-width:360px){.announce .res-head{font-size:22px}}
 .confetti{position:absolute;top:0;left:-18px;right:-18px;height:440px;overflow:hidden;pointer-events:none;z-index:6}
 .confetti i{position:absolute;top:-14px;display:block}
 
@@ -1360,7 +1362,7 @@ function renderResult(code,stay){
     +'<div class="sign">🐾 '+i.title+' 🐾</div>';
   // 結果発表バナー + 紙吹雪
   const annEl=document.getElementById('announce');
-  if(annEl)annEl.innerHTML='<div class="pill">✨ '+i.res_head+' ✨</div>';
+  if(annEl){const RES_EYE={ja:'診断結果',en:'YOUR RESULT',ko:'진단 결과',zh:'诊断结果',tw:'診斷結果'};annEl.innerHTML='<span class="eyebrow">🐾 '+(RES_EYE[L]||RES_EYE.ja)+'</span><div class="res-head">'+i.res_head+'</div>';}
   const confEl=document.getElementById('confetti');
   if(confEl){const ccol=['#f7a8c4','#c9a6f0','#ffd49a','#92d7bc','#a7c7e7','#ffffff','#ef94b8'];let cf='';for(let k=0;k<22;k++){const cl=Math.round(Math.random()*100),cw=6+Math.round(Math.random()*6),chh=8+Math.round(Math.random()*8),cc=ccol[Math.floor(Math.random()*ccol.length)],cr=Math.random()<.4?'50%':'2px',cdur=(1.8+Math.random()*1.4).toFixed(2),cdl=(Math.random()*0.5).toFixed(2);cf+='<i style="left:'+cl+'%;width:'+cw+'px;height:'+chh+'px;background:'+cc+';border-radius:'+cr+';animation:confettiFall '+cdur+'s cubic-bezier(.3,.6,.5,1) '+cdl+'s forwards"></i>';}confEl.innerHTML=cf;}
   document.getElementById('hook').innerHTML=d.hook;
