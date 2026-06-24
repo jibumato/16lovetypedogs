@@ -1724,8 +1724,6 @@ function renderLoveGuide(code){
              guideTrap(code,2, d.cons[2]||"すれ違い") ];
   const td0=trap1desc(code);
 
-  const rowCell=(v,cls)=> v==="x"?`<td class="${cls} x">—</td>` : v==="o"?`<td class="${cls} o">◎</td>` : `<td class="${cls}">${v}</td>`;
-  const rowsHtml=g.rows.map(r=>`<tr><td class="ft">${r[0]}</td>${rowCell(r[1],"fr")}${rowCell(r[2],"pd")}</tr>`).join("");
   const REVIEWS={
     ja:[["好きな人への接し方が変わった！読んでから距離感が縮まった気がする","20代女性",5],
         ["相性の解説が細かくて、彼との付き合い方の参考になりました","20代女性",5],
@@ -1804,12 +1802,7 @@ function renderLoveGuide(code){
       <div class="pg bl"><img loading="lazy" decoding="async" src="${imgPath(top.c)}" alt=""><div class="bd">${g.th1}</div></div>
       <div class="pg bl"><img loading="lazy" decoding="async" src="${imgPath(code)}" alt=""><div class="bd">${g.th2}</div></div>
     </div>
-    <div class="lg-divider" style="margin-top:24px"><h3 style="font-size:16px">${g.cmpHead}</h3><div class="sub">${g.cmpSub}</div></div>
     <div class="lg-benefits"><h4>${ge.benefitsHead}</h4><ul>${ge.benefits.map(b=>`<li>${b}</li>`).join('')}</ul></div>
-    <table class="lg-cmp">
-      <thead><tr><th class="ft">${g.cFeat}</th><th>${g.cFree}</th><th class="pd">${g.cPaid}</th></tr></thead>
-      <tbody>${rowsHtml}</tbody>
-    </table>
     ${reviewsHtml}
     <div class="lg-cta">
       <div class="lg-coupon-badge">${COUPON_BADGE[L]||COUPON_BADGE.ja}</div>
