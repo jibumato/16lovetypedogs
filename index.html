@@ -906,6 +906,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
   <button class="tab" data-tab="home" onclick="navHome()"><span class="ti">🐶</span><span class="tl" id="t-tabhome">診断</span></button>
   <button class="tab" data-tab="share" onclick="navShare()"><span class="ti">📤</span><span class="tl" id="t-tabshare">シェア</span></button>
   <button class="tab" data-tab="omikuji" onclick="openOmikuji()"><span class="ti">🎴</span><span class="tl" id="t-tabomk">おみくじ</span></button>
+  <button class="tab" data-tab="article" onclick="navArticle()"><span class="ti">📚</span><span class="tl" id="t-tabart">記事</span></button>
 </nav>
 
 <script>
@@ -1041,7 +1042,7 @@ function applyStatic(){
   setText('t-compathead',i.compat_head);setText('t-youlbl',i.you);setText('t-partnerlbl',i.partner);
   setText('t-compatbtn',i.compat_btn);setText('t-backres',i.back_res);
   setText('t-navdex',i.nav_dex);setText('t-navomk',i.nav_omikuji);setText('t-shareimg',i.share_img);
-  (function(){const nv=NAV_I18N[L]||NAV_I18N.ja;setText('t-tabhome',nv.home);setText('t-tabshare',nv.share);setText('t-tabomk',nv.omikuji);setText('t-topbrand',nv.brand);})();
+  (function(){const nv=NAV_I18N[L]||NAV_I18N.ja;setText('t-tabhome',nv.home);setText('t-tabshare',nv.share);setText('t-tabomk',nv.omikuji);setText('t-tabart',nv.article);setText('t-topbrand',nv.brand);})();
   (function(){const oe=document.getElementById('t-omkdaily');if(!oe)return;
     const OMKD={ja:{t:'🎴 恋愛おみくじは毎日引ける',s:'お気に入り登録して、明日もチェック 🐶'},
       en:{t:'🎴 A new love fortune every day',s:'Bookmark us and come back tomorrow 🐶'},
@@ -1090,11 +1091,11 @@ function show(id){
 }
 /* ---- fixed nav bars ---- */
 const NAV_I18N={
-  ja:{home:'診断',share:'シェア',omikuji:'おみくじ',brand:'16わんこ恋愛診断'},
-  en:{home:'Quiz',share:'Share',omikuji:'Fortune',brand:'16 Love-Type Dogs'},
-  ko:{home:'진단',share:'공유',omikuji:'운세',brand:'16 연애견 진단'},
-  zh:{home:'测验',share:'分享',omikuji:'运势',brand:'16恋爱犬测验'},
-  tw:{home:'測驗',share:'分享',omikuji:'運勢',brand:'16戀愛犬測驗'}
+  ja:{home:'診断',share:'シェア',omikuji:'おみくじ',article:'記事',brand:'16わんこ恋愛診断'},
+  en:{home:'Quiz',share:'Share',omikuji:'Fortune',article:'Articles',brand:'16 Love-Type Dogs'},
+  ko:{home:'진단',share:'공유',omikuji:'운세',article:'칼럼',brand:'16 연애견 진단'},
+  zh:{home:'测验',share:'分享',omikuji:'运势',article:'文章',brand:'16恋爱犬测验'},
+  tw:{home:'測驗',share:'分享',omikuji:'運勢',article:'文章',brand:'16戀愛犬測驗'}
 };
 const NAV_SHARE_TEXT={
   ja:'あなたの恋を、かわいい犬種で診断🐾 #16わんこ恋愛診断',
@@ -1110,6 +1111,10 @@ function updateTabbar(id){
   });
 }
 function navHome(){ show('top'); }
+function navArticle(){
+  try{ if(window.gtag) gtag('event','select_content',{content_type:'navbar_article',language:L}); }catch(e){}
+  location.href='/ranking-index.html';
+}
 async function navShare(){
   const i=I();
   const active=document.querySelector('.screen.active');
