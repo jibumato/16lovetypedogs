@@ -1760,7 +1760,7 @@ function renderLoveGuide(code){
   for(let k=rvPool.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));const t=rvPool[k];rvPool[k]=rvPool[j];rvPool[j]=t;}
   const rvList=rvPool.slice(0,4);
   const rvStars=(n)=>{n=n||5;let s='';for(let k=0;k<5;k++)s+='<span class="rv-star'+(k<n?'':' off')+'">★</span>';return s;};
-  const rvAvg=(rvList.reduce((a,r)=>a+(r[2]||5),0)/rvList.length).toFixed(1);
+  const rvAvg=(rvPool.reduce((a,r)=>a+(r[2]||5),0)/rvPool.length).toFixed(1);
   const REVIEWS_HEAD={ja:'💬 読んだ人の声',en:'💬 What readers say',ko:'💬 읽은 분들의 소감',zh:'💬 读者感言',tw:'💬 讀者感言'};
   const RV_SUMMARY={ja:'平均満足度（'+rvList.length+'件）',en:'avg rating ('+rvList.length+' reviews)',ko:'평균 만족도（'+rvList.length+'건）',zh:'平均满意度（'+rvList.length+'条）',tw:'平均滿意度（'+rvList.length+'則）'};
   const reviewsHtml='<div class="lg-reviews"><h4>'+(REVIEWS_HEAD[L]||REVIEWS_HEAD.ja)+'</h4>'
