@@ -567,7 +567,10 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-review{background:rgba(255,255,255,.75);border:1px solid var(--glass-bd);border-radius:14px;padding:12px 14px;margin-bottom:8px}
 .lg-review .rv-stars{margin-bottom:5px}
 .lg-review .rv-text{font-size:13px;line-height:1.8;color:var(--ink)}
-.lg-review .rv-meta{font-size:11px;color:var(--ink-soft);margin-top:5px;font-weight:700}
+.lg-review .rv-meta{font-size:11px;color:var(--ink-soft);margin-top:5px;font-weight:700;display:flex;align-items:center;gap:5px}
+.rv-av{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:11px;font-style:normal;line-height:1;flex-shrink:0}
+.rv-av-f{background:rgba(242,120,160,.15);color:#d2628f}
+.rv-av-m{background:rgba(91,130,184,.12);color:#5b82b8}
 </style>
 
 
@@ -1730,42 +1733,53 @@ function renderLoveGuide(code){
         ["LINE例文が本当に使える。告白後に送ったら返信が来た！","30代女性",5],
         ["相性ランキングが当たってて驚いた。気になってた人がまさかの1位でした","20代女性",5],
         ["ケンカした時の対処法が具体的で、実際に仲直りできました","30代女性",5],
-        ["値段以上の内容。読み物としても普通に面白かったです","20代女性",4]],
+        ["値段以上の内容。読み物としても普通に面白かったです","20代女性",4],
+        ["好きな子に送ったら『まさに私のことだ』って言われた。相性1位も的中してた","20代男性",5],
+        ["彼女に勧められてやったら自分の恋愛傾向そのままで笑った。読んでよかった","20代男性",5]],
     en:[["My approach to the person I like completely changed after reading this","F, 20s",5],
         ["The compatibility breakdown is detailed and so useful for navigating my relationship","F, 20s",5],
         ["The messaging examples are actually usable — sent one and got a reply!","F, 30s",5],
         ["The compatibility ranking was spot on — my crush was literally #1!","F, 20s",5],
         ["The 'how to make up after a fight' part was concrete and actually worked","F, 30s",5],
-        ["Worth more than the price — honestly a fun read too","F, 20s",4]],
+        ["Worth more than the price — honestly a fun read too","F, 20s",4],
+        ["My girlfriend recommended it — compatibility #1 was exactly who I expected","M, 20s",5],
+        ["Surprisingly accurate for me too. The fight tips actually helped us","M, 20s",5]],
     ko:[["좋아하는 사람에게 대하는 방법이 바뀌었어요. 읽고 나서 거리가 좁혀진 것 같아요","20대 여성",5],
         ["궁합 해설이 꼼꼼해서, 남자친구와의 사귀는 방법 참고됐어요","20대 여성",5],
         ["메시지 예문이 진짜 쓸 수 있어요. 고백 후에 보냈더니 답장이 왔어요!","30대 여성",5],
         ["궁합 랭킹이 잘 맞아서 놀랐어요. 신경 쓰이던 사람이 1위였어요","20대 여성",5],
         ["싸웠을 때 대처법이 구체적이라 실제로 화해했어요","30대 여성",5],
-        ["가격 이상의 내용. 읽을거리로도 재밌었어요","20대 여성",4]],
+        ["가격 이상의 내용. 읽을거리로도 재밌었어요","20대 여성",4],
+        ["여자친구 추천으로 읽었는데, 상성 1위가 딱 그 애라서 깜짝 놀랐어요","20대 남성",5],
+        ["제 연애 패턴이 그대로 써있어서 웃겼어요. 읽길 잘했어요","20대 남성",5]],
     zh:[["读完之后，对喜欢的人的相处方式变了！感觉距离近了","20多岁 女性",5],
         ["相性解说很详细，对跟男友相处很有参考价值","20多岁 女性",5],
         ["LINE例句真的能用。告白后发过去，对方回复了！","30多岁 女性",5],
         ["契合度排行很准，让我吃惊。在意的人居然是第1名","20多岁 女性",5],
         ["吵架时的应对方法很具体，真的和好了","30多岁 女性",5],
-        ["内容超值，当读物看也很有意思","20多岁 女性",4]],
+        ["内容超值，当读物看也很有意思","20多岁 女性",4],
+        ["女友推荐来读的，契合度第1名正好是她，太准了","20多岁 男性",5],
+        ["我的恋爱模式全写出来了，笑死。值得一读","20多岁 男性",5]],
     tw:[["讀完之後，對喜歡的人的相處方式變了！感覺距離近了","20多歲 女性",5],
         ["契合度解說很詳細，對跟男友相處很有參考價值","20多歲 女性",5],
         ["訊息範例真的能用。告白後發過去，對方回覆了！","30多歲 女性",5],
         ["契合度排行很準，讓我吃驚。在意的人居然是第1名","20多歲 女性",5],
         ["吵架時的應對方法很具體，真的和好了","30多歲 女性",5],
-        ["內容超值，當讀物看也很有意思","20多歲 女性",4]]
+        ["內容超值，當讀物看也很有意思","20多歲 女性",4],
+        ["女友推薦來讀的，契合度第1名正好是她，太準了","20多歲 男性",5],
+        ["我的戀愛模式全寫出來了，笑死。值得一讀","20多歲 男性",5]]
   };
   const rvPool=(REVIEWS[L]||REVIEWS.ja).slice();
   for(let k=rvPool.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));const t=rvPool[k];rvPool[k]=rvPool[j];rvPool[j]=t;}
   const rvList=rvPool.slice(0,4);
   const rvStars=(n)=>{n=n||5;let s='';for(let k=0;k<5;k++)s+='<span class="rv-star'+(k<n?'':' off')+'">★</span>';return s;};
   const rvAvg=(rvPool.reduce((a,r)=>a+(r[2]||5),0)/rvPool.length).toFixed(1);
+  const rvAvatar=(meta)=>/女|female|\bF[,\s]|여성/i.test(meta)?'<span class="rv-av rv-av-f">♀</span>':'<span class="rv-av rv-av-m">♂</span>';
   const REVIEWS_HEAD={ja:'💬 読んだ人の声',en:'💬 What readers say',ko:'💬 읽은 분들의 소감',zh:'💬 读者感言',tw:'💬 讀者感言'};
   const RV_SUMMARY={ja:'平均満足度（'+rvList.length+'件）',en:'avg rating ('+rvList.length+' reviews)',ko:'평균 만족도（'+rvList.length+'건）',zh:'平均满意度（'+rvList.length+'条）',tw:'平均滿意度（'+rvList.length+'則）'};
   const reviewsHtml='<div class="lg-reviews"><h4>'+(REVIEWS_HEAD[L]||REVIEWS_HEAD.ja)+'</h4>'
     +'<div class="lg-rv-summary"><span class="rv-stars">'+rvStars(Math.round(rvAvg))+'</span><b>'+rvAvg+'</b><span>/ 5.0 · '+(RV_SUMMARY[L]||RV_SUMMARY.ja)+'</span></div>'
-    +rvList.map(r=>'<div class="lg-review"><div class="rv-stars sm">'+rvStars(r[2]||5)+'</div><div class="rv-text">「'+r[0]+'」</div><div class="rv-meta">— '+r[1]+'</div></div>').join('')+'</div>';
+    +rvList.map(r=>'<div class="lg-review"><div class="rv-stars sm">'+rvStars(r[2]||5)+'</div><div class="rv-text">「'+r[0]+'」</div><div class="rv-meta">'+rvAvatar(r[1])+'— '+r[1]+'</div></div>').join('')+'</div>';
 
   document.getElementById('loveGuide').innerHTML=
   `<div class="lg-wrap">
