@@ -69,7 +69,7 @@
     var type = (p.get('type')||'').toUpperCase();
     /* Stripe Payment Link はリダイレクト時に session_id を自動付与 */
     var tx = p.get('session_id') || p.get('transaction_id') || ('tx-'+Date.now());
-    var value = Number(p.get('value')) || 1180; /* 既定は通常価格。クーポン適用時は ?value=944 を付与 */
+    var value = Number(p.get('value')) || 944; /* 購入導線は常にDISCOUNT20適用(1180の20%off=944)。?value=で上書き可 */
     /* リロードによる二重計上を防止（同一取引IDは1回のみ） */
     var key = 'purchase_'+tx;
     if(!sessionStorage.getItem(key)){
