@@ -1756,7 +1756,9 @@ function renderLoveGuide(code){
         ["吵架時的應對方法很具體，真的和好了","30多歲 女性",5],
         ["內容超值，當讀物看也很有意思","20多歲 女性",4]]
   };
-  const rvList=REVIEWS[L]||REVIEWS.ja;
+  const rvPool=(REVIEWS[L]||REVIEWS.ja).slice();
+  for(let k=rvPool.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));const t=rvPool[k];rvPool[k]=rvPool[j];rvPool[j]=t;}
+  const rvList=rvPool.slice(0,4);
   const rvStars=(n)=>{n=n||5;let s='';for(let k=0;k<5;k++)s+='<span class="rv-star'+(k<n?'':' off')+'">★</span>';return s;};
   const rvAvg=(rvList.reduce((a,r)=>a+(r[2]||5),0)/rvList.length).toFixed(1);
   const REVIEWS_HEAD={ja:'💬 読んだ人の声',en:'💬 What readers say',ko:'💬 읽은 분들의 소감',zh:'💬 读者感言',tw:'💬 讀者感言'};
