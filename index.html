@@ -1146,11 +1146,11 @@ function show(id){
 }
 /* ---- fixed nav bars ---- */
 const NAV_I18N={
-  ja:{home:'診断',share:'シェア',omikuji:'おみくじ',article:'記事',guide:'攻略書',brand:'16わんこ恋愛診断'},
-  en:{home:'Quiz',share:'Share',omikuji:'Fortune',article:'Articles',guide:'Guide',brand:'16 Love-Type Dogs'},
-  ko:{home:'진단',share:'공유',omikuji:'운세',article:'칼럼',guide:'공략서',brand:'16 연애견 진단'},
-  zh:{home:'测验',share:'分享',omikuji:'运势',article:'文章',guide:'攻略书',brand:'16恋爱犬测验'},
-  tw:{home:'測驗',share:'分享',omikuji:'運勢',article:'文章',guide:'攻略書',brand:'16戀愛犬測驗'}
+  ja:{home:'診断',share:'シェア',omikuji:'おみくじ',article:'記事',guide:'レポート',brand:'16わんこ恋愛診断'},
+  en:{home:'Quiz',share:'Share',omikuji:'Fortune',article:'Articles',guide:'Report',brand:'16 Love-Type Dogs'},
+  ko:{home:'진단',share:'공유',omikuji:'운세',article:'칼럼',guide:'리포트',brand:'16 연애견 진단'},
+  zh:{home:'测验',share:'分享',omikuji:'运势',article:'文章',guide:'报告',brand:'16恋爱犬测验'},
+  tw:{home:'測驗',share:'分享',omikuji:'運勢',article:'文章',guide:'報告',brand:'16戀愛犬測驗'}
 };
 const LANG_NAMES={ja:'日本語',en:'English',ko:'한국어',zh:'简体中文',tw:'繁體中文'};
 const NAV_SHARE_TEXT={
@@ -1415,7 +1415,7 @@ function renderResult(code,stay){
   dexAdd(code);
   renderDexNotice(code,wasNew,dexGet().length);
   (function(){const el=document.getElementById('guideTeaser');if(!el)return;
-    const T={ja:'📖 恋愛攻略書を読む ↓',en:'📖 Read the love guide ↓',ko:'📖 연애 공략서 보기 ↓',zh:'📖 查看恋爱攻略书 ↓',tw:'📖 查看戀愛攻略書 ↓'};
+    const T={ja:'📖 プレミアムレポートを見る ↓',en:'📖 See the Premium Report ↓',ko:'📖 프리미엄 리포트 보기 ↓',zh:'📖 查看深度报告 ↓',tw:'📖 查看深度報告 ↓'};
     el.className='guide-teaser';
     el.innerHTML='<a href="#loveGuide" onclick="event.preventDefault();var t=document.getElementById(\'loveGuide\');if(t)t.scrollIntoView({behavior:\'smooth\'})">'+(T[L]||T.ja)+'</a>';
   })();
@@ -1429,13 +1429,13 @@ function renderResult(code,stay){
     +lockedBlock('🫶',i.h_howto,d.howto,code);
   const top=ORDER.filter(c=>c!==code).map(c=>({c:c,s:compatScore(code,c)[0]})).sort((a,b)=>b.s-a.s).slice(0,3);
   const medals=['🥇','🥈','🥉'];
-  const RANK_LOCK={ja:'🔒 攻略書で確認',en:'🔒 See in Guide',ko:'🔒 공략서에서 확인',zh:'🔒 在攻略书中查看',tw:'🔒 在攻略書中查看'};
-  const RANK_BUY={ja:'攻略書で全相性を見る →',en:'See all 16 matches →',ko:'전 16타입 궁합 보기 →',zh:'查看全16类型契合 →',tw:'查看全16類型契合 →'};
-  const RANK_NOTE={ja:'📖 全16タイプとの詳細な相性スコア＋コメントは <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">恋愛攻略書</a> で確認できます',
-    en:'📖 Full compatibility scores + notes for all 16 types in the <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">love guide</a>',
-    ko:'📖 전 16타입과의 상세 궁합 점수와 코멘트는 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">연애 공략서</a>에서 확인',
-    zh:'📖 与全16类型的详细契合度及点评，请在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">恋爱攻略书</a> 中查看',
-    tw:'📖 與全16類型的詳細契合度及點評，請在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">戀愛攻略書</a> 中查看'};
+  const RANK_LOCK={ja:'🔒 レポートで確認',en:'🔒 See in Report',ko:'🔒 리포트에서 확인',zh:'🔒 在报告中查看',tw:'🔒 在報告中查看'};
+  const RANK_BUY={ja:'プレミアムレポートで全相性を見る →',en:'See all 16 in the Premium Report →',ko:'프리미엄 리포트에서 전 16타입 보기 →',zh:'在深度报告中查看全16类型契合 →',tw:'在深度報告中查看全16類型契合 →'};
+  const RANK_NOTE={ja:'📖 全16タイプとの詳細な相性スコア＋コメントは <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">プレミアムレポート</a> で確認できます',
+    en:'📖 Full compatibility scores + notes for all 16 types in the <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">Premium Report</a>',
+    ko:'📖 전 16타입과의 상세 궁합 점수와 코멘트는 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">프리미엄 리포트</a>에서 확인',
+    zh:'📖 与全16类型的详细契合度及点评，请在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">深度报告</a> 中查看',
+    tw:'📖 與全16類型的詳細契合度及點評，請在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">深度報告</a> 中查看'};
   document.getElementById('ranking').innerHTML='<div class="sec mt"><h3><span class="dot">💘</span>'+i.rank_head+'</h3><div class="rank">'
     +top.map((m,idx)=>{
       const dd=LOC[L][m.c];
@@ -1536,7 +1536,7 @@ const COUPON_BADGE={
 };
 /* オファーのベネフィット6つ＋FAQ（PDF実物の内容に基づく／競合の課金トリックを誠実な回答で打ち返す） */
 const GUIDE_EXTRA={
-  ja:{ benefitsHead:"攻略書で手に入る6つのこと",
+  ja:{ benefitsHead:"プレミアムレポートで手に入る6つのこと",
     benefits:[
       "「本当のあなた」の恋愛人格と、その傾向が生まれた理由",
       "無意識にくり返す“恋愛の罠”と、その抜け出し方",
@@ -1550,7 +1550,7 @@ const GUIDE_EXTRA={
       ["満足できなかったら返金できますか？","はい。万が一ご満足いただけない場合は、購入後30日以内であれば全額返金いたします。安心してお試しください。"],
       ["スマホでも読めますか？","購入後すぐにPDFをダウンロードでき、スマホ・PCどちらでも読めます。"],
       ["日本語以外の言語はありますか？","現在は日本語版のみの限定販売です。"]] },
-  en:{ benefitsHead:"6 things you'll get in the guide",
+  en:{ benefitsHead:"6 things in the Premium Report",
     benefits:[
       "Your true love personality — and why you became this way",
       "The 'love traps' you repeat unconsciously, and how to break them",
@@ -1564,7 +1564,7 @@ const GUIDE_EXTRA={
       ["Can I get a refund?","Yes. If you're not satisfied for any reason, we'll refund you in full within 30 days of purchase."],
       ["Can I read it on my phone?","Yes — download the PDF right after purchase and read on phone or PC."],
       ["Is it available in other languages?","Currently the guide is sold in Japanese only."]] },
-  ko:{ benefitsHead:"공략서에서 얻는 6가지",
+  ko:{ benefitsHead:"프리미엄 리포트에서 얻는 6가지",
     benefits:[
       "‘진짜 당신’의 연애 인격과, 그 성향이 생긴 이유",
       "무의식적으로 반복하는 ‘연애의 함정’과 빠져나오는 법",
@@ -1577,8 +1577,8 @@ const GUIDE_EXTRA={
       ["단건 구매인가요? 구독이 있나요?","완전한 단건 구매입니다. 월 구독·자동 갱신이 전혀 없으며, 한 번 구매로 추가 요금 없이 계속 볼 수 있어요."],
       ["만족하지 못하면 환불되나요?","네. 내용에 만족하지 못하시면 전액 환불해 드립니다."],
       ["휴대폰에서도 볼 수 있나요?","구매 후 바로 PDF를 다운로드해 휴대폰·PC 모두에서 읽을 수 있어요."],
-      ["일본어 외 언어가 있나요?","현재 공략서는 일본어판만 한정 판매 중입니다."]] },
-  zh:{ benefitsHead:"攻略书能带给你的6件事",
+      ["일본어 외 언어가 있나요?","현재 프리미엄 리포트는 일본어판만 한정 판매 중입니다."]] },
+  zh:{ benefitsHead:"深度报告能带给你的6件事",
     benefits:[
       "“真实的你”的恋爱人格，以及这种倾向的成因",
       "你无意识重复的“恋爱陷阱”，以及摆脱方法",
@@ -1592,7 +1592,7 @@ const GUIDE_EXTRA={
       ["不满意可以退款吗？","可以。若对内容不满意，我们将全额退款。"],
       ["手机上能看吗？","购买后即可下载PDF，手机和电脑都能阅读。"],
       ["有日文以外的语言吗？","目前攻略书仅限日文版发售。"]] },
-  tw:{ benefitsHead:"攻略書能帶給你的6件事",
+  tw:{ benefitsHead:"深度報告能帶給你的6件事",
     benefits:[
       "「真實的你」的戀愛人格，以及這種傾向的成因",
       "你無意識重複的「戀愛陷阱」，以及擺脫方法",
@@ -1605,7 +1605,7 @@ const GUIDE_EXTRA={
       ["是買斷嗎？有訂閱嗎？","完全買斷。沒有月費、沒有自動續費——一次購買即可無額外費用永久閱讀。"],
       ["不滿意可以退款嗎？","可以。若對內容不滿意，我們將全額退款。"],
       ["手機上能看嗎？","購買後即可下載PDF，手機和電腦都能閱讀。"],
-      ["有日文以外的語言嗎？","目前攻略書僅限日文版發售。"]] }
+      ["有日文以外的語言嗎？","目前深度報告僅限日文版發售。"]] }
 };
 /* タイプコード → Payment Link を返す（プロモコードを自動プリフィル） */
 function guideBuyUrl(code,lang){
@@ -1637,93 +1637,93 @@ function guideSign(code,fallback){ const g=GUIDE[code]; return (g&&g.sign&&g.sig
 
 /* upsellの多言語UI文 */
 const GUIDE_I18N={
-  ja:{ eyebrow:"PREMIUM EDITION", head1:"続きは、", headAc:"あなたのタイプ専用", head2:"の恋愛トリセツで。",
-    sub:"無料版の3倍の情報量。下は攻略書の中身を少しだけお見せしています。",
+  ja:{ eyebrow:"PREMIUM EDITION", head1:"続きは、", headAc:"あなたのタイプ専用", head2:"のプレミアムレポートで。",
+    sub:"無料で見えているのは、あなたの恋愛分析の全体像のわずか30%。残りはプレミアムレポートだけに。",
     tagBest:"ベスト相性 1位", bestQ:"あなたと最高に幸せになれるのは…",
-    bestHint:"▶ 相性1位の正体と、上位5タイプの攻略コメントを攻略書で公開",
+    bestHint:"▶ 相性1位の正体と、上位5タイプの攻略コメントをレポートで公開",
     tagTrap:"あなたが繰り返す3つの恋愛の罠", open:"公開中",
-    trapHint:"▶ 残り2つの罠と「抜け道（SOLUTION）」を攻略書で解説",
+    trapHint:"▶ 残り2つの罠と「抜け道（SOLUTION）」をレポートで解説",
     tagSign:"ケンカ・倦怠期の乗り越え方", signQ:"すれ違いを、こじらせない。",
     signLine:"3ステップ<span class=\"lg-blur\">仲直り法</span>で、こじれを最短で修復",
-    signHint:"▶ タイプ特有のケンカパターンと「3ステップ仲直り法」を攻略書で解説",
-    sampleTag:"立ち読み", sampleHead:"1ページまるごと立ち読み", sampleSub:"実際の攻略書の中身です。これがあなたのタイプ専用で全14ページ。",
+    signHint:"▶ タイプ特有のケンカパターンと「3ステップ仲直り法」をレポートで解説",
+    sampleTag:"立ち読み", sampleHead:"1ページまるごと立ち読み", sampleSub:"実際のプレミアムレポートの中身です。これがあなたのタイプ専用で全14ページ。",
     sampleCap:"※サンプルは「ゴールデン（ENFJ）」版の一部です。実際はあなたのタイプ専用の内容になります。",
     pagesHead:"ほかにも、こんなページが全14ページ", pagesSub:"性格分析・全16タイプ相性・LINE攻略・ワークまで",
     th0:"恋愛人格", th1:"全16タイプ相性", th2:"LINE攻略",
     cmpHead:"無料版とどう違う？", cmpSub:"同じ診断結果でも、見える深さが変わります",
-    cFeat:"内容", cFree:"無料版", cPaid:"恋愛攻略書",
+    cFeat:"内容", cFree:"無料版", cPaid:"プレミアムレポート",
     rows:[["性格タイプの解説","ひとことのみ","とことん深掘り"],["全16タイプ相性","3位のみ","全16＋コメント"],
       ["恋愛の罠と対策","1つだけ","3つ＋抜け道"],["LINE・メッセージ攻略","x","シーン別例文"],
       ["ケンカ・倦怠期の対処","x","3ステップ仲直り"],["結婚観・長続きの条件","x","条件チェック"],
       ["書き込みワークシート","x","2枚つき"]],
-    tax:"税込・買い切り / ダウンロードPDF", coupon:"944円はプロモコード適用後の価格です", jpOnly:"🇯🇵 攻略書は現在、日本語版のみの限定販売です", refund:"万が一ご満足いただけない場合は30日間の返金保証あり", pages:"フルカラー", pagesB:"全14ページ", pagesAf:"・スマホでも読みやすいA4縦",
-    buy:"あなたのタイプ専用のトリセツを受け取る", buySub:"版 ・ 今すぐダウンロード",
+    tax:"税込・買い切り / ダウンロードPDF", coupon:"944円はプロモコード適用後の価格です", jpOnly:"🇯🇵 プレミアムレポートは現在、日本語版のみの限定販売です", refund:"万が一ご満足いただけない場合は30日間の返金保証あり", pages:"フルカラー", pagesB:"全14ページ", pagesAf:"・スマホでも読みやすいA4縦",
+    buy:"あなたのタイプ専用のプレミアムレポートを受け取る", buySub:"版 ・ 今すぐダウンロード",
     re:["購入後すぐ読める","スマホ／PC対応","追加課金なし"], other:"他の言語で読む：" },
-  en:{ eyebrow:"PREMIUM EDITION", head1:"The rest is in your ", headAc:"type-only", head2:" love manual.",
-    sub:"3x the free version. Here's a peek inside the guide.",
+  en:{ eyebrow:"PREMIUM EDITION", head1:"The rest is in your ", headAc:"type-only", head2:" Premium Report.",
+    sub:"The free version shows only 30% of the full picture. The rest is in your type-only Premium Report.",
     tagBest:"Best Match #1", bestQ:"The one you'll be happiest with is…",
-    bestHint:"▶ Reveal your #1 match and tips for your top 5 in the guide",
+    bestHint:"▶ Reveal your #1 match and tips for your top 5 in the Premium Report",
     tagTrap:"3 love traps you repeat", open:"shown",
-    trapHint:"▶ The other 2 traps and their SOLUTIONS, explained in the guide",
+    trapHint:"▶ The other 2 traps and their SOLUTIONS, explained in the Premium Report",
     tagSign:"Surviving fights & slumps", signQ:"Don't let friction snowball.",
     signLine:"A 3-step <span class=\"lg-blur\">make-up method</span> to recover fast",
-    signHint:"▶ Your type's fight patterns and the 3-step make-up method, in the guide",
-    sampleTag:"Sample", sampleHead:"Read a full sample page", sampleSub:"A real page from the guide. Yours is type-only, 14 pages in all.",
-    sampleCap:"*Sample is part of the \"Golden (ENFJ)\" edition. Your guide is tailored to your own type.",
+    signHint:"▶ Your type's fight patterns and the 3-step make-up method, in the Premium Report",
+    sampleTag:"Sample", sampleHead:"Read a full sample page", sampleSub:"A real page from the Premium Report. Yours is type-only, 14 pages in all.",
+    sampleCap:"*Sample is part of the \"Golden (ENFJ)\" edition. Your report is tailored to your own type.",
     pagesHead:"More pages like these — 14 in all", pagesSub:"Personality, all-16 compatibility, chat tips, worksheets",
     th0:"Personality", th1:"16-type chart", th2:"Chat tips",
     cmpHead:"How is it different?", cmpSub:"Same result, deeper insight",
-    cFeat:"Content", cFree:"Free", cPaid:"Love Guide",
+    cFeat:"Content", cFree:"Free", cPaid:"Premium Report",
     rows:[["Personality","one line","in depth"],["16-type compatibility","top 3 only","all 16 + notes"],
       ["Love traps & fixes","just 1","3 + solutions"],["Chat / message tips","x","scene examples"],
       ["Fights & slumps","x","3-step recovery"],["Marriage & longevity","x","checklist"],
       ["Worksheets","x","2 sheets"]],
-    tax:"Tax incl. / one-time / PDF download", coupon:"¥944 is the price after the promo code is applied.", jpOnly:"🇯🇵 The love guide is currently sold in Japanese only.", refund:"30-day money-back guarantee if not satisfied", pages:"Full color ", pagesB:"14 pages", pagesAf:" · A4 portrait",
-    buy:"Get your type-only love manual", buySub:" edition · download now",
+    tax:"Tax incl. / one-time / PDF download", coupon:"¥944 is the price after the promo code is applied.", jpOnly:"🇯🇵 The Premium Report is currently sold in Japanese only.", refund:"30-day money-back guarantee if not satisfied", pages:"Full color ", pagesB:"14 pages", pagesAf:" · A4 portrait",
+    buy:"Get your type-only Premium Report", buySub:" edition · download now",
     re:["Read instantly","Phone & PC","No extra charge"], other:"Read in another language: " },
-  ko:{ eyebrow:"PREMIUM EDITION", head1:"이어지는 건, ", headAc:"당신 타입 전용", head2:" 연애 설명서로.",
-    sub:"무료판의 3배 정보량. 아래는 공략서 내용을 살짝 보여드려요.",
+  ko:{ eyebrow:"PREMIUM EDITION", head1:"이어지는 건, ", headAc:"당신 타입 전용", head2:" 프리미엄 리포트로.",
+    sub:"무료로 볼 수 있는 건 전체 연애 분석의 30%에 불과해요. 나머지는 프리미엄 리포트에만.",
     tagBest:"베스트 궁합 1위", bestQ:"당신이 가장 행복해질 상대는…",
-    bestHint:"▶ 1위의 정체와 상위 5타입 공략 코멘트를 공략서에서 공개",
+    bestHint:"▶ 1위의 정체와 상위 5타입 공략 코멘트를 프리미엄 리포트에서 공개",
     tagTrap:"당신이 반복하는 3가지 연애의 함정", open:"공개중",
-    trapHint:"▶ 남은 2가지 함정과 '빠져나오는 법(SOLUTION)'을 공략서에서 해설",
+    trapHint:"▶ 남은 2가지 함정과 '빠져나오는 법(SOLUTION)'을 프리미엄 리포트에서 해설",
     tagSign:"싸움·권태기 극복법", signQ:"엇갈림, 키우지 않기.",
     signLine:"3단계 <span class=\"lg-blur\">화해법</span>으로 꼬인 마음을 최단 회복",
-    signHint:"▶ 타입 특유의 싸움 패턴과 '3단계 화해법'을 공략서에서 해설",
-    sampleTag:"미리보기", sampleHead:"한 페이지 통째로 미리보기", sampleSub:"실제 공략서 내용입니다. 당신 타입 전용으로 전 14페이지.",
+    signHint:"▶ 타입 특유의 싸움 패턴과 '3단계 화해법'을 프리미엄 리포트에서 해설",
+    sampleTag:"미리보기", sampleHead:"한 페이지 통째로 미리보기", sampleSub:"실제 프리미엄 리포트 내용입니다. 당신 타입 전용으로 전 14페이지.",
     sampleCap:"※샘플은 '골든(ENFJ)' 버전의 일부입니다. 실제로는 당신 타입 전용 내용이 됩니다.",
     pagesHead:"이 외에도, 이런 페이지가 전 14페이지", pagesSub:"성격 분석·전 16타입 궁합·메시지 공략·워크까지",
     th0:"연애 인격", th1:"전 16타입 궁합", th2:"메시지 공략",
     cmpHead:"무료판과 뭐가 다를까?", cmpSub:"같은 결과라도 보이는 깊이가 달라요",
-    cFeat:"내용", cFree:"무료판", cPaid:"연애 공략서",
+    cFeat:"내용", cFree:"무료판", cPaid:"프리미엄 리포트",
     rows:[["성격 타입 해설","한마디만","깊이 파고들기"],["전 16타입 궁합","상위 3개만","전 16+코멘트"],
       ["연애 함정과 대책","1개만","3개+해결법"],["메시지 공략","x","상황별 예문"],
       ["싸움·권태기 대처","x","3단계 화해법"],["결혼관·오래가는 조건","x","조건 체크"],
       ["작성 워크시트","x","2장"]],
-    tax:"세금 포함·단건 구매 / PDF 다운로드", coupon:"944엔은 프로모션 코드 적용 후 가격입니다.", jpOnly:"🇯🇵 공략서는 현재 일본어판만 한정 판매 중입니다.", refund:"만족 못 하시면 30일 환불 보장", pages:"풀컬러 ", pagesB:"전 14페이지", pagesAf:"·휴대폰에서도 읽기 쉬운 A4 세로",
-    buy:"내 타입 전용 설명서 받기", buySub:" 버전 · 지금 다운로드",
+    tax:"세금 포함·단건 구매 / PDF 다운로드", coupon:"944엔은 프로모션 코드 적용 후 가격입니다.", jpOnly:"🇯🇵 프리미엄 리포트는 현재 일본어판만 한정 판매 중입니다.", refund:"만족 못 하시면 30일 환불 보장", pages:"풀컬러 ", pagesB:"전 14페이지", pagesAf:"·휴대폰에서도 읽기 쉬운 A4 세로",
+    buy:"내 타입 전용 프리미엄 리포트 받기", buySub:" 버전 · 지금 다운로드",
     re:["구매 후 바로 열람","휴대폰·PC 지원","추가 결제 없음"], other:"다른 언어로 읽기: " },
-  zh:{ eyebrow:"PREMIUM EDITION", head1:"接下来，请看", headAc:"专属你类型", head2:"的恋爱说明书。",
-    sub:"信息量是免费版的3倍。下面稍微展示一下攻略书的内容。",
+  zh:{ eyebrow:"PREMIUM EDITION", head1:"接下来，请看", headAc:"专属你类型", head2:"的深度报告。",
+    sub:"免费版仅覆盖全貌的30%。其余内容，尽在你专属类型的深度报告中。",
     tagBest:"最佳契合 第1名", bestQ:"最能让你幸福的人是…",
-    bestHint:"▶ 第1名的真身与前5名的攻略点评，尽在攻略书",
+    bestHint:"▶ 第1名的真身与前5名的攻略点评，尽在深度报告",
     tagTrap:"你会反复掉入的3个恋爱陷阱", open:"已公开",
-    trapHint:"▶ 其余2个陷阱与「破解之道（SOLUTION）」，攻略书详解",
+    trapHint:"▶ 其余2个陷阱与「破解之道（SOLUTION）」，深度报告详解",
     tagSign:"吵架·倦怠期的化解", signQ:"别让小摩擦越闹越大。",
     signLine:"用3步<span class=\"lg-blur\">和好法</span>，最快修复闹别扭",
-    signHint:"▶ 你的类型特有吵架模式与「3步和好法」，攻略书详解",
-    sampleTag:"试读", sampleHead:"整页试读", sampleSub:"这是攻略书的真实内容。专属你类型，共14页。",
+    signHint:"▶ 你的类型特有吵架模式与「3步和好法」，深度报告详解",
+    sampleTag:"试读", sampleHead:"整页试读", sampleSub:"这是深度报告的真实内容。专属你类型，共14页。",
     sampleCap:"※样张为「黄金（ENFJ）」版的一部分。实际内容会按你的类型专属定制。",
     pagesHead:"还有更多这样的页面，共14页", pagesSub:"性格分析·全16类型契合·消息攻略·练习表",
     th0:"恋爱人格", th1:"全16类型契合", th2:"消息攻略",
     cmpHead:"和免费版有何不同？", cmpSub:"同样的结果，看见的深度不同",
-    cFeat:"内容", cFree:"免费版", cPaid:"恋爱攻略书",
+    cFeat:"内容", cFree:"免费版", cPaid:"深度报告",
     rows:[["性格类型解说","仅一句话","深入剖析"],["全16类型契合","仅前3名","全16+点评"],
       ["恋爱陷阱与对策","仅1个","3个+破解"],["消息攻略","x","分场景范例"],
       ["吵架·倦怠期化解","x","3步和好法"],["婚恋观·长久条件","x","条件清单"],
       ["填写练习表","x","2张"]],
-    tax:"含税·买断 / PDF下载", coupon:"944日元为使用促销代码后的价格。", jpOnly:"🇯🇵 攻略书目前仅限日文版发售。", refund:"不满意可申请30天退款保障", pages:"全彩 ", pagesB:"共14页", pagesAf:"·手机也好读的A4竖版",
-    buy:"领取专属你类型的说明书", buySub:" 版 · 立即下载",
+    tax:"含税·买断 / PDF下载", coupon:"944日元为使用促销代码后的价格。", jpOnly:"🇯🇵 深度报告目前仅限日文版发售。", refund:"不满意可申请30天退款保障", pages:"全彩 ", pagesB:"共14页", pagesAf:"·手机也好读的A4竖版",
+    buy:"领取专属你类型的深度报告", buySub:" 版 · 立即下载",
     re:["购买后即刻阅读","手机/电脑通用","无额外收费"], other:"用其他语言阅读：" },
 };
 
@@ -1888,11 +1888,11 @@ function toggleClamp(btn){
 }
 /* 攻略のヒントは全文ロック→有料ガイド誘導 */
 const LOCK_T={
-  ja:{lbl:'攻略のヒントの続きは、あなた専用の恋愛攻略書（全14ページ）で読めます',btn:'攻略書を見る →'},
-  en:{lbl:'The full strategy tips are in your type-only Love Guide (14 pages)',btn:'See the guide →'},
-  ko:{lbl:'공략 힌트 전문은 당신 전용 연애 공략서(전 14페이지)에서 볼 수 있어요',btn:'공략서 보기 →'},
-  zh:{lbl:'攻略提示全文可在你专属类型的恋爱攻略书（共14页）中查看',btn:'查看攻略书 →'},
-  tw:{lbl:'攻略提示全文可在你專屬類型的戀愛攻略書（共14頁）中查看',btn:'查看攻略書 →'}
+  ja:{lbl:'攻略のヒントの続きは、あなた専用のプレミアムレポート（全14ページ）で読めます',btn:'レポートを見る →'},
+  en:{lbl:'The full strategy tips are in your type-only Premium Report (14 pages)',btn:'See the Report →'},
+  ko:{lbl:'공략 힌트 전문은 당신 전용 프리미엄 리포트(전 14페이지)에서 볼 수 있어요',btn:'리포트 보기 →'},
+  zh:{lbl:'攻略提示全文可在你专属类型的深度报告（共14页）中查看',btn:'查看深度报告 →'},
+  tw:{lbl:'攻略提示全文可在你專屬類型的深度報告（共14頁）中查看',btn:'查看深度報告 →'}
 };
 function lockedBlock(ic,title,body,code){
   const t=LOCK_T[L]||LOCK_T.ja;
