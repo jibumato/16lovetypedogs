@@ -2068,22 +2068,22 @@ function genHeadline(a,b,s){
   const A=ARCH[L]||ARCH.ja,D=DYN[L]||DYN.ja,C=CONN[L]||CONN.ja;
   const ei=a[0]===b[0],sn=a[1]===b[1],tf=a[2]===b[2],jp=a[3]===b[3];
   let key=(grp(a)===grp(b))?'g_same':(!ei&&!sn&&!tf&&!jp)?'opp':sn?'sn_same':(!tf&&!ei)?'comp':'mix';
-  const emo=s>=82?'💕':s>=70?'✨':s>=58?'🌱':'🤝';
+  const emo=s>=85?'💕':s>=75?'✨':s>=65?'🌱':'🤝';
   return A[a]+C[0]+A[b]+C[1]+D[key]+emo;
 }
+/* 相性スコア（PDF準拠の確定式：対称・乱数なし・最高98／最低51）
+   S/N一致=+26（最大要素）／T/F一致=+8／E/I相違=+6（補い合う）／J/P相違=+7（補い合う）／ベース51
+   ※同タイプはランキング除外・固定70。メッセージは marquee ペアのみ HIGH の手書きを使用 */
 function compatScore(a,b){
   if(a===b)return[70,BANDS[L].same];
+  const s=51
+    +((a[1]===b[1])?26:0)
+    +((a[2]===b[2])?8:0)
+    +((a[0]!==b[0])?6:0)
+    +((a[3]!==b[3])?7:0);
   const key=[a,b].sort().join('|');
-  if(HIGH[key])return[HIGH[key][0],HIGH[key][1][L]];
-  let s=46;
-  s+=(a[0]!==b[0])?8:5;
-  s+=(a[1]===b[1])?16:4;
-  s+=(a[2]!==b[2])?10:6;
-  s+=(a[3]!==b[3])?9:6;
-  const sorted=[a,b].sort().join('');
-  s+=((sorted.charCodeAt(0)+sorted.charCodeAt(5))%7)-3;
-  s=Math.max(40,Math.min(97,s));
-  return[s,genHeadline(a,b,s)];
+  const msg=(HIGH[key]&&HIGH[key][1])?HIGH[key][1][L]:genHeadline(a,b,s);
+  return[s,msg];
 }
 const AX={
  ja:{ei_d_good:"外向と内向で、にぎやかさと落ち着きのバランスが取れる",tf_d_good:"論理と感情を、お互いがちょうどよく補い合える",jp_d_good:"計画派とのびのび派で、足りない部分を埋め合える",
