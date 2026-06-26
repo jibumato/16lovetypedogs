@@ -243,6 +243,13 @@ body{
 .sec h3 .lbl{display:flex;flex-direction:column;line-height:1.15}
 .sec h3 .lbl .jp{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--ink-faint)}
 .sec p{font-size:14px;line-height:1.8;color:var(--ink);text-align:left;word-break:normal;line-break:strict}
+.sec-clamp .clamp-body{position:relative;max-height:9.4em;overflow:hidden;transition:max-height .4s ease}
+.sec-clamp.open .clamp-body{max-height:1800px}
+.sec-clamp .clamp-body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3.4em;background:linear-gradient(transparent,var(--paper));pointer-events:none;transition:opacity .3s}
+.sec-clamp.open .clamp-body::after{opacity:0}
+.clamp-more{margin-top:8px;display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:4px 2px;font-family:inherit;font-size:13px;font-weight:800;color:var(--pink-deep);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.clamp-more .ar{font-size:10px;transition:transform .3s}
+.sec-clamp.open .clamp-more .ar{transform:rotate(180deg)}
 .sec + .sec h3{margin-top:0}
 .sec h3.mt{margin-top:22px}
 .taglist{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
@@ -1406,8 +1413,8 @@ function renderResult(code,stay){
     el.innerHTML='<a href="#loveGuide" onclick="event.preventDefault();var t=document.getElementById(\'loveGuide\');if(t)t.scrollIntoView({behavior:\'smooth\'})">'+(T[L]||T.ja)+'</a>';
   })();
   document.getElementById('desc').innerHTML=
-     block('🐶',i.h_pers,d.personality)
-    +block('💕',i.h_love,d.love)
+     clampBlock('🐶',i.h_pers,d.personality)
+    +clampBlock('💕',i.h_love,d.love)
     +block('💞',i.h_couple,d.couple)
     +block('🌧',i.h_fight,d.fight)
     +'<div class="sec"><h3><span class="dot">💗</span>'+i.h_pros+'</h3><div class="taglist">'+d.pros.map(p=>'<span>'+p+'</span>').join('')+'</div></div>'
@@ -1857,6 +1864,21 @@ function curSeason(){const m=new Date().getMonth()+1;return m<=2?'winter':m<=5?'
 function codeNum(code){let n=0;for(const ch of code)n+=ch.charCodeAt(0);return n;}
 function affUrl(kw){return 'https://www.amazon.co.jp/s?k='+encodeURIComponent(kw)+'&tag=jbmt-22';}
 function block(ic,title,body){return '<div class="sec"><h3><span class="dot">'+ic+'</span>'+title+'</h3><p>'+body+'</p></div>';}
+/* 性格・恋愛傾向など長文セクションを折りたたみ表示（有料ガイドへの到達率を高めるため） */
+const CLAMP_T={ja:{more:'続きを読む',less:'閉じる'},en:{more:'Read more',less:'Show less'},ko:{more:'더 보기',less:'접기'},zh:{more:'阅读更多',less:'收起'},tw:{more:'閱讀更多',less:'收起'}};
+function clampBlock(ic,title,body){
+  const t=CLAMP_T[L]||CLAMP_T.ja;
+  return '<div class="sec sec-clamp"><h3><span class="dot">'+ic+'</span>'+title+'</h3>'
+    +'<div class="clamp-body"><p>'+body+'</p></div>'
+    +'<button type="button" class="clamp-more" onclick="toggleClamp(this)"><span class="tx">'+t.more+'</span><span class="ar">▼</span></button>'
+    +'</div>';
+}
+function toggleClamp(btn){
+  const sec=btn.closest('.sec-clamp');if(!sec)return;
+  const open=sec.classList.toggle('open');
+  const t=CLAMP_T[L]||CLAMP_T.ja,tx=btn.querySelector('.tx');
+  if(tx)tx.textContent=open?t.less:t.more;
+}
 function hex(g){return {NT:'#f3edfb',NF:'#fff1f3',SJ:'#eef9f3',SP:'#fff6e9'}[g];}
 
 /* ---- compatibility ---- */
