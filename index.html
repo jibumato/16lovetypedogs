@@ -84,7 +84,8 @@ body{
 @keyframes twinkle{0%,100%{opacity:.22;transform:scale(.75)}50%{opacity:1;transform:scale(1.12)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
   .rt-track{animation:rtScroll 38s linear infinite!important}
-  .rt-track.rt-reverse{animation-direction:reverse!important}}
+  .rt-track.rt-reverse{animation-direction:reverse!important}
+  .lg-buy::before{animation:lgShine 3.4s ease-in-out infinite!important}}
 
 /* glass card helper applied via individual selectors */
 .card,.qcard,.cert,.compat-pick,.omk-card,.unlock,.result-next,.seo-static,.lg-peek,.lg-cta,.lg-cmp{
@@ -532,11 +533,10 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-coupon-badge{display:inline-block;background:linear-gradient(135deg,#ffe0ec,#fff0d8);border:1px dashed var(--pink-deep);color:var(--pink-deep);font-size:12px;font-weight:800;border-radius:999px;padding:6px 16px;margin:0 0 12px;letter-spacing:.02em}
 .lg-pages{font-size:12px;color:var(--ink);margin:7px 0 16px}.lg-pages b{color:var(--pink-deep)}
 .lg-buy{position:relative;overflow:hidden;display:block;width:100%;padding:16px 12px;border:0;border-radius:16px;cursor:pointer;font-family:inherit;font-size:16px;font-weight:800;color:#fff;text-decoration:none;line-height:1.4;background:var(--accent);box-shadow:0 14px 30px -10px rgba(220,120,170,.55);-webkit-tap-highlight-color:transparent}
-.lg-buy::before{content:"";position:absolute;top:-40%;left:-80%;width:55%;height:180%;background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,.15) 35%,rgba(255,255,255,.7) 50%,rgba(255,255,255,.15) 65%,transparent 100%);transform:skewX(-22deg);animation:lgShine 3.4s ease-in-out infinite;pointer-events:none}
+.lg-buy::before{content:"";position:absolute;top:-40%;left:0;width:60%;height:180%;background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,.18) 40%,rgba(255,255,255,.85) 50%,rgba(255,255,255,.18) 60%,transparent 100%);transform:translateX(-180%) skewX(-22deg);animation:lgShine 3.4s ease-in-out infinite;will-change:transform;pointer-events:none}
 .lg-buy:active{transform:translateY(1px)}
 .lg-buy .s{position:relative;z-index:1;display:block;font-size:11px;font-weight:600;opacity:.95;margin-top:3px}
-@keyframes lgShine{0%{left:-80%}28%{left:140%}100%{left:140%}}
-@media(prefers-reduced-motion:reduce){.lg-buy::before{animation:none;display:none}}
+@keyframes lgShine{0%{transform:translateX(-180%) skewX(-22deg)}28%{transform:translateX(260%) skewX(-22deg)}100%{transform:translateX(260%) skewX(-22deg)}}
 .lg-jponly{font-size:11.5px;color:var(--pink-deep);font-weight:700;margin-top:10px}
 .lg-re{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 14px;margin-top:14px}
 .lg-re span{font-size:11px;color:var(--ink-soft)}.lg-re span::before{content:"✓ ";color:var(--sj);font-weight:800}
