@@ -602,6 +602,8 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .rankrow.rank-locked:hover{transform:none;box-shadow:0 10px 24px -18px rgba(150,120,180,.55)}
 .rank-blur-content{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:12px;filter:blur(5px);user-select:none;pointer-events:none}
 .rank-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding-right:13px;background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,.5))}
+.rank-locked-group{position:relative;display:flex;flex-direction:column;gap:10px}
+.rank-group-overlay{justify-content:center;padding-right:0;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.42))}
 .rank-buybtn{flex:none;white-space:nowrap;font-size:11.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:999px;padding:8px 14px;text-decoration:none;box-shadow:0 8px 16px -7px rgba(210,98,143,.6)}
 .rank-all-note{text-align:center;margin:12px 0 2px;font-size:12.5px;color:var(--ink-soft)}
 .rank-all-note a{color:var(--pink-deep);text-decoration:none;font-weight:800}
@@ -1445,14 +1447,13 @@ function renderResult(code,stay){
     ko:'📖 전 16타입과의 상세 궁합 점수와 코멘트는 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">프리미엄 리포트</a>에서 확인',
     zh:'📖 与全16类型的详细契合度及点评，请在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">深度报告</a> 中查看',
     tw:'📖 與全16類型的詳細契合度及點評，請在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">深度報告</a> 中查看'};
+  const shownRow=(m,idx)=>'<div class="rankrow" onclick="pickRank(\''+m.c+'\')"><span class="medal">'+medals[idx]+'</span>'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+LOC[L][m.c].name+'</div><div class="rankbreed">'+LOC[L][m.c].breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div>';
+  const blurRow=(m,idx)=>'<div class="rankrow rank-locked"><span class="medal">'+medals[idx]+'</span><div class="rank-blur-content">'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+LOC[L][m.c].name+'</div><div class="rankbreed">'+LOC[L][m.c].breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div></div>';
+  /* 上位2件はブラー行をひとまとめにし、解除ボタンは1つだけ（重複解消） */
+  const lockedGroup='<div class="rank-locked-group">'+blurRow(top[0],0)+blurRow(top[1],1)
+    +'<div class="rank-overlay rank-group-overlay"><a class="rank-buybtn" href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">'+RANK_BUY[L]+'</a></div></div>';
   document.getElementById('ranking').innerHTML='<div class="sec mt"><h3><span class="dot">💘</span>'+i.rank_head+'</h3><div class="rank">'
-    +top.map((m,idx)=>{
-      const dd=LOC[L][m.c];
-      if(idx===2){
-        return '<div class="rankrow" onclick="pickRank(\''+m.c+'\')"><span class="medal">'+medals[idx]+'</span>'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+dd.name+'</div><div class="rankbreed">'+dd.breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div>';
-      }
-      return '<div class="rankrow rank-locked"><span class="medal">'+medals[idx]+'</span><div class="rank-blur-content">'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+dd.name+'</div><div class="rankbreed">'+dd.breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div><div class="rank-overlay"><a class="rank-buybtn" href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">'+RANK_BUY[L]+'</a></div></div>';
-    }).join('')
+    +lockedGroup+shownRow(top[2],2)
     +'</div>'
     +'<p class="rank-all-note">'+(RANK_NOTE[L]||RANK_NOTE.ja)+'</p>'
     +'</div>';
@@ -1852,7 +1853,7 @@ function renderUraChara(code){
       +'<div class="s-body">'+u.strat+'</div>'
       +'<div class="s-overlay"><span class="ic">🔒</span><span class="t">'+I18.lock+'</span></div>'
     +'</div>'
-    +'<a class="ura-buybtn" href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener" onclick="trackCheckout(\''+code+'\',\''+L+'\')">'+I18.btn+'</a>'
+    +'<a class="ura-buybtn" href="#loveGuide" onclick="event.preventDefault();guideToCta()">'+I18.btn+'</a>'
     +'<p class="ura-note">'+I18.note+'</p>'
   +'</div>';
 }
