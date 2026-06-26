@@ -252,8 +252,11 @@ body{
 .clamp-more .ar{font-size:10px;transition:transform .3s}
 .sec-clamp.open .clamp-more .ar{transform:rotate(180deg)}
 .sec-locked{position:relative}
-.sec-locked .lock-body{position:relative;max-height:4.5em;overflow:hidden}
-.sec-locked .lock-body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3em;background:linear-gradient(transparent,var(--paper))}
+.sec-locked .lock-body{position:relative;max-height:8.5em;overflow:hidden}
+.sec-locked .lock-body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5.5em;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);-webkit-mask-image:linear-gradient(transparent,#000 58%);mask-image:linear-gradient(transparent,#000 58%);pointer-events:none}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .sec-locked .lock-body::after{background:linear-gradient(transparent,var(--paper));backdrop-filter:none;-webkit-backdrop-filter:none;-webkit-mask-image:none;mask-image:none;height:3em}
+}
 .lock-cta{margin-top:10px;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff0f5,#f4ecfb);border:1.5px solid #f3c9da;border-radius:14px;padding:12px 14px}
 .lock-cta .lock-ic{font-size:20px;flex:none}
 .lock-cta .lock-txt{flex:1;font-size:12.5px;color:#6f6781;line-height:1.55}
@@ -2039,7 +2042,7 @@ function lockedBlock(ic,title,body,code){
     +'<div class="lock-body"><p>'+body+'</p></div>'
     +'<div class="lock-cta"><span class="lock-ic">🔒</span>'
     +'<span class="lock-txt">'+t.lbl+'</span>'
-    +'<a class="lock-btn" href="'+guideBuyUrl(code,L)+'" onclick="trackCheckout(\''+code+'\',\''+L+'\')">'+t.btn+'</a>'
+    +'<a class="lock-btn" href="#loveGuide" onclick="event.preventDefault();guideToCta()">'+t.btn+'</a>'
     +'</div></div>';
 }
 function hex(g){return {NT:'#f3edfb',NF:'#fff1f3',SJ:'#eef9f3',SP:'#fff6e9'}[g];}
