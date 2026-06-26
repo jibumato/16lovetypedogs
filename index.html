@@ -1827,7 +1827,6 @@ function renderLoveGuide(code){
     <div class="lg-divider" style="margin-top:22px"><span class="line">SAMPLE PAGE</span><h3 style="font-size:16px">${g.sampleHead}</h3><div class="sub">${g.sampleSub}</div></div>
     <figure class="lg-sample"><span class="lg-sample-tag">📖 ${g.sampleTag}</span><img loading="lazy" decoding="async" src="/sample-guide.webp" alt="${g.sampleHead}" width="920" height="1415"><figcaption>${g.sampleCap}</figcaption></figure>
     <div class="lg-benefits"><h4>${ge.benefitsHead}</h4><ul>${ge.benefits.map(b=>`<li>${b}</li>`).join('')}</ul></div>
-    ${reviewsHtml}
     <div class="lg-cta">
       <div class="lg-coupon-badge">${COUPON_BADGE[L]||COUPON_BADGE.ja}</div>
       <div class="lg-price"><span class="lg-off">${GUIDE_CFG.off}</span><span class="lg-orig">${GUIDE_CFG.orig}${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span><span class="lg-now">${GUIDE_CFG.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span></div>
@@ -1838,6 +1837,7 @@ function renderLoveGuide(code){
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}${g.refund?`<span>${g.refund}</span>`:''}</div>
       ${g.jpOnly?`<div class="lg-jponly">${g.jpOnly}</div>`:''}
     </div>
+    ${reviewsHtml}
     <div class="lg-faq"><h4>${ge.faqHead}</h4>${ge.faq.map(f=>`<details><summary>${f[0]}</summary><div class="fa">${f[1]}</div></details>`).join('')}</div>
   </div>`;
   observeGuideView(code);
