@@ -265,6 +265,36 @@ body{
 
 /* hook */
 
+/* ===== 裏性格診断 ===== */
+.urac .ura-sub{font-size:11.5px;font-weight:700;color:var(--ink-soft);margin:-4px 0 16px 53px;line-height:1.6}
+.ura-flip{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ura-face{border-radius:16px;padding:13px 12px;text-align:center}
+.ura-face .f-lbl{font-size:10px;font-weight:800;letter-spacing:.12em;margin-bottom:7px;display:block}
+.ura-face .f-body{font-size:12.5px;line-height:1.7;font-weight:700;color:var(--ink)}
+.ura-face.omote{background:rgba(200,220,255,.18);border:1px solid rgba(130,160,220,.22)}
+.ura-face.omote .f-lbl{color:#6a8fcf}
+.ura-face.ura{background:linear-gradient(135deg,rgba(247,168,196,.16),rgba(252,232,245,.5));border:1px solid rgba(210,98,143,.24)}
+.ura-face.ura .f-lbl{color:var(--pink-deep)}
+.ura-turn{display:flex;align-items:center;justify-content:center;color:var(--pink-deep);font-size:11.5px;font-weight:800;margin:12px 0;gap:9px}
+.ura-turn::before,.ura-turn::after{content:'';flex:1;height:1px;background:rgba(210,98,143,.28)}
+.ura-scorehead{font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--pink-deep);text-align:center;margin-bottom:11px}
+.ura-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
+.ura-card{background:rgba(255,255,255,.7);border:1px solid rgba(210,98,143,.14);border-radius:14px;padding:11px 8px 9px;text-align:center}
+.ura-card .lbl{font-size:10.5px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;display:block;margin-bottom:5px}
+.ura-card .num{font-family:'M PLUS Rounded 1c';font-size:25px;font-weight:800;color:var(--pink-deep);line-height:1}
+.ura-card .unit{font-size:10px;color:var(--ink-soft);font-weight:700;margin-left:1px}
+.ura-card .pips{display:flex;gap:3px;justify-content:center;margin-top:6px}
+.ura-card .pips i{width:7px;height:7px;border-radius:50%;background:rgba(210,98,143,.16)}
+.ura-card .pips i.on{background:linear-gradient(135deg,#f7a8c4,#d2628f)}
+.ura-strat{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(210,98,143,.22);margin-bottom:14px}
+.ura-strat .s-head{background:rgba(247,168,196,.14);padding:9px 14px;font-size:11px;font-weight:800;color:var(--pink-deep);letter-spacing:.04em}
+.ura-strat .s-body{padding:13px 15px;font-size:13px;font-weight:700;color:var(--ink);line-height:1.7;filter:blur(3.5px);user-select:none;background:linear-gradient(135deg,#fff7fb,#fdeef6)}
+.ura-strat .s-overlay{position:absolute;left:0;right:0;bottom:0;top:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(to bottom,rgba(255,247,251,.35),rgba(255,247,251,.78))}
+.ura-strat .s-overlay .ic{font-size:24px}
+.ura-strat .s-overlay .t{font-size:11.5px;font-weight:800;color:var(--pink-deep);text-align:center;letter-spacing:.02em;padding:0 16px}
+.ura-buybtn{display:block;background:linear-gradient(135deg,#e58aa0,#d2628f);color:#fff;font-family:inherit;font-size:14px;font-weight:800;border:0;border-radius:99px;padding:13px 18px;width:100%;text-align:center;letter-spacing:.04em;cursor:pointer;text-decoration:none;box-shadow:0 8px 18px -6px rgba(210,98,143,.5)}
+.ura-note{text-align:center;font-size:10.5px;color:var(--ink-soft);font-weight:700;margin-top:10px}
+
 /* ad + bonus */
 .adslot{margin:22px 0;min-height:90px;border-radius:18px;background:rgba(255,255,255,.5);border:1px dashed var(--hair);
   display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-size:12px;letter-spacing:.1em}
@@ -705,6 +735,9 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       <p id="t-ctap"></p>
       <button class="btn mt" id="t-ctab" onclick="goCompat()"></button>
     </div>
+
+    <!-- 5.5 裏性格診断（表↔裏・本音スコア → 戦略チラ見せで有料導線へ） -->
+    <div id="uraChara"></div>
 
     <!-- 6. プレミアムレポート（有料オファー） -->
     <div id="loveGuide"></div>
@@ -1423,6 +1456,7 @@ function renderResult(code,stay){
     +'</div>'
     +'<p class="rank-all-note">'+(RANK_NOTE[L]||RANK_NOTE.ja)+'</p>'
     +'</div>';
+  renderUraChara(code);
   renderLoveGuide(code);
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
@@ -1690,6 +1724,55 @@ const GUIDE_I18N={
 
 const TRAP1DESC={"ja":{"INTJ":"好きなほど態度がそっけなくなり、本当の気持ちを言葉にできずすれ違ってしまいがち。","INTP":"相手のサインや空気の変化に気づきにくく、好意や不満を見落としてしまいがち。","ENTJ":"よかれと思って先回りしすぎて、相手のペースや気持ちを置き去りにしてしまいがち。","ENTP":"刺激を求めるあまり、安定した関係に物足りなさを感じて気持ちが移りやすい。","INFJ":"不満や弱音をひとりで抱え込み、限界までため込んでから一気にあふれてしまいがち。","INFP":"相手を理想化しすぎて、現実とのギャップに勝手に傷ついてしまいがち。","ENFJ":"相手を優先しすぎて自分を後回しにし、気づけば見返りのない我慢を重ねてしまいがち。","ENFP":"その日の気分で態度が変わりやすく、相手を振り回してしまうことがある。","ISTJ":"気持ちの伝え方がわからず、愛情があるのに冷たく見えてすれ違ってしまいがち。","ISFJ":"我慢して尽くしすぎるあまり、本音を言えずにひとりでしんどくなってしまいがち。","ESTJ":"正論や段取りで進めすぎて、相手の気持ちより「正しさ」を優先してしまいがち。","ESFJ":"かまってほしい気持ちが強く、不安になると相手を試すような言動をしてしまいがち。","ISTP":"感情表現が少なく、好きでも無関心に見えて相手を不安にさせてしまいがち。","ISFP":"衝突を避けて相手に合わせすぎ、自分の本音を飲み込んでしまいがち。","ESTP":"勢いで距離を詰めすぎて、相手の心の準備を置き去りにしてしまいがち。","ESFP":"ひとりが苦手で、寂しさからかまってほしさが空回りしてしまいがち。"},"en":{"INTJ":"The more you like someone, the cooler you act — your true feelings stay unspoken and you drift apart.","INTP":"You can miss subtle signals and shifts in mood, overlooking both affection and discontent.","ENTJ":"Meaning well, you take charge too much and leave your partner's pace and feelings behind.","ENTP":"Craving stimulation, you can feel restless in a stable relationship and let your heart wander.","INFJ":"You bottle up complaints and worries alone until they suddenly overflow all at once.","INFP":"You idealize your partner so much that you get hurt by the gap with reality.","ENFJ":"You put your partner first and yourself last, quietly piling up unrewarded patience.","ENFP":"Your mood can swing day to day, sometimes leaving your partner feeling tossed around.","ISTJ":"Unsure how to show feelings, you can seem cold even when you care — and drift apart.","ISFJ":"You endure and give too much, struggling alone because you can't voice your true feelings.","ESTJ":"You push logic and plans so hard that you put being right ahead of their feelings.","ESFJ":"Craving attention, you can start testing your partner whenever anxiety creeps in.","ISTP":"With little expression, you can look indifferent even when smitten, leaving them uneasy.","ISFP":"Avoiding conflict, you over-adapt to your partner and swallow your own true feelings.","ESTP":"You close the distance on impulse, leaving your partner's heart no time to catch up.","ESFP":"You hate being alone, and loneliness can make your need for attention backfire."},"ko":{"INTJ":"좋아할수록 태도가 무뚝뚝해져서, 진심을 말로 못 해 엇갈리기 쉬워요.","INTP":"상대의 신호나 분위기 변화를 잘 못 알아채, 호감도 불만도 놓치기 쉬워요.","ENTJ":"좋은 마음에 너무 앞서 나가서, 상대의 페이스와 감정을 뒤로 미루기 쉬워요.","ENTP":"자극을 원한 나머지 안정된 관계에 싫증을 느껴 마음이 옮겨가기 쉬워요.","INFJ":"불만이나 약한 소리를 혼자 끌어안다가 한계까지 쌓인 뒤 한꺼번에 터지기 쉬워요.","INFP":"상대를 너무 이상화해서, 현실과의 차이에 혼자 상처받기 쉬워요.","ENFJ":"상대를 우선하고 자신을 뒤로 미뤄, 어느새 보답 없는 인내를 거듭하기 쉬워요.","ENFP":"그날 기분에 따라 태도가 달라져 상대를 휘두르게 될 때가 있어요.","ISTJ":"마음을 표현하는 법을 몰라, 사랑하면서도 차갑게 보여 엇갈리기 쉬워요.","ISFJ":"참고 너무 헌신하다가, 본심을 말 못 해 혼자 힘들어지기 쉬워요.","ESTJ":"정론과 계획을 너무 앞세워, 상대의 마음보다 '옳음'을 우선하기 쉬워요.","ESFJ":"관심받고 싶은 마음이 커서, 불안하면 상대를 시험하는 말을 하기 쉬워요.","ISTP":"감정 표현이 적어, 좋아해도 무관심해 보여 상대를 불안하게 하기 쉬워요.","ISFP":"충돌을 피하려 상대에게 너무 맞추다, 자신의 본심을 삼키기 쉬워요.","ESTP":"기세로 거리를 너무 좁혀, 상대의 마음의 준비를 놓치기 쉬워요.","ESFP":"혼자를 못 견뎌, 외로움에 관심받고 싶은 마음이 헛도는 일이 있어요."},"zh":{"INTJ":"越喜欢越故作冷淡，真心说不出口，容易错过彼此。","INTP":"不太能察觉对方的信号和情绪变化，容易忽略好感和不满。","ENTJ":"出于好意太爱包办，容易把对方的节奏和心情抛在脑后。","ENTP":"太想要新鲜感，容易对稳定的关系感到乏味而心动他人。","INFJ":"把不满和软弱独自憋着，攒到极限后容易一次性爆发。","INFP":"把对方理想化过头，容易因现实落差而独自受伤。","ENFJ":"太以对方为先、把自己放后，不知不觉积累没有回报的忍耐。","ENFP":"容易因当天心情而改变态度，有时会让对方被牵着走。","ISTJ":"不知道怎么表达感情，明明在乎却显得冷淡，容易错过彼此。","ISFJ":"太忍耐太付出，说不出真心话，容易一个人撑得很累。","ESTJ":"太爱讲道理和安排，容易把对错看得比对方的心情更重。","ESFJ":"太想被关注，一不安就容易说出试探对方的话。","ISTP":"表达很少，喜欢也像是无所谓，容易让对方不安。","ISFP":"为了避免冲突太迁就对方，容易把自己的真心咽下去。","ESTP":"凭一时冲动拉近距离，容易把对方的心理准备抛在后头。","ESFP":"受不了孤单，寂寞时想被关注的心情容易适得其反。"},"tw":{"INTJ":"越喜歡越故作冷淡，真心說不出口，容易錯過彼此。","INTP":"不太能察覺對方的訊號和情緒變化，容易忽略好感和不滿。","ENTJ":"出於好意太愛包辦，容易把對方的步調和心情拋在腦後。","ENTP":"太想要新鮮感，容易對穩定的關係感到乏味而心動他人。","INFJ":"把不滿和軟弱獨自憋著，累積到極限後容易一次爆發。","INFP":"把對方理想化過頭，容易因現實落差而獨自受傷。","ENFJ":"太以對方為先、把自己放後，不知不覺累積沒有回報的忍耐。","ENFP":"容易因當天心情而改變態度，有時會讓對方被牽著走。","ISTJ":"不知道怎麼表達感情，明明在乎卻顯得冷淡，容易錯過彼此。","ISFJ":"太忍耐太付出，說不出真心話，容易一個人撐得很累。","ESTJ":"太愛講道理和安排，容易把對錯看得比對方的心情更重。","ESFJ":"太想被關注，一不安就容易說出試探對方的話。","ISTP":"表達很少，喜歡也像是無所謂，容易讓對方不安。","ISFP":"為了避免衝突太遷就對方，容易把自己的真心吞下去。","ESTP":"憑一時衝動拉近距離，容易把對方的心理準備拋在後頭。","ESFP":"受不了孤單，寂寞時想被關注的心情容易適得其反。"}};
 function trap1desc(code){ const t=TRAP1DESC[L]||TRAP1DESC.ja; return (t&&t[code])||''; }
+/* ===== 裏性格診断（表の顔↔裏の顔・本音スコア・戦略チラ見せ→課金導線）=====
+   日本語のみ先行。scores=[本音を隠す度,重い愛が出る度,依存しやすさ,嫉妬しやすさ]（各5点満点） */
+const URA_JA={
+  INTJ:{omote:"クールで自立した、一人でも平気な計算家",ura:"本命の前だけ甘えたい。でも素直になれず、わざとそっけなくしてしまう",scores:[5,3,2,3],strat:"そっけない態度の裏にある「本当は甘えたい」を、プライドを保ったまま相手に伝える言い換えのコツは——"},
+  INTP:{omote:"マイペースで何でも冷静に分析する自由人",ura:"一度沼ると頭から離れない。考えすぎて動けず、こっそり重くなっている",scores:[4,4,3,2],strat:"分析グセを「重い片思い」で終わらせず、好きな人との距離を縮める武器に変える方法は——"},
+  ENTJ:{omote:"頼れる仕切り役。恋も自分がリードしたい",ura:"弱音を見せられず一人で抱えて空回り。本当は支えて甘えさせてほしい",scores:[4,3,2,4],strat:"強がりの鎧を脱いで「頼っていい？」を自然に言える、リーダー気質のための甘え方は——"},
+  ENTP:{omote:"機転とノリで場を盛り上げる刺激好き",ura:"飽きっぽく見えて、本命に逃げられるのが怖い。試すように突き放してしまう",scores:[4,3,3,4],strat:"刺激を求める心を一人の相手に向け、「試し行動」で大切な人を手放さないための処方箋は——"},
+  INFJ:{omote:"聞き上手で穏やか。相手の気持ちを察する理想家",ura:"自分の本音だけ言えず、わかってもらえないと静かに深く傷つく",scores:[5,4,3,3],strat:"「察してほしい」を我慢でため込まず、重くならない言葉で本音を開く伝え方は——"},
+  INFP:{omote:"やさしく自然体な、夢見がちな癒し系",ura:"理想と現実のギャップにこっそり傷つき、心の扉をそっと閉じてしまう",scores:[4,4,4,3],strat:"理想を押し付けずに伝え、現実の相手とちゃんと愛し合えるようになるための第一歩は——"},
+  ENFJ:{omote:"明るく面倒見がよく、みんなに好かれる人気者",ura:"尽くしすぎて自分が後回し。見返りがないと急に不安で重くなる",scores:[3,4,4,3],strat:"尽くす愛を「重い」で終わらせず、ちゃんと愛され返すためのバランスの取り方は——"},
+  ENFP:{omote:"好奇心旺盛なムードメーカー。恋を全力で楽しむ",ura:"実はさみしがりで、連絡が途切れると不安。明るさの裏で甘えたい",scores:[3,4,4,4],strat:"「さみしい・かまって」を重く伝えず、相手がもっと会いたくなる甘え方に変えるコツは——"},
+  ISTJ:{omote:"真面目で誠実、口下手だけど信頼できる",ura:"不器用で愛情表現が苦手。我慢を溜め込み、ある日ぽつりとあふれる",scores:[5,3,2,3],strat:"不器用な愛情をちゃんと伝わる形にして、「冷たい人」の誤解を解くための具体策は——"},
+  ISFJ:{omote:"穏やかで優しく、さりげなく気が利く献身家",ura:"言葉より行動で示すから、気づかれないと寂しい。本当は褒めてほしい",scores:[4,3,4,3],strat:"「気づいてほしい・褒めてほしい」を、健気さを保ったまま素直に伝える言葉選びは——"},
+  ESTJ:{omote:"きっちり屋で計画的、頼れる誠実家",ura:"あいまいさが不安で、つい相手を仕切りコントロールしたくなる",scores:[3,3,3,3],strat:"仕切りすぎる手綱をゆるめ、相手を信頼して任せられるようになるための心の持ち方は——"},
+  ESFJ:{omote:"面倒見抜群で人気者、愛情表現がストレート",ura:"連絡が途切れると不安MAX。尽くす分、つい見返りを求めてしまう",scores:[2,5,5,4],strat:"あふれる愛を「重い」と思われず、相手から追いかけてもらえる距離感のつくり方は——"},
+  ISTP:{omote:"クールでマイペース、ベタベタしない",ura:"本当は大事に思っているのに言葉にせず、距離を置きすぎて誤解される",scores:[5,2,2,2],strat:"寡黙な愛情を、相手を不安にさせない最小限の言葉で伝えるための具体フレーズは——"},
+  ISFP:{omote:"ゆるい自然体の癒し系、自由を愛する平和主義",ura:"急かされると逃げたくなる。でも安心できる人にはとことん依存する",scores:[3,3,4,2],strat:"逃げグセと甘えのスイッチをコントロールし、安心できる恋を長く続けるためのコツは——"},
+  ESTP:{omote:"行動派で好奇心旺盛、勢いで距離を詰める",ura:"追うのは好きでも追われると冷める。手に入った途端に熱が引くことも",scores:[3,2,2,3],strat:"勢いだけで終わらせず、手に入れた後の恋もちゃんと長続きさせるための切り替え方は——"},
+  ESFP:{omote:"華やかなムードメーカー、恋の主役でいたい人",ura:"実は誰よりさみしがり。かまってほしくてヤキモチ、既読が気になって眠れない",scores:[4,3,4,4],strat:"「かまってほしい」を可愛く伝えて、ヤキモチや不安で空回りしないための甘え方は——"}
+};
+const URA_SCORE_LABELS=["本音を隠す度","重い愛が出る度","依存しやすさ","嫉妬しやすさ"];
+function renderUraChara(code){
+  const el=document.getElementById('uraChara');
+  if(!el) return;
+  if(L!=='ja'){ el.innerHTML=''; return; }   // 日本語のみ先行
+  const u=URA_JA[code]; if(!u){ el.innerHTML=''; return; }
+  const pips=v=>'<div class="pips">'+[1,2,3,4,5].map(n=>'<i class="'+(n<=v?'on':'')+'"></i>').join('')+'</div>';
+  const cards=URA_SCORE_LABELS.map((lb,k)=>
+    '<div class="ura-card"><span class="lbl">'+lb+'</span><span class="num">'+u.scores[k]+'</span><span class="unit">/5</span>'+pips(u.scores[k])+'</div>'
+  ).join('');
+  el.innerHTML='<div class="sec mt urac">'
+    +'<h3><span class="dot">🎭</span>あなたの&ldquo;裏の顔&rdquo;</h3>'
+    +'<p class="ura-sub">表ではわからない、恋が深まると出てくるあなたの本音</p>'
+    +'<div class="ura-flip">'
+      +'<div class="ura-face omote"><span class="f-lbl">☀️ 表の顔</span><div class="f-body">'+u.omote+'</div></div>'
+      +'<div class="ura-face ura"><span class="f-lbl">🌙 裏の顔</span><div class="f-body">'+u.ura+'</div></div>'
+    +'</div>'
+    +'<div class="ura-turn">恋が深まると顔が変わる</div>'
+    +'<div class="ura-scorehead">— 恋愛の本音スコア —</div>'
+    +'<div class="ura-grid">'+cards+'</div>'
+    +'<div class="ura-strat">'
+      +'<div class="s-head">🫶 裏の顔を味方につける恋愛戦略</div>'
+      +'<div class="s-body">'+u.strat+'</div>'
+      +'<div class="s-overlay"><span class="ic">🔒</span><span class="t">続きはプレミアムレポート PART II で</span></div>'
+    +'</div>'
+    +'<a class="ura-buybtn" href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener" onclick="trackCheckout(\''+code+'\',\''+L+'\')">📖 プレミアムレポートを見る →</a>'
+    +'<p class="ura-note">あなたの&ldquo;裏の顔&rdquo;の活かし方を、タイプ別にくわしく解説</p>'
+  +'</div>';
+}
 function renderLoveGuide(code){
   const g=GUIDE_I18N[L]||GUIDE_I18N.ja, d=LOC[L][code], i=I();
   const ge=GUIDE_EXTRA[L]||GUIDE_EXTRA.ja;
