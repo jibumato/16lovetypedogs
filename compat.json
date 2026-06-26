@@ -1,0 +1,784 @@
+{
+  "_README": "16わんこ恋愛診断 — 相性スコアの単一正データ（サイト・PDF共通の唯一の出典）。サイトの compatScore() とPDF生成は必ずこの値を使うこと。",
+  "formula": {
+    "description": "score = base + 各軸ボーナス（対称・決定論・乱数なし）",
+    "base": 51,
+    "rules": {
+      "S/N一致": 26,
+      "T/F一致": 8,
+      "E/I相違": 6,
+      "J/P相違": 7
+    },
+    "range": [
+      51,
+      98
+    ],
+    "self": "同タイプ(a===b)はランキング除外。サイトの相性チェックでは固定70＋専用コメント。",
+    "bands": {
+      "85-98": "運命級/ベスト",
+      "75-84": "好相性",
+      "65-74": "普通",
+      "51-64": "伸びしろ/要工夫"
+    }
+  },
+  "breeds": {
+    "INTJ": "チワワ",
+    "INTP": "ミニチュアシュナウザー",
+    "ENTJ": "コーギー",
+    "ENTP": "ジャックラッセル・テリア",
+    "INFJ": "キャバリア",
+    "INFP": "マルチーズ",
+    "ENFJ": "ゴールデン・レトリバー",
+    "ENFP": "トイ・プードル",
+    "ISTJ": "柴犬",
+    "ISFJ": "シーズー",
+    "ESTJ": "ボストン・テリア",
+    "ESFJ": "ラブラドール・レトリバー",
+    "ISTP": "ミニチュア・ダックスフンド",
+    "ISFP": "フレンチ・ブルドッグ",
+    "ESTP": "ビーグル",
+    "ESFP": "ポメラニアン"
+  },
+  "order": [
+    "INTJ",
+    "INTP",
+    "ENTJ",
+    "ENTP",
+    "INFJ",
+    "INFP",
+    "ENFJ",
+    "ENFP",
+    "ISTJ",
+    "ISFJ",
+    "ESTJ",
+    "ESFJ",
+    "ISTP",
+    "ISFP",
+    "ESTP",
+    "ESFP"
+  ],
+  "matrix": {
+    "INTJ": {
+      "INTJ": null,
+      "INTP": 92,
+      "ENTJ": 91,
+      "ENTP": 98,
+      "INFJ": 77,
+      "INFP": 84,
+      "ENFJ": 83,
+      "ENFP": 90,
+      "ISTJ": 59,
+      "ISFJ": 51,
+      "ESTJ": 65,
+      "ESFJ": 57,
+      "ISTP": 66,
+      "ISFP": 58,
+      "ESTP": 72,
+      "ESFP": 64
+    },
+    "INTP": {
+      "INTJ": 92,
+      "INTP": null,
+      "ENTJ": 98,
+      "ENTP": 91,
+      "INFJ": 84,
+      "INFP": 77,
+      "ENFJ": 90,
+      "ENFP": 83,
+      "ISTJ": 66,
+      "ISFJ": 58,
+      "ESTJ": 72,
+      "ESFJ": 64,
+      "ISTP": 59,
+      "ISFP": 51,
+      "ESTP": 65,
+      "ESFP": 57
+    },
+    "ENTJ": {
+      "INTJ": 91,
+      "INTP": 98,
+      "ENTJ": null,
+      "ENTP": 92,
+      "INFJ": 83,
+      "INFP": 90,
+      "ENFJ": 77,
+      "ENFP": 84,
+      "ISTJ": 65,
+      "ISFJ": 57,
+      "ESTJ": 59,
+      "ESFJ": 51,
+      "ISTP": 72,
+      "ISFP": 64,
+      "ESTP": 66,
+      "ESFP": 58
+    },
+    "ENTP": {
+      "INTJ": 98,
+      "INTP": 91,
+      "ENTJ": 92,
+      "ENTP": null,
+      "INFJ": 90,
+      "INFP": 83,
+      "ENFJ": 84,
+      "ENFP": 77,
+      "ISTJ": 72,
+      "ISFJ": 64,
+      "ESTJ": 66,
+      "ESFJ": 58,
+      "ISTP": 65,
+      "ISFP": 57,
+      "ESTP": 59,
+      "ESFP": 51
+    },
+    "INFJ": {
+      "INTJ": 77,
+      "INTP": 84,
+      "ENTJ": 83,
+      "ENTP": 90,
+      "INFJ": null,
+      "INFP": 92,
+      "ENFJ": 91,
+      "ENFP": 98,
+      "ISTJ": 51,
+      "ISFJ": 59,
+      "ESTJ": 57,
+      "ESFJ": 65,
+      "ISTP": 58,
+      "ISFP": 66,
+      "ESTP": 64,
+      "ESFP": 72
+    },
+    "INFP": {
+      "INTJ": 84,
+      "INTP": 77,
+      "ENTJ": 90,
+      "ENTP": 83,
+      "INFJ": 92,
+      "INFP": null,
+      "ENFJ": 98,
+      "ENFP": 91,
+      "ISTJ": 58,
+      "ISFJ": 66,
+      "ESTJ": 64,
+      "ESFJ": 72,
+      "ISTP": 51,
+      "ISFP": 59,
+      "ESTP": 57,
+      "ESFP": 65
+    },
+    "ENFJ": {
+      "INTJ": 83,
+      "INTP": 90,
+      "ENTJ": 77,
+      "ENTP": 84,
+      "INFJ": 91,
+      "INFP": 98,
+      "ENFJ": null,
+      "ENFP": 92,
+      "ISTJ": 57,
+      "ISFJ": 65,
+      "ESTJ": 51,
+      "ESFJ": 59,
+      "ISTP": 64,
+      "ISFP": 72,
+      "ESTP": 58,
+      "ESFP": 66
+    },
+    "ENFP": {
+      "INTJ": 90,
+      "INTP": 83,
+      "ENTJ": 84,
+      "ENTP": 77,
+      "INFJ": 98,
+      "INFP": 91,
+      "ENFJ": 92,
+      "ENFP": null,
+      "ISTJ": 64,
+      "ISFJ": 72,
+      "ESTJ": 58,
+      "ESFJ": 66,
+      "ISTP": 57,
+      "ISFP": 65,
+      "ESTP": 51,
+      "ESFP": 59
+    },
+    "ISTJ": {
+      "INTJ": 59,
+      "INTP": 66,
+      "ENTJ": 65,
+      "ENTP": 72,
+      "INFJ": 51,
+      "INFP": 58,
+      "ENFJ": 57,
+      "ENFP": 64,
+      "ISTJ": null,
+      "ISFJ": 77,
+      "ESTJ": 91,
+      "ESFJ": 83,
+      "ISTP": 92,
+      "ISFP": 84,
+      "ESTP": 98,
+      "ESFP": 90
+    },
+    "ISFJ": {
+      "INTJ": 51,
+      "INTP": 58,
+      "ENTJ": 57,
+      "ENTP": 64,
+      "INFJ": 59,
+      "INFP": 66,
+      "ENFJ": 65,
+      "ENFP": 72,
+      "ISTJ": 77,
+      "ISFJ": null,
+      "ESTJ": 83,
+      "ESFJ": 91,
+      "ISTP": 84,
+      "ISFP": 92,
+      "ESTP": 90,
+      "ESFP": 98
+    },
+    "ESTJ": {
+      "INTJ": 65,
+      "INTP": 72,
+      "ENTJ": 59,
+      "ENTP": 66,
+      "INFJ": 57,
+      "INFP": 64,
+      "ENFJ": 51,
+      "ENFP": 58,
+      "ISTJ": 91,
+      "ISFJ": 83,
+      "ESTJ": null,
+      "ESFJ": 77,
+      "ISTP": 98,
+      "ISFP": 90,
+      "ESTP": 92,
+      "ESFP": 84
+    },
+    "ESFJ": {
+      "INTJ": 57,
+      "INTP": 64,
+      "ENTJ": 51,
+      "ENTP": 58,
+      "INFJ": 65,
+      "INFP": 72,
+      "ENFJ": 59,
+      "ENFP": 66,
+      "ISTJ": 83,
+      "ISFJ": 91,
+      "ESTJ": 77,
+      "ESFJ": null,
+      "ISTP": 90,
+      "ISFP": 98,
+      "ESTP": 84,
+      "ESFP": 92
+    },
+    "ISTP": {
+      "INTJ": 66,
+      "INTP": 59,
+      "ENTJ": 72,
+      "ENTP": 65,
+      "INFJ": 58,
+      "INFP": 51,
+      "ENFJ": 64,
+      "ENFP": 57,
+      "ISTJ": 92,
+      "ISFJ": 84,
+      "ESTJ": 98,
+      "ESFJ": 90,
+      "ISTP": null,
+      "ISFP": 77,
+      "ESTP": 91,
+      "ESFP": 83
+    },
+    "ISFP": {
+      "INTJ": 58,
+      "INTP": 51,
+      "ENTJ": 64,
+      "ENTP": 57,
+      "INFJ": 66,
+      "INFP": 59,
+      "ENFJ": 72,
+      "ENFP": 65,
+      "ISTJ": 84,
+      "ISFJ": 92,
+      "ESTJ": 90,
+      "ESFJ": 98,
+      "ISTP": 77,
+      "ISFP": null,
+      "ESTP": 83,
+      "ESFP": 91
+    },
+    "ESTP": {
+      "INTJ": 72,
+      "INTP": 65,
+      "ENTJ": 66,
+      "ENTP": 59,
+      "INFJ": 64,
+      "INFP": 57,
+      "ENFJ": 58,
+      "ENFP": 51,
+      "ISTJ": 98,
+      "ISFJ": 90,
+      "ESTJ": 92,
+      "ESFJ": 84,
+      "ISTP": 91,
+      "ISFP": 83,
+      "ESTP": null,
+      "ESFP": 77
+    },
+    "ESFP": {
+      "INTJ": 64,
+      "INTP": 57,
+      "ENTJ": 58,
+      "ENTP": 51,
+      "INFJ": 72,
+      "INFP": 65,
+      "ENFJ": 66,
+      "ENFP": 59,
+      "ISTJ": 90,
+      "ISFJ": 98,
+      "ESTJ": 84,
+      "ESFJ": 92,
+      "ISTP": 83,
+      "ISFP": 91,
+      "ESTP": 77,
+      "ESFP": null
+    }
+  },
+  "top5": {
+    "INTJ": [
+      {
+        "code": "ENTP",
+        "breed": "ジャックラッセル・テリア",
+        "score": 98
+      },
+      {
+        "code": "INTP",
+        "breed": "ミニチュアシュナウザー",
+        "score": 92
+      },
+      {
+        "code": "ENTJ",
+        "breed": "コーギー",
+        "score": 91
+      },
+      {
+        "code": "ENFP",
+        "breed": "トイ・プードル",
+        "score": 90
+      },
+      {
+        "code": "INFP",
+        "breed": "マルチーズ",
+        "score": 84
+      }
+    ],
+    "INTP": [
+      {
+        "code": "ENTJ",
+        "breed": "コーギー",
+        "score": 98
+      },
+      {
+        "code": "INTJ",
+        "breed": "チワワ",
+        "score": 92
+      },
+      {
+        "code": "ENTP",
+        "breed": "ジャックラッセル・テリア",
+        "score": 91
+      },
+      {
+        "code": "ENFJ",
+        "breed": "ゴールデン・レトリバー",
+        "score": 90
+      },
+      {
+        "code": "INFJ",
+        "breed": "キャバリア",
+        "score": 84
+      }
+    ],
+    "ENTJ": [
+      {
+        "code": "INTP",
+        "breed": "ミニチュアシュナウザー",
+        "score": 98
+      },
+      {
+        "code": "ENTP",
+        "breed": "ジャックラッセル・テリア",
+        "score": 92
+      },
+      {
+        "code": "INTJ",
+        "breed": "チワワ",
+        "score": 91
+      },
+      {
+        "code": "INFP",
+        "breed": "マルチーズ",
+        "score": 90
+      },
+      {
+        "code": "ENFP",
+        "breed": "トイ・プードル",
+        "score": 84
+      }
+    ],
+    "ENTP": [
+      {
+        "code": "INTJ",
+        "breed": "チワワ",
+        "score": 98
+      },
+      {
+        "code": "ENTJ",
+        "breed": "コーギー",
+        "score": 92
+      },
+      {
+        "code": "INTP",
+        "breed": "ミニチュアシュナウザー",
+        "score": 91
+      },
+      {
+        "code": "INFJ",
+        "breed": "キャバリア",
+        "score": 90
+      },
+      {
+        "code": "ENFJ",
+        "breed": "ゴールデン・レトリバー",
+        "score": 84
+      }
+    ],
+    "INFJ": [
+      {
+        "code": "ENFP",
+        "breed": "トイ・プードル",
+        "score": 98
+      },
+      {
+        "code": "INFP",
+        "breed": "マルチーズ",
+        "score": 92
+      },
+      {
+        "code": "ENFJ",
+        "breed": "ゴールデン・レトリバー",
+        "score": 91
+      },
+      {
+        "code": "ENTP",
+        "breed": "ジャックラッセル・テリア",
+        "score": 90
+      },
+      {
+        "code": "INTP",
+        "breed": "ミニチュアシュナウザー",
+        "score": 84
+      }
+    ],
+    "INFP": [
+      {
+        "code": "ENFJ",
+        "breed": "ゴールデン・レトリバー",
+        "score": 98
+      },
+      {
+        "code": "INFJ",
+        "breed": "キャバリア",
+        "score": 92
+      },
+      {
+        "code": "ENFP",
+        "breed": "トイ・プードル",
+        "score": 91
+      },
+      {
+        "code": "ENTJ",
+        "breed": "コーギー",
+        "score": 90
+      },
+      {
+        "code": "INTJ",
+        "breed": "チワワ",
+        "score": 84
+      }
+    ],
+    "ENFJ": [
+      {
+        "code": "INFP",
+        "breed": "マルチーズ",
+        "score": 98
+      },
+      {
+        "code": "ENFP",
+        "breed": "トイ・プードル",
+        "score": 92
+      },
+      {
+        "code": "INFJ",
+        "breed": "キャバリア",
+        "score": 91
+      },
+      {
+        "code": "INTP",
+        "breed": "ミニチュアシュナウザー",
+        "score": 90
+      },
+      {
+        "code": "ENTP",
+        "breed": "ジャックラッセル・テリア",
+        "score": 84
+      }
+    ],
+    "ENFP": [
+      {
+        "code": "INFJ",
+        "breed": "キャバリア",
+        "score": 98
+      },
+      {
+        "code": "ENFJ",
+        "breed": "ゴールデン・レトリバー",
+        "score": 92
+      },
+      {
+        "code": "INFP",
+        "breed": "マルチーズ",
+        "score": 91
+      },
+      {
+        "code": "INTJ",
+        "breed": "チワワ",
+        "score": 90
+      },
+      {
+        "code": "ENTJ",
+        "breed": "コーギー",
+        "score": 84
+      }
+    ],
+    "ISTJ": [
+      {
+        "code": "ESTP",
+        "breed": "ビーグル",
+        "score": 98
+      },
+      {
+        "code": "ISTP",
+        "breed": "ミニチュア・ダックスフンド",
+        "score": 92
+      },
+      {
+        "code": "ESTJ",
+        "breed": "ボストン・テリア",
+        "score": 91
+      },
+      {
+        "code": "ESFP",
+        "breed": "ポメラニアン",
+        "score": 90
+      },
+      {
+        "code": "ISFP",
+        "breed": "フレンチ・ブルドッグ",
+        "score": 84
+      }
+    ],
+    "ISFJ": [
+      {
+        "code": "ESFP",
+        "breed": "ポメラニアン",
+        "score": 98
+      },
+      {
+        "code": "ISFP",
+        "breed": "フレンチ・ブルドッグ",
+        "score": 92
+      },
+      {
+        "code": "ESFJ",
+        "breed": "ラブラドール・レトリバー",
+        "score": 91
+      },
+      {
+        "code": "ESTP",
+        "breed": "ビーグル",
+        "score": 90
+      },
+      {
+        "code": "ISTP",
+        "breed": "ミニチュア・ダックスフンド",
+        "score": 84
+      }
+    ],
+    "ESTJ": [
+      {
+        "code": "ISTP",
+        "breed": "ミニチュア・ダックスフンド",
+        "score": 98
+      },
+      {
+        "code": "ESTP",
+        "breed": "ビーグル",
+        "score": 92
+      },
+      {
+        "code": "ISTJ",
+        "breed": "柴犬",
+        "score": 91
+      },
+      {
+        "code": "ISFP",
+        "breed": "フレンチ・ブルドッグ",
+        "score": 90
+      },
+      {
+        "code": "ESFP",
+        "breed": "ポメラニアン",
+        "score": 84
+      }
+    ],
+    "ESFJ": [
+      {
+        "code": "ISFP",
+        "breed": "フレンチ・ブルドッグ",
+        "score": 98
+      },
+      {
+        "code": "ESFP",
+        "breed": "ポメラニアン",
+        "score": 92
+      },
+      {
+        "code": "ISFJ",
+        "breed": "シーズー",
+        "score": 91
+      },
+      {
+        "code": "ISTP",
+        "breed": "ミニチュア・ダックスフンド",
+        "score": 90
+      },
+      {
+        "code": "ESTP",
+        "breed": "ビーグル",
+        "score": 84
+      }
+    ],
+    "ISTP": [
+      {
+        "code": "ESTJ",
+        "breed": "ボストン・テリア",
+        "score": 98
+      },
+      {
+        "code": "ISTJ",
+        "breed": "柴犬",
+        "score": 92
+      },
+      {
+        "code": "ESTP",
+        "breed": "ビーグル",
+        "score": 91
+      },
+      {
+        "code": "ESFJ",
+        "breed": "ラブラドール・レトリバー",
+        "score": 90
+      },
+      {
+        "code": "ISFJ",
+        "breed": "シーズー",
+        "score": 84
+      }
+    ],
+    "ISFP": [
+      {
+        "code": "ESFJ",
+        "breed": "ラブラドール・レトリバー",
+        "score": 98
+      },
+      {
+        "code": "ISFJ",
+        "breed": "シーズー",
+        "score": 92
+      },
+      {
+        "code": "ESFP",
+        "breed": "ポメラニアン",
+        "score": 91
+      },
+      {
+        "code": "ESTJ",
+        "breed": "ボストン・テリア",
+        "score": 90
+      },
+      {
+        "code": "ISTJ",
+        "breed": "柴犬",
+        "score": 84
+      }
+    ],
+    "ESTP": [
+      {
+        "code": "ISTJ",
+        "breed": "柴犬",
+        "score": 98
+      },
+      {
+        "code": "ESTJ",
+        "breed": "ボストン・テリア",
+        "score": 92
+      },
+      {
+        "code": "ISTP",
+        "breed": "ミニチュア・ダックスフンド",
+        "score": 91
+      },
+      {
+        "code": "ISFJ",
+        "breed": "シーズー",
+        "score": 90
+      },
+      {
+        "code": "ESFJ",
+        "breed": "ラブラドール・レトリバー",
+        "score": 84
+      }
+    ],
+    "ESFP": [
+      {
+        "code": "ISFJ",
+        "breed": "シーズー",
+        "score": 98
+      },
+      {
+        "code": "ESFJ",
+        "breed": "ラブラドール・レトリバー",
+        "score": 92
+      },
+      {
+        "code": "ISFP",
+        "breed": "フレンチ・ブルドッグ",
+        "score": 91
+      },
+      {
+        "code": "ISTJ",
+        "breed": "柴犬",
+        "score": 90
+      },
+      {
+        "code": "ESTJ",
+        "breed": "ボストン・テリア",
+        "score": 84
+      }
+    ]
+  }
+}
