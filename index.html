@@ -679,7 +679,6 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div class="confetti" id="confetti"></div>
     <div class="announce" id="announce"></div>
     <div class="cert" id="cert"></div>
-    <div id="dexNotice"></div>
     <div id="guideTeaser"></div>
 
     <!-- 2. あなたの恋愛人格・傾向の詳細 -->
@@ -731,22 +730,6 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     </div>
     <div id="compatResult"></div>
     <button class="btn ghost mt" id="t-backres" onclick="show('result')"></button>
-  </section>
-
-  <!-- ========== DEX ========== -->
-  <section id="dex" class="screen">
-    <div class="qhead"><h2 id="t-dexhead" style="font-size:22px;color:var(--pink-deep)"></h2>
-      <p class="hint mt" id="t-dexprog"></p></div>
-    <div class="grid16 dexgrid" id="dexgrid"></div>
-    <p class="center mt" id="t-dexcomplete" style="display:none;font-weight:800;color:var(--pink-deep)"></p>
-    <button class="btn ghost mt" id="t-dexback" onclick="show('top')"></button>
-  </section>
-
-  <!-- ========== OMIKUJI ========== -->
-  <section id="omikuji" class="screen">
-    <div class="qhead"><h2 id="t-omkhead" style="font-size:22px;color:var(--pink-deep)"></h2></div>
-    <div id="omkBody" class="center"></div>
-    <button class="btn ghost mt" id="t-omkback" onclick="show('top')"></button>
   </section>
 
   <!-- ========== STATIC SEO CONTENT (always visible) ========== -->
@@ -958,7 +941,6 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 <nav class="tabbar" id="tabbar">
   <button class="tab" data-tab="home" onclick="navHome()"><span class="ti">🐶</span><span class="tl" id="t-tabhome">診断</span></button>
   <button class="tab" data-tab="share" onclick="navShare()"><span class="ti">📤</span><span class="tl" id="t-tabshare">シェア</span></button>
-  <button class="tab" data-tab="omikuji" onclick="openOmikuji()"><span class="ti">🎴</span><span class="tl" id="t-tabomk">おみくじ</span></button>
   <button class="tab" data-tab="article" onclick="navArticle()"><span class="ti">📚</span><span class="tl" id="t-tabart">記事</span></button>
 </nav>
 
@@ -981,7 +963,6 @@ const WALK={"ja": ["焦って引っ張らないで。相手のペースに歩幅
 const LUCKY={"ja": ["フワフワのポーチを持つと、恋がふっと近づくよ🩷", "犬のキーホルダーをバッグに。話のきっかけになるかも🔑", "足元はきれいめスニーカー。軽やかな一歩が良い縁を運ぶ👟", "ミルクティー色の小物で、やわらかい雰囲気をプラス🧋", "いい香りのハンドクリームを、お守りがわりにポーチへ🌸", "小さなお花モチーフのアクセを耳元に。さりげない可愛げが効く🌼", "スマホや手帳に肉球シールをひとつ。見るたび運気アップ🐾", "ベージュのマフラーやストールで、あったか見えを意識して🧣", "透明感のあるクリアポーチで、涼しげに見せて🫧", "もこもこ素材の手袋やイヤーマフで、あったか可愛く🧤", "桜カラーの小物をひとつ添えて、春の恋を呼び込んで🌸", "こっくりカラーのリップで、秋色の可愛げをプラス🍁"], "en": ["Carry a fluffy pouch and love drifts a little closer 🩷", "Clip a dog keychain to your bag—it might spark a chat 🔑", "Clean, light sneakers. A nimble step brings good connections 👟", "Add milk-tea-colored accessories for a soft, gentle vibe 🧋", "Tuck a nice-smelling hand cream in your pouch like a charm 🌸", "Tiny flower-motif earrings—understated cuteness works 🌼", "Put one paw-print sticker on your phone or planner for a luck boost 🐾", "A beige scarf or stole for a warm, cozy look 🧣", "A clear, see-through pouch for a cool, breezy look 🫧", "Fluffy gloves or earmuffs for a warm, cute look 🧤", "Add one cherry-blossom-colored accent to call in spring love 🌸", "A rich autumn-toned lip adds seasonal charm 🍁"], "ko": ["폭신한 파우치를 들면 사랑이 살며시 가까워져요 🩷", "강아지 키링을 가방에. 대화의 계기가 될지도 🔑", "깔끔한 스니커즈. 가벼운 한 걸음이 좋은 인연을 불러요 👟", "밀크티 색 소품으로 부드러운 분위기를 더해요 🧋", "향 좋은 핸드크림을 부적처럼 파우치에 🌸", "작은 꽃 모티프 귀걸이를. 은근한 귀여움이 통해요 🌼", "폰이나 다이어리에 발바닥 스티커 하나. 볼 때마다 운기 UP 🐾", "베이지 머플러나 스톨로 따뜻해 보이게 🧣", "투명한 클리어 파우치로 시원하게 연출 🫧", "보송보송한 장갑이나 귀마개로 따뜻하고 귀엽게 🧤", "벚꽃 컬러 소품 하나로 봄 사랑을 불러요 🌸", "깊은 가을 컬러 립으로 가을빛 귀여움을 더해요 🍁"], "zh": ["带上软软的小包，恋爱就悄悄靠近 🩷", "把小狗钥匙扣挂在包上，也许能成为搭话的契机 🔑", "干净清爽的小白鞋。轻盈的一步带来好缘分 👟", "用奶茶色小物，添一份柔软气质 🧋", "把香香的护手霜当护身符放进包里 🌸", "小小的花朵耳饰，低调的可爱很奏效 🌼", "在手机或手账上贴一枚肉球贴纸，每次看到都增运 🐾", "用米色围巾或披肩，营造暖暖的氛围 🧣", "用透明的果冻包，营造清凉感 🫧", "毛茸茸的手套或耳罩，温暖又可爱 🧤", "添一件樱花色小物，招来春日恋情 🌸", "用浓郁的秋色唇膏，添一份秋日可爱 🍁"], "tw":["帶上軟軟的小包，戀愛就悄悄靠近 🩷", "把小狗鑰匙扣掛在包上，也許能成爲搭話的契機 🔑", "乾淨清爽的小白鞋。輕盈的一步帶來好緣分 👟", "用奶茶色小物，添一份柔軟氣質 🧋", "把香香的護手霜當護身符放進包裏 🌸", "小小的花朵耳飾，低調的可愛很奏效 🌼", "在手機或手賬上貼一枚肉球貼紙，每次看到都增運 🐾", "用米色圍巾或披肩，營造暖暖的氛圍 🧣", "用透明的果凍包，營造清涼感 🫧", "毛茸茸的手套或耳罩，溫暖又可愛 🧤", "添一件櫻花色小物，招來春日戀情 🌸", "用濃鬱的秋色脣膏，添一份秋日可愛 🍁"]};
 const SEASON=["all", "all", "all", "all", "all", "all", "all", ["autumn", "winter"], ["summer"], ["winter"], ["spring"], ["autumn"]];
 const PARAM={"INTJ": [5, 3, 4, 4, 2], "INTP": [4, 2, 2, 1, 2], "ENTJ": [4, 4, 4, 3, 3], "ENTP": [2, 2, 2, 2, 5], "INFJ": [5, 4, 4, 3, 2], "INFP": [5, 4, 3, 3, 3], "ENFJ": [4, 5, 4, 3, 3], "ENFP": [3, 4, 2, 4, 5], "ISTJ": [5, 3, 5, 2, 1], "ISFJ": [5, 5, 5, 3, 1], "ESTJ": [4, 4, 5, 3, 2], "ESFJ": [4, 5, 4, 5, 3], "ISTP": [3, 2, 2, 2, 3], "ISFP": [3, 3, 3, 2, 3], "ESTP": [2, 3, 2, 3, 5], "ESFP": [3, 4, 3, 5, 5]};
-const OMK={"levels": [{"lab": {"ja": "大吉", "en": "Great Luck", "ko": "대길", "zh": "大吉", "tw": "大吉"}, "msg": {"ja": "恋の大チャンス！勇気を出した分だけ前進できる日。", "en": "A big chance for love! The braver you are, the further you go today.", "ko": "사랑의 큰 기회! 용기를 낸 만큼 나아가는 날.", "zh": "恋爱大好机会！今天越勇敢，就走得越远。", "tw": "戀愛大好機會！今天越勇敢，就走得越遠。"}}, {"lab": {"ja": "中吉", "en": "Good Luck", "ko": "중길", "zh": "中吉", "tw": "中吉"}, "msg": {"ja": "いい流れ。素直な笑顔が幸運を呼び込みそう。", "en": "A nice flow. An honest smile will invite fortune your way.", "ko": "좋은 흐름. 솔직한 미소가 행운을 부를 거예요.", "zh": "顺流而上。真诚的笑容会替你招来好运。", "tw": "順流而上。真誠的笑容會替你招來好運。"}}, {"lab": {"ja": "小吉", "en": "Small Luck", "ko": "소길", "zh": "小吉", "tw": "小吉"}, "msg": {"ja": "焦らずマイペースに。小さな優しさが効く日。", "en": "No rush, at your own pace. Small kindnesses pay off today.", "ko": "서두르지 말고 마이페이스로. 작은 친절이 통하는 날.", "zh": "别急，按自己节奏。今天小小的温柔很奏效。", "tw": "別急，按自己節奏。今天小小的溫柔很奏效。"}}, {"lab": {"ja": "末吉", "en": "Future Luck", "ko": "말길", "zh": "末吉", "tw": "末吉"}, "msg": {"ja": "ゆっくりでも大丈夫。今日は自分を大事にする日。", "en": "Slow is fine. Today is a day to treasure yourself.", "ko": "천천히도 괜찮아요. 오늘은 자신을 아끼는 날.", "zh": "慢一点也没关系。今天是好好疼自己的一天。", "tw": "慢一點也沒關係。今天是好好疼自己的一天。"}}], "colors": [{"hex": "#f6a8bc", "name": {"ja": "さくらピンク", "en": "Sakura Pink", "ko": "벚꽃 핑크", "zh": "樱花粉", "tw": "櫻花粉"}}, {"hex": "#cf9f43", "name": {"ja": "ゴールド", "en": "Gold", "ko": "골드", "zh": "金色", "tw": "金色"}}, {"hex": "#8ec9b0", "name": {"ja": "ミントグリーン", "en": "Mint Green", "ko": "민트 그린", "zh": "薄荷绿", "tw": "薄荷綠"}}, {"hex": "#a7c7e7", "name": {"ja": "スカイブルー", "en": "Sky Blue", "ko": "스카이 블루", "zh": "天空蓝", "tw": "天空藍"}}, {"hex": "#e0caa0", "name": {"ja": "クリームベージュ", "en": "Cream Beige", "ko": "크림 베이지", "zh": "奶油米色", "tw": "奶油米色"}}, {"hex": "#c8a2c8", "name": {"ja": "ラベンダー", "en": "Lavender", "ko": "라벤더", "zh": "薰衣草紫", "tw": "薰衣草紫"}}], "act": {"ja": ["気になる人に自分から一言送ってみて📱", "笑顔であいさつ、それだけで運気アップ😊", "新しい場所に出かけると出会いの予感🌿", "自分を褒めて、ごきげんでいるのが一番のモテ💖", "まわりの人に小さな親切を🍬", "今日は聞き役にまわると好印象👂"], "en": ["Send a first little message to your crush 📱", "Greet with a smile—that alone lifts your luck 😊", "Go somewhere new; a meeting may be waiting 🌿", "Praise yourself; staying happy is the best charm 💖", "Do a small kindness for someone nearby 🍬", "Be the listener today for a great impression 👂"], "ko": ["마음에 둔 사람에게 먼저 한마디 보내봐요 📱", "웃으며 인사, 그것만으로 운기 UP 😊", "새로운 곳에 나가보면 만남의 예감 🌿", "자신을 칭찬하기, 기분 좋은 게 최고의 매력 💖", "주변 사람에게 작은 친절을 🍬", "오늘은 들어주는 역할이 좋은 인상 👂"], "zh": ["主动给心仪的人发个消息吧 📱", "微笑打招呼，光这样就增运 😊", "去个新地方，也许有邂逅 🌿", "夸夸自己，保持好心情就是最强魅力 💖", "对身边的人做点小善意 🍬", "今天当个倾听者，印象超好 👂"], "tw": ["主動給心儀的人發個消息吧 📱", "微笑打招呼，光這樣就增運 😊", "去個新地方，也許有邂逅 🌿", "誇誇自己，保持好心情就是最強魅力 💖", "對身邊的人做點小善意 🍬", "今天當個傾聽者，印象超好 👂"]}};
 const LKEYWORD=["ファー ポーチ", "犬 キーホルダー", "白 スニーカー レディース", "ベージュ 小物", "ハンドクリーム いい香り", "花 モチーフ ピアス", "肉球 ステッカー", "ベージュ マフラー レディース", "クリア ポーチ", "もこもこ 手袋", "桜色 ヘアアクセ", "リップ 秋色"];
 const ORDER=["INTJ", "INTP", "ENTJ", "ENTP", "INFJ", "INFP", "ENFJ", "ENFP", "ISTJ", "ISFJ", "ESTJ", "ESFJ", "ISTP", "ISFP", "ESTP", "ESFP"];
 const LOOP_TXT={
@@ -1133,8 +1114,6 @@ function setLang(l){
   else if(id==='result'&&current)renderResult(current,true);
   else if(id==='compat'&&document.getElementById('compatResult').innerHTML.trim())runCompat();
   else if(id==='loading'){const el=document.getElementById('load-msg');if(el)el.textContent=I().loading[0];}
-  else if(id==='dex')renderDex();
-  else if(id==='omikuji')openOmikuji();
 }
 
 function show(id){
@@ -1411,9 +1390,6 @@ function renderResult(code,stay){
   if(annEl){const RES_EYE={ja:'診断結果',en:'YOUR RESULT',ko:'진단 결과',zh:'诊断结果',tw:'診斷結果'};annEl.innerHTML='<span class="eyebrow">🐾 '+(RES_EYE[L]||RES_EYE.ja)+'</span><div class="res-head">'+i.res_head+'</div>';}
   const confEl=document.getElementById('confetti');
   if(confEl){const ccol=['#f7a8c4','#c9a6f0','#ffd49a','#92d7bc','#a7c7e7','#ffffff','#ef94b8'];let cf='';for(let k=0;k<22;k++){const cl=Math.round(Math.random()*100),cw=6+Math.round(Math.random()*6),chh=8+Math.round(Math.random()*8),cc=ccol[Math.floor(Math.random()*ccol.length)],cr=Math.random()<.4?'50%':'2px',cdur=(1.8+Math.random()*1.4).toFixed(2),cdl=(Math.random()*0.5).toFixed(2);cf+='<i style="left:'+cl+'%;width:'+cw+'px;height:'+chh+'px;background:'+cc+';border-radius:'+cr+';animation:confettiFall '+cdur+'s cubic-bezier(.3,.6,.5,1) '+cdl+'s forwards"></i>';}confEl.innerHTML=cf;}
-  const seenBefore=dexGet(),wasNew=!seenBefore.includes(code);
-  dexAdd(code);
-  renderDexNotice(code,wasNew,dexGet().length);
   (function(){const el=document.getElementById('guideTeaser');if(!el)return;
     const T={ja:'📖 プレミアムレポートを見る ↓',en:'📖 See the Premium Report ↓',ko:'📖 프리미엄 리포트 보기 ↓',zh:'📖 查看深度报告 ↓',tw:'📖 查看深度報告 ↓'};
     el.className='guide-teaser';
@@ -1451,13 +1427,6 @@ function renderResult(code,stay){
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
   if(!stay)show('result');
-}
-function renderDexNotice(code,wasNew,n){
-  const t=loopText(),breed=LOC[L][code].breed;
-  const title=(wasNew?t.dexNew:t.dexSeen).replace('{breed}',breed);
-  document.getElementById('dexNotice').innerHTML='<div class="unlock"><div class="ttl">'+title+'</div>'
-    +'<div class="txt">'+t.dexProgress.replace('{n}',n)+'</div>'
-    +'<button class="mini" onclick="openDex()">🐾 '+t.dexBtn+'</button></div>';
 }
 /* ===== プレミアムレポート upsell ===== */
 const STRIPE_LINKS={
@@ -2022,7 +1991,6 @@ function goCompat(){if(current)document.getElementById('cpA').value=current;show
 function pickRank(c){buildSelects();document.getElementById('cpA').value=current;document.getElementById('cpB').value=c;show('compat');runCompat();}
 function runCompat(){
   const a=document.getElementById('cpA').value,b=document.getElementById('cpB').value;
-  dexAdd(a);dexAdd(b);
   const r=compatScore(a,b),s=r[0],msg=r[1];
   const cs={ja:{line:'LINEで送る',x:'Xでシェア',img:'画像で保存・シェア'},en:{line:'Send on LINE',x:'Share on X',img:'Save / share image'},ko:{line:'LINE로 보내기',x:'X에 공유',img:'이미지 저장·공유'},zh:{line:'用LINE发送',x:'分享到X',img:'保存·分享图片'},tw:{line:'用LINE發送',x:'分享到X',img:'保存·分享圖片'}}[L]||{line:'LINEで送る',x:'Xでシェア',img:'画像で保存・シェア'};
   compatState={a:a,b:b,s:s,msg:msg};
@@ -2245,83 +2213,6 @@ function saveShareImg(){
       },'image/png');
     }catch(e){const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='16lovedog_'+current+'.png';a.click();}
   });
-}
-
-/* ===== dog dex (collection) ===== */
-function dexGet(){try{return JSON.parse(localStorage.getItem('dex16')||'[]');}catch(e){return [];}}
-function dexAdd(code){try{const s=dexGet();if(!s.includes(code)){s.push(code);localStorage.setItem('dex16',JSON.stringify(s));}}catch(e){}}
-function openDex(){renderDex();show('dex');}
-function renderDex(){
-  const seen=dexGet(),i=I();
-  document.getElementById('dexgrid').innerHTML=ORDER.map(c=>{
-    if(seen.includes(c)){
-      let br=LOC[L][c].breed;if(L==='ja')br=br.replace('・レトリバー','').replace('・テリア','').replace('・ブルドッグ','ブル').replace('ミニチュア・','M.');
-      return '<button class="tcell" style="border-bottom:4px solid '+GROUP[BASE[c].g]+'" onclick="pickType(\''+c+'\')">'+dogImg(c)+'<span class="code">'+c+'</span><span class="br">'+br+'</span></button>';
-    }
-    return '<div class="dexcell-lock">🐾<span class="q">'+i.dex_locked+'</span></div>';
-  }).join('');
-  const n=seen.length;
-  document.getElementById('t-dexprog').textContent=n+' / 16 '+i.dex_done;
-  const cmp=document.getElementById('t-dexcomplete');
-  if(n>=16){cmp.textContent=i.dex_complete;cmp.style.display='block';}else{cmp.style.display='none';}
-}
-
-/* ===== daily love omikuji ===== */
-function omkToday(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
-function omkGet(){try{return JSON.parse(localStorage.getItem('omk16')||'null');}catch(e){return null;}}
-function openOmikuji(){
-  const st=omkGet();
-  if(st&&st.date===omkToday()&&st.r)renderOmikuji(st.r,false);
-  else renderOmikujiDraw();
-  show('omikuji');
-}
-function renderOmikujiDraw(){
-  const i=I();
-  document.getElementById('omkBody').innerHTML='<div class="omk-draw" onclick="drawOmikuji()">🎴</div><br><button class="btn" style="max-width:240px;margin:0 auto" onclick="drawOmikuji()">'+i.omk_draw+'</button>';
-}
-function drawOmikuji(){
-  const weights=[2,4,5,3];let pool=[];weights.forEach((w,idx)=>{for(let k=0;k<w;k++)pool.push(idx);});
-  const se2=curSeason(),al2=[];for(let k=0;k<LUCKY[L].length;k++){const ss=SEASON[k];if(ss==='all'||ss.indexOf(se2)>=0)al2.push(k);}
-  const r={lvl:pool[Math.floor(Math.random()*pool.length)],colorIdx:Math.floor(Math.random()*OMK.colors.length),
-           actIdx:Math.floor(Math.random()*OMK.act[L].length),dog:ORDER[Math.floor(Math.random()*ORDER.length)],
-           itemIdx:al2[Math.floor(Math.random()*al2.length)]};
-  try{localStorage.setItem('omk16',JSON.stringify({date:omkToday(),r:r}));}catch(e){}
-  renderOmikuji(r,true);
-  sakuraBurst();
-}
-function sakuraBurst(){
-  const layer=document.createElement('div');
-  layer.className='sakura-layer';
-  const cols=['#ffe1ec','#fbc9da','#f6a8c6','#ffd2e0','#f7b7d0'];
-  let html='';const N=34;
-  for(let k=0;k<N;k++){
-    const left=Math.round(Math.random()*100),
-          w=(10+Math.round(Math.random()*8)),
-          h=(w-2),
-          dur=(4.2+Math.random()*3.4).toFixed(2),
-          dl=(Math.random()*1.6).toFixed(2),
-          c1=cols[Math.floor(Math.random()*cols.length)],
-          c2=cols[Math.floor(Math.random()*cols.length)];
-    html+='<i style="left:'+left+'%;width:'+w+'px;height:'+h+'px;background:linear-gradient(135deg,'+c1+','+c2+');animation:sakuraFall '+dur+'s linear '+dl+'s forwards"></i>';
-  }
-  layer.innerHTML=html;
-  document.body.appendChild(layer);
-  setTimeout(function(){if(layer.parentNode)layer.parentNode.removeChild(layer);},9500);
-}
-function renderOmikuji(r,animate){
-  const i=I(),lv=OMK.levels[r.lvl],col=OMK.colors[r.colorIdx],dd=LOC[L][r.dog];
-  const lvColors=['#e58aa0','#cf9f43','#6ec3a0','#7fb0d8'];
-  document.getElementById('omkBody').innerHTML=
-   '<div class="omk-card'+(animate?' pop':'')+'">'
-   +'<div class="omk-level" style="color:'+lvColors[r.lvl]+'">'+lv.lab[L]+'</div>'
-   +'<div class="omk-msg">'+lv.msg[L]+'</div>'
-   +'<div class="omk-dogline">'+dogImg(r.dog)+'<div style="text-align:left"><div class="lab" style="font-size:12px;font-weight:800;color:var(--ink-soft)">'+i.omk_dog+'</div><div style="font-weight:800;font-size:15px">'+dd.breed+'</div></div></div>'
-   +'<div class="omk-row"><span class="lab">'+i.omk_color+'</span><span class="omk-swatch" style="background:'+col.hex+'"></span>'+col.name[L]+'</div>'
-   +'<div class="omk-row" style="flex-direction:column;gap:2px"><span class="lab">'+i.omk_action+'</span><span>'+OMK.act[L][r.actIdx]+'</span></div>'
-   +'<div class="omk-row" style="flex-direction:column;gap:4px"><span class="lab">'+i.omk_item+'</span><span>'+LUCKY[L][r.itemIdx!=null?r.itemIdx:0]+'</span>'
-     +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[r.itemIdx!=null?r.itemIdx:0])+'">'+i.aff_item+'</a></div>'
-   +'<div class="omk-note">'+i.omk_note+'</div></div>';
-  dexAdd(r.dog);
 }
 
 /* init */
