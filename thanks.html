@@ -104,7 +104,7 @@
     <div class="breed" id="breed"></div>
     <div class="role" id="role"></div>
     <div class="tagline" id="tagline"></div>
-    <a class="dlbtn" id="dlbtn" href="#" download>📖 恋愛攻略書をダウンロード</a>
+    <a class="dlbtn" id="dlbtn" href="#" download>📖 プレミアムレポートをダウンロード</a>
     <p class="note">ボタンが反応しない場合は、リンクを長押し（スマホ）または右クリック（PC）し、「リンク先を保存」をお試しください。<br>ダウンロードしたPDFは端末に保存しておくことをおすすめします。</p>
     <a class="back" href="https://16lovetypedogs.com/">← 診断トップへ戻る</a>
   </div>
@@ -145,7 +145,7 @@
   if (data) {
     document.getElementById('breed').textContent = data.breed + '（' + type.toUpperCase() + '）';
     document.getElementById('role').textContent = data.role + ' ・ ' + data.title;
-    document.getElementById('tagline').textContent = '「恋愛攻略書 ' + data.breed + '版」をダウンロードして、あなただけの恋愛トリセツをお楽しみください。';
+    document.getElementById('tagline').textContent = '「プレミアムレポート ' + data.breed + '版」をダウンロードして、あなただけの恋愛トリセツをお楽しみください。';
 
     var dlbtn = document.getElementById('dlbtn');
     dlbtn.setAttribute('href', R2_BASE + '/' + type + '_love_guide.pdf');
