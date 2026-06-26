@@ -250,6 +250,13 @@ body{
 .clamp-more{margin-top:8px;display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:4px 2px;font-family:inherit;font-size:13px;font-weight:800;color:var(--pink-deep);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .clamp-more .ar{font-size:10px;transition:transform .3s}
 .sec-clamp.open .clamp-more .ar{transform:rotate(180deg)}
+.sec-locked{position:relative}
+.sec-locked .lock-body{position:relative;max-height:4.5em;overflow:hidden}
+.sec-locked .lock-body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3em;background:linear-gradient(transparent,var(--paper))}
+.lock-cta{margin-top:10px;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff0f5,#f4ecfb);border:1.5px solid #f3c9da;border-radius:14px;padding:12px 14px}
+.lock-cta .lock-ic{font-size:20px;flex:none}
+.lock-cta .lock-txt{flex:1;font-size:12.5px;color:#6f6781;line-height:1.55}
+.lock-cta .lock-btn{flex:none;background:#d2628f;color:#fff;border:0;border-radius:999px;padding:8px 16px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
 .sec + .sec h3{margin-top:0}
 .sec h3.mt{margin-top:22px}
 .taglist{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
@@ -1415,11 +1422,11 @@ function renderResult(code,stay){
   document.getElementById('desc').innerHTML=
      clampBlock('🐶',i.h_pers,d.personality)
     +clampBlock('💕',i.h_love,d.love)
-    +block('💞',i.h_couple,d.couple)
-    +block('🌧',i.h_fight,d.fight)
+    +clampBlock('💞',i.h_couple,d.couple)
+    +clampBlock('🌧',i.h_fight,d.fight)
     +'<div class="sec"><h3><span class="dot">💗</span>'+i.h_pros+'</h3><div class="taglist">'+d.pros.map(p=>'<span>'+p+'</span>').join('')+'</div></div>'
     +'<div class="sec"><h3><span class="dot">🐾</span>'+i.h_cons+'</h3><div class="taglist cons">'+d.cons.map(p=>'<span>'+p+'</span>').join('')+'</div></div>'
-    +block('🫶',i.h_howto,d.howto);
+    +lockedBlock('🫶',i.h_howto,d.howto,code);
   const top=ORDER.filter(c=>c!==code).map(c=>({c:c,s:compatScore(code,c)[0]})).sort((a,b)=>b.s-a.s).slice(0,3);
   const medals=['🥇','🥈','🥉'];
   const RANK_LOCK={ja:'🔒 攻略書で確認',en:'🔒 See in Guide',ko:'🔒 공략서에서 확인',zh:'🔒 在攻略书中查看',tw:'🔒 在攻略書中查看'};
@@ -1878,6 +1885,23 @@ function toggleClamp(btn){
   const open=sec.classList.toggle('open');
   const t=CLAMP_T[L]||CLAMP_T.ja,tx=btn.querySelector('.tx');
   if(tx)tx.textContent=open?t.less:t.more;
+}
+/* 攻略のヒントは全文ロック→有料ガイド誘導 */
+const LOCK_T={
+  ja:{lbl:'攻略のヒントの続きは、あなた専用の恋愛攻略書（全14ページ）で読めます',btn:'攻略書を見る →'},
+  en:{lbl:'The full strategy tips are in your type-only Love Guide (14 pages)',btn:'See the guide →'},
+  ko:{lbl:'공략 힌트 전문은 당신 전용 연애 공략서(전 14페이지)에서 볼 수 있어요',btn:'공략서 보기 →'},
+  zh:{lbl:'攻略提示全文可在你专属类型的恋爱攻略书（共14页）中查看',btn:'查看攻略书 →'},
+  tw:{lbl:'攻略提示全文可在你專屬類型的戀愛攻略書（共14頁）中查看',btn:'查看攻略書 →'}
+};
+function lockedBlock(ic,title,body,code){
+  const t=LOCK_T[L]||LOCK_T.ja;
+  return '<div class="sec sec-locked"><h3><span class="dot">'+ic+'</span>'+title+'</h3>'
+    +'<div class="lock-body"><p>'+body+'</p></div>'
+    +'<div class="lock-cta"><span class="lock-ic">🔒</span>'
+    +'<span class="lock-txt">'+t.lbl+'</span>'
+    +'<a class="lock-btn" href="'+guideBuyUrl(code,L)+'" onclick="trackCheckout(\''+code+'\',\''+L+'\')">'+t.btn+'</a>'
+    +'</div></div>';
 }
 function hex(g){return {NT:'#f3edfb',NF:'#fff1f3',SJ:'#eef9f3',SP:'#fff6e9'}[g];}
 
