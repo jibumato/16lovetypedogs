@@ -1775,7 +1775,7 @@ function renderLoveGuide(code){
         ["女友推薦來讀的，契合度第1名正好是她，太準了","20多歲 男性",5],
         ["我的戀愛模式全寫出來了，笑死。值得一讀","20多歲 男性",5]]
   };
-  const rvPool=(REVIEWS[L]||REVIEWS.ja).slice();
+  const rvPool=(REVIEWS[L]||REVIEWS.ja).filter(r=>/女|female|\bF[,\s]|여성/i.test(r[1]));
   for(let k=rvPool.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));const t=rvPool[k];rvPool[k]=rvPool[j];rvPool[j]=t;}
   const rvList=rvPool.slice(0,4);
   const rvStars=(n)=>{n=n||5;let s='';for(let k=0;k<5;k++)s+='<span class="rv-star'+(k<n?'':' off')+'">★</span>';return s;};
