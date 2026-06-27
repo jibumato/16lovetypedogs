@@ -343,6 +343,11 @@ body{
 
 /* share */
 .shareblock{margin-top:16px}
+/* 結果直後の軽いシェア導線（コンパクト） */
+.share-nudge{margin:14px 0 6px;text-align:center}
+.share-nudge .sn-cap{display:block;font-size:13px;font-weight:800;color:var(--ink-soft);margin-bottom:10px}
+.share-nudge .sn-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.share-nudge .sn-btns .btn{margin:0;flex:1 1 0;min-width:96px;max-width:200px;font-size:13.5px;padding:11px 12px;border-radius:12px;font-weight:800}
 .sns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:0}
 .sns .btn{margin:0;font-size:14px;padding:13px;border-radius:13px;font-weight:800}
 .x-btn{background:#111!important;box-shadow:none!important}
@@ -714,12 +719,36 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div class="confetti" id="confetti"></div>
     <div class="announce" id="announce"></div>
     <div class="cert" id="cert"></div>
-    <div id="guideTeaser"></div>
+    <!-- 2. 軽いシェア（結果直後・感情のピークで拡散を捕捉） -->
+    <div class="share-nudge">
+      <span class="sn-cap" id="t-snudge"></span>
+      <div class="sn-btns">
+        <button class="btn line-btn" id="t-linebtn2" onclick="shareLine()"></button>
+        <button class="btn x-btn" id="t-sharebtn2" onclick="shareX()"></button>
+        <button class="btn sub" id="t-shareimg2" onclick="saveShareImg()"></button>
+      </div>
+    </div>
 
-    <!-- 2. あなたの恋愛人格・傾向の詳細 -->
+    <!-- 3. あなたの恋愛人格・傾向の詳細（無料の中身で信頼構築） -->
     <div class="sec" id="desc"></div>
 
-    <!-- 3. シェア -->
+    <!-- 4. 相性ランキング TOP3 -->
+    <div id="ranking"></div>
+
+    <!-- 4. 気になるあの人との相性は？（相性チェック・単一CTA） -->
+    <div class="sec mt">
+      <h3><span class="dot">💞</span><span id="t-ctah"></span></h3>
+      <p id="t-ctap"></p>
+      <button class="btn mt" id="t-ctab" onclick="goCompat()"></button>
+    </div>
+
+    <!-- 5. 裏性格診断（表↔裏・本音スコア → 戦略チラ見せで有料導線へ） -->
+    <div id="uraChara"></div>
+
+    <!-- 5. プレミアムレポート（有料オファー） -->
+    <div id="loveGuide"></div>
+
+    <!-- 6. もう一度シェア（読み終えた満足のピークで再拡散） -->
     <div class="shareblock">
       <p class="share-cap" id="t-sharecap"></p>
       <canvas id="shareCanvas" width="1080" height="1920"></canvas>
@@ -730,22 +759,6 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
         <button class="btn sub" id="t-shareimg" onclick="saveShareImg()"></button>
       </div>
     </div>
-
-    <!-- 4. 相性ランキング TOP3 -->
-    <div id="ranking"></div>
-
-    <!-- 5. 気になるあの人との相性は？（相性チェック・単一CTA） -->
-    <div class="sec mt">
-      <h3><span class="dot">💞</span><span id="t-ctah"></span></h3>
-      <p id="t-ctap"></p>
-      <button class="btn mt" id="t-ctab" onclick="goCompat()"></button>
-    </div>
-
-    <!-- 5.5 裏性格診断（表↔裏・本音スコア → 戦略チラ見せで有料導線へ） -->
-    <div id="uraChara"></div>
-
-    <!-- 6. プレミアムレポート（有料オファー） -->
-    <div id="loveGuide"></div>
 
     <div class="bonus" style="display:none">
       <h3 id="t-bonush"></h3>
@@ -1109,6 +1122,7 @@ function applyStatic(){
   setText('t-qback',i.back);
   setText('t-schead',i.sc_head);setText('t-schint',i.sc_hint);setText('t-scback',i.back_top);
   setText('t-reshead',i.res_head);setText('t-sharebtn',i.share_x);
+  setText('t-sharebtn2',i.share_x);setText('t-shareimg2',i.share_img);
   setText('t-bonush',i.bonus_h);setText('t-bonusp',i.bonus_p);setText('t-bonusb',i.bonus_b);
   setText('t-ctah',i.cta_h);setText('t-ctap',i.cta_p);setText('t-ctab',i.cta_b);
   setText('t-again',i.again);
@@ -1126,9 +1140,10 @@ function applyStatic(){
   setText('t-dexhead',i.dex_head);setText('t-dexback',i.back_top);
   setText('t-omkhead',i.omk_head);setText('t-omkback',i.back_top);
   setText('t-linebtn',loopText().line);
+  setText('t-linebtn2',loopText().line);
   setText('t-kakaobtn',loopText().kakao||'');
   document.querySelectorAll('.kakao-btn').forEach(b=>b.style.display=(L==='ko'&&KAKAO_JS_KEY)?'block':'none');
-  (function(){var lb=document.getElementById('t-linebtn');if(lb)lb.style.display=(L==='ja'||L==='tw')?'':'none';})();
+  ['t-linebtn','t-linebtn2'].forEach(function(id){var lb=document.getElementById(id);if(lb)lb.style.display=(L==='ja'||L==='tw')?'':'none';});
   document.getElementById('t-footer').innerHTML=i.footer.replace(/\n/g,'<br>')+'<br>'+i.aff_disclosure
     +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
     +'<br>© 2026 '+i.title+' / Type&amp;Co';
@@ -1464,6 +1479,8 @@ function renderResult(code,stay){
   renderLoveGuide(code);
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
+  const SHARE_NUDGE={ja:'🐾 結果をシェアして友だちにも教えよう！',en:'🐾 Share your result with friends!',ko:'🐾 결과를 친구에게도 공유해요!',zh:'🐾 把结果分享给朋友吧！',tw:'🐾 把結果分享給朋友吧！'};
+  setText('t-snudge',SHARE_NUDGE[L]||SHARE_NUDGE.ja);
   if(!stay)show('result');
 }
 /* ===== プレミアムレポート upsell ===== */
