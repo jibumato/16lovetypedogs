@@ -148,7 +148,8 @@
     document.getElementById('tagline').textContent = '「プレミアムレポート ' + data.breed + '版」をダウンロードして、あなただけの恋愛トリセツをお楽しみください。';
 
     var dlbtn = document.getElementById('dlbtn');
-    dlbtn.setAttribute('href', R2_BASE + '/' + type + '_love_guide.pdf');
+    // ?v= はキャッシュバスター（PDF差し替え時にバージョンを上げると、旧版キャッシュを確実に回避できる）
+    dlbtn.setAttribute('href', R2_BASE + '/' + type + '_love_guide.pdf?v=2');
 
     if (DOG_IMG_BASE) {
       document.getElementById('dogimg').src = DOG_IMG_BASE + '/' + type + '_dog.png';
