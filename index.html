@@ -346,8 +346,19 @@ body{
 /* 結果直後の軽いシェア導線（コンパクト） */
 .share-nudge{margin:14px 0 6px;text-align:center}
 .share-nudge .sn-cap{display:block;font-size:13px;font-weight:800;color:var(--ink-soft);margin-bottom:10px}
-.share-nudge .sn-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.share-nudge .sn-btns .btn{margin:0;flex:1 1 0;min-width:96px;max-width:200px;font-size:13.5px;padding:11px 12px;border-radius:12px;font-weight:800}
+/* アイコンのみのコンパクトな共有ボタン（結果ナッジ＋フル共有で共用） */
+.share-icons{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:4px}
+.ic-btn{width:48px;height:48px;border-radius:50%;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s,box-shadow .12s;box-shadow:0 4px 12px -4px rgba(120,90,140,.35)}
+.ic-btn:active{transform:scale(.9)}
+.ic-btn svg{width:24px;height:24px;display:block}
+.ic-btn.line{background:#06c755}
+.ic-btn.x{background:#111}
+.ic-btn.ig{background:radial-gradient(circle at 30% 110%,#fdf497 0%,#fd5949 45%,#d6249f 62%,#285aeb 92%)}
+.ic-btn.kakao{background:#fee500;display:none}
+.ic-btn.save{background:#f1e8f4}
+.ic-btn.line svg,.ic-btn.x svg,.ic-btn.ig svg{fill:#fff}
+.ic-btn.kakao svg{fill:#3a1d1d}
+.ic-btn.save svg{fill:#9a8ca8}
 .sns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:0}
 .sns .btn{margin:0;font-size:14px;padding:13px;border-radius:13px;font-weight:800}
 .x-btn{background:#111!important;box-shadow:none!important}
@@ -722,10 +733,12 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <!-- 2. 軽いシェア（結果直後・感情のピークで拡散を捕捉） -->
     <div class="share-nudge">
       <span class="sn-cap" id="t-snudge"></span>
-      <div class="sn-btns">
-        <button class="btn line-btn" id="t-linebtn2" onclick="shareLine()"></button>
-        <button class="btn x-btn" id="t-sharebtn2" onclick="shareX()"></button>
-        <button class="btn sub" id="t-shareimg2" onclick="saveShareImg()"></button>
+      <div class="share-icons">
+        <button class="ic-btn line" aria-label="LINE" onclick="shareLine()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.59 2 11.02c0 3.97 3.54 7.3 8.32 7.93.32.07.76.21.87.49.1.25.07.64.03.89l-.13.8c-.04.24-.19.94.83.51 1.02-.43 5.49-3.23 7.49-5.53C20.74 14.7 22 13 22 11.02 22 6.59 17.5 3 12 3z"/></svg></button>
+        <button class="ic-btn x" aria-label="X" onclick="shareX()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
+        <button class="ic-btn ig" aria-label="Instagram" onclick="shareInstagram()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07c-1.28.06-2.15.26-2.91.56-.79.31-1.46.72-2.12 1.38C1.35 2.67.94 3.34.63 4.13c-.3.76-.5 1.63-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.15.56 2.91.31.79.72 1.46 1.38 2.12.66.66 1.33 1.07 2.12 1.38.76.3 1.63.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.28-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.12-1.38.66-.66 1.07-1.33 1.38-2.12.3-.76.5-1.63.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.12-.66-.66-1.33-1.07-2.12-1.38-.76-.3-1.63-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.41-10.4a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z"/></svg></button>
+        <button class="ic-btn kakao" aria-label="KakaoTalk" onclick="shareKakao()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.48 3 2 6.52 2 10.86c0 2.78 1.85 5.22 4.63 6.6-.2.71-.74 2.65-.85 3.06-.13.5.18.5.39.36.16-.11 2.57-1.75 3.62-2.46.72.1 1.46.16 2.21.16 5.52 0 10-3.52 10-7.86S17.52 3 12 3z"/></svg></button>
+        <button class="ic-btn save" aria-label="Save image" onclick="saveShareImg()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg></button>
       </div>
     </div>
 
@@ -752,11 +765,12 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div class="shareblock">
       <p class="share-cap" id="t-sharecap"></p>
       <canvas id="shareCanvas" width="1080" height="1920"></canvas>
-      <div class="sns">
-        <button class="btn kakao-btn" id="t-kakaobtn" onclick="shareKakao()"></button>
-        <button class="btn line-btn" id="t-linebtn" onclick="shareLine()"></button>
-        <button class="btn x-btn" id="t-sharebtn" onclick="shareX()"></button>
-        <button class="btn sub" id="t-shareimg" onclick="saveShareImg()"></button>
+      <div class="share-icons">
+        <button class="ic-btn line" aria-label="LINE" onclick="shareLine()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.59 2 11.02c0 3.97 3.54 7.3 8.32 7.93.32.07.76.21.87.49.1.25.07.64.03.89l-.13.8c-.04.24-.19.94.83.51 1.02-.43 5.49-3.23 7.49-5.53C20.74 14.7 22 13 22 11.02 22 6.59 17.5 3 12 3z"/></svg></button>
+        <button class="ic-btn x" aria-label="X" onclick="shareX()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
+        <button class="ic-btn ig" aria-label="Instagram" onclick="shareInstagram()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07c-1.28.06-2.15.26-2.91.56-.79.31-1.46.72-2.12 1.38C1.35 2.67.94 3.34.63 4.13c-.3.76-.5 1.63-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.15.56 2.91.31.79.72 1.46 1.38 2.12.66.66 1.33 1.07 2.12 1.38.76.3 1.63.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.28-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.12-1.38.66-.66 1.07-1.33 1.38-2.12.3-.76.5-1.63.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.12-.66-.66-1.33-1.07-2.12-1.38-.76-.3-1.63-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.41-10.4a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z"/></svg></button>
+        <button class="ic-btn kakao" aria-label="KakaoTalk" onclick="shareKakao()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.48 3 2 6.52 2 10.86c0 2.78 1.85 5.22 4.63 6.6-.2.71-.74 2.65-.85 3.06-.13.5.18.5.39.36.16-.11 2.57-1.75 3.62-2.46.72.1 1.46.16 2.21.16 5.52 0 10-3.52 10-7.86S17.52 3 12 3z"/></svg></button>
+        <button class="ic-btn save" aria-label="Save image" onclick="saveShareImg()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg></button>
       </div>
     </div>
 
@@ -1121,14 +1135,13 @@ function applyStatic(){
   (function(){const he=document.getElementById('t-hint');if(!he)return;const parts=i.hint.split(/[・·•/｜|]/).map(s=>s.trim()).filter(Boolean);const ems=['⏱','🆓','🔓'];if(parts.length>=2){he.className='assure';he.innerHTML=parts.slice(0,3).map((p,idx)=>'<span>'+(ems[idx]||'🐾')+' '+p+'</span>').join('');}else{he.className='hint';he.textContent=i.hint;}})();
   setText('t-qback',i.back);
   setText('t-schead',i.sc_head);setText('t-schint',i.sc_hint);setText('t-scback',i.back_top);
-  setText('t-reshead',i.res_head);setText('t-sharebtn',i.share_x);
-  setText('t-sharebtn2',i.share_x);setText('t-shareimg2',i.share_img);
+  setText('t-reshead',i.res_head);
   setText('t-bonush',i.bonus_h);setText('t-bonusp',i.bonus_p);setText('t-bonusb',i.bonus_b);
   setText('t-ctah',i.cta_h);setText('t-ctap',i.cta_p);setText('t-ctab',i.cta_b);
   setText('t-again',i.again);
   setText('t-compathead',i.compat_head);setText('t-youlbl',i.you);setText('t-partnerlbl',i.partner);
   setText('t-compatbtn',i.compat_btn);setText('t-backres',i.back_res);
-  setText('t-navdex',i.nav_dex);setText('t-navomk',i.nav_omikuji);setText('t-shareimg',i.share_img);
+  setText('t-navdex',i.nav_dex);setText('t-navomk',i.nav_omikuji);
   (function(){const nv=NAV_I18N[L]||NAV_I18N.ja;setText('t-tabhome',nv.home);setText('t-tabshare',nv.share);setText('t-tabomk',nv.omikuji);setText('t-tabart',nv.article);setText('t-topguide',nv.guide);setText('t-topbrand',nv.brand);})();
   (function(){const oe=document.getElementById('t-omkdaily');if(!oe)return;
     const OMKD={ja:{t:'🎴 恋愛おみくじは毎日引ける',s:'お気に入り登録して、明日もチェック 🐶'},
@@ -1139,11 +1152,9 @@ function applyStatic(){
     oe.innerHTML='<span class="od-t">'+OMKD.t+'</span><span class="od-s">'+OMKD.s+'</span>';})();
   setText('t-dexhead',i.dex_head);setText('t-dexback',i.back_top);
   setText('t-omkhead',i.omk_head);setText('t-omkback',i.back_top);
-  setText('t-linebtn',loopText().line);
-  setText('t-linebtn2',loopText().line);
-  setText('t-kakaobtn',loopText().kakao||'');
-  document.querySelectorAll('.kakao-btn').forEach(b=>b.style.display=(L==='ko'&&KAKAO_JS_KEY)?'block':'none');
-  ['t-linebtn','t-linebtn2'].forEach(function(id){var lb=document.getElementById(id);if(lb)lb.style.display=(L==='ja'||L==='tw')?'':'none';});
+  /* アイコン共有ボタンの言語別表示（LINE=ja/tw・Kakao=ko） */
+  document.querySelectorAll('.ic-btn.line').forEach(b=>b.style.display=(L==='ja'||L==='tw')?'inline-flex':'none');
+  document.querySelectorAll('.ic-btn.kakao').forEach(b=>b.style.display=(L==='ko'&&KAKAO_JS_KEY)?'inline-flex':'none');
   document.getElementById('t-footer').innerHTML=i.footer.replace(/\n/g,'<br>')+'<br>'+i.aff_disclosure
     +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
     +'<br>© 2026 '+i.title+' / Type&amp;Co';
@@ -2412,6 +2423,26 @@ function saveShareImg(){
           try{await navigator.share({files:[file],text:text,url:shareUrl(current)});return;}catch(e){if(e&&e.name==='AbortError')return;}
         }
         const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();
+      },'image/png');
+    }catch(e){const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='16lovedog_'+current+'.png';a.click();}
+  });
+}
+/* Instagram共有：IGはWeb投稿URLが無いため、画像を共有(ネイティブシートでIG選択)→不可なら保存＋案内 */
+function shareInstagram(){
+  if(!current)return;
+  drawShareCard(current,()=>{
+    const c=document.getElementById('shareCanvas');
+    try{
+      c.toBlob(async(blob)=>{
+        if(!blob)return;
+        const file=new File([blob],'16lovedog_'+current+'.png',{type:'image/png'});
+        gtag('event','share',{method:'instagram',content_type:'result_image',item_id:current});
+        if(navigator.canShare&&navigator.canShare({files:[file]})){
+          try{await navigator.share({files:[file]});return;}catch(e){if(e&&e.name==='AbortError')return;}
+        }
+        const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();
+        const IGM={ja:'画像を保存しました📸\nInstagramのストーリーや投稿に貼ってね！',en:'Image saved 📸\nPost it to your Instagram story!',ko:'이미지를 저장했어요 📸\n인스타 스토리에 올려보세요!',zh:'已保存图片 📸\n发到你的Instagram吧！',tw:'已儲存圖片 📸\n發到你的Instagram吧！'};
+        try{alert(IGM[L]||IGM.ja);}catch(e){}
       },'image/png');
     }catch(e){const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='16lovedog_'+current+'.png';a.click();}
   });
