@@ -154,9 +154,9 @@ TEMPLATE = """<!DOCTYPE html>
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="https://16lovetypedogs.com/{self_path}">
-<meta property="og:image" content="https://16lovetypedogs.com/ogp/{lang}/{code_lower}.png">
+<meta property="og:image" content="https://16lovetypedogs.com/ogp/{lang}/{code_lower}.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://16lovetypedogs.com/ogp/{lang}/{code_lower}.png">
+<meta name="twitter:image" content="https://16lovetypedogs.com/ogp/{lang}/{code_lower}.png?v=2">
 <link rel="canonical" href="https://16lovetypedogs.com/{self_path}">
 {hreflang}
 <link rel="preconnect" href="https://fonts.googleapis.com">
