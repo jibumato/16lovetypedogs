@@ -28,11 +28,11 @@ def make(code,lang="ja"):
     blob=Image.new("RGBA",(W,H),(0,0,0,0));bd=ImageDraw.Draw(blob)
     bd.ellipse([-140,-180,220,180],fill=BLOB+(120,));bd.ellipse([W-260,H-220,W+120,H+160],fill=BLOB+(110,))
     img=Image.alpha_composite(img.convert("RGBA"),blob).convert("RGB");dr=ImageDraw.Draw(img)
-    LX=60;LW=600
+    LX=60;LW=540
     ef=fb(26);et="MBTI  ×  恋愛  ×  犬種";ew=dr.textlength(et,font=ef)
     dr.rounded_rectangle([LX,44,LX+ew+48,96],26,fill=PILL_BG);dr.text((LX+24,70),et,font=ef,fill=PINK,anchor="lm")
     y=124;dr.text((LX,y),"私の恋愛わんこは",font=fr(34),fill=INK_SOFT,anchor="lm");y+=54
-    bs=92
+    bs=84
     while bs>40 and dr.textlength(d["breed"],font=fb(bs))>LW:bs-=4
     dr.text((LX,y),d["breed"],font=fb(bs),fill=PINK,anchor="lm");y+=bs//2+34
     dr.text((LX,y),f"({code})",font=fb(34),fill=INK_SOFT,anchor="lm");y+=54
