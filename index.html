@@ -587,6 +587,11 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-buy .s{position:relative;z-index:1;display:block;font-size:11px;font-weight:600;opacity:.95;margin-top:3px}
 @keyframes lgShine{0%{transform:translateX(-180%) skewX(-22deg)}28%{transform:translateX(260%) skewX(-22deg)}100%{transform:translateX(260%) skewX(-22deg)}}
 .lg-jponly{font-size:11.5px;color:var(--pink-deep);font-weight:700;margin-top:10px}
+/* 支払い方法バッジ（カード/PayPay） */
+.lg-pay{display:flex;gap:7px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:11px}
+.lg-pay .pl{font-size:11px;color:var(--ink-soft);font-weight:700}
+.lg-pay .chip{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid var(--glass-bd);border-radius:999px;padding:4px 11px;font-size:11.5px;font-weight:800;color:var(--ink)}
+.lg-pay .chip.pp{background:#ff0033;border-color:#ff0033;color:#fff;letter-spacing:.01em}
 .lg-re{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 14px;margin-top:14px}
 .lg-re span{font-size:11px;color:var(--ink-soft)}.lg-re span::before{content:"✓ ";color:var(--sj);font-weight:800}
 .lg-langs{margin-top:12px;font-size:12px;color:var(--ink-soft)}
@@ -1525,6 +1530,14 @@ const COUPON_BADGE={
   zh:"🎟 20%OFF优惠券已套用 · 仅限测验者",
   tw:"🎟 20%OFF折價券已套用 · 僅限測驗者"
 };
+/* 支払い方法バッジ（Stripe決済：カード＋PayPay。PayPayはJP顧客に表示） */
+const PAY_I18N={
+  ja:{pl:"お支払い",card:"カード"},
+  en:{pl:"Pay with",card:"Card"},
+  ko:{pl:"결제",card:"카드"},
+  zh:{pl:"支付方式",card:"信用卡"},
+  tw:{pl:"付款方式",card:"信用卡"}
+};
 /* オファーのベネフィット6つ＋FAQ（PDF実物の内容に基づく／競合の課金トリックを誠実な回答で打ち返す） */
 const GUIDE_EXTRA={
   ja:{ benefitsHead:"プレミアムレポートで手に入る6つのこと",
@@ -2007,6 +2020,7 @@ function renderLoveGuide(code){
       <div class="lg-tax">${g.tax}</div>
       <div class="lg-pages">${g.pages}<b>${g.pagesB}</b>${g.pagesAf||''}</div>
       <a class="lg-buy" id="lgBuy" href="${guideBuyUrl(code,L)}" onclick="trackCheckout('${code}','${L}')">${g.buy}<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
+      <div class="lg-pay"><span class="pl">${PAY_I18N[L]?.pl||PAY_I18N.ja.pl}</span><span class="chip">💳 ${PAY_I18N[L]?.card||PAY_I18N.ja.card}</span><span class="chip pp">PayPay</span></div>
       <div class="lg-coupon">🎟 ${g.coupon||''}</div>
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}${g.refund?`<span>${g.refund}</span>`:''}</div>
       ${g.jpOnly?`<div class="lg-jponly">${g.jpOnly}</div>`:''}
