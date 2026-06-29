@@ -267,11 +267,7 @@ body{
 .taglist{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
 .taglist span{background:rgba(255,255,255,.8);border:1px solid rgba(200,180,220,.35);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--ink)}
 
-/* hook（診断後のひとことコメント） */
-.res-hook{margin:14px 0 2px;background:linear-gradient(135deg,#fff0f5,#f7ecfb);border:1.5px solid #f3c9da;border-radius:18px;padding:13px 16px 14px;animation:hookIn .5s cubic-bezier(.2,1.1,.4,1) both}
-.res-hook .rh-lbl{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--pink-deep);letter-spacing:.04em;margin-bottom:5px}
-.res-hook .rh-text{font-size:13.5px;line-height:1.85;font-weight:700;color:var(--ink)}
-@keyframes hookIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* hook */
 
 /* ===== 裏性格診断 ===== */
 .urac .ura-sub{font-size:11.5px;font-weight:700;color:var(--ink-soft);margin:-4px 0 16px 53px;line-height:1.6}
@@ -780,8 +776,6 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div class="confetti" id="confetti"></div>
     <div class="announce" id="announce"></div>
     <div class="cert" id="cert"></div>
-    <!-- 1.5 診断後のひとことコメント（診断前の親しみトーンと整合） -->
-    <div id="resHook"></div>
     <!-- 2. 軽いシェア（結果直後・感情のピークで拡散を捕捉） -->
     <div class="share-nudge">
       <span class="sn-cap" id="t-snudge"></span>
@@ -1523,12 +1517,6 @@ function renderResult(code,stay){
     +'<div class="axes">'+axes+'</div>'
     +'<div class="paramhead">'+i.h_param+'</div><div class="params">'+pr+'</div>'
     +'<div class="sign">🐾 '+i.title+' 🐾</div>';
-  // 診断後のひとことコメント（タイプ別hookを吹き出しで・診断前の親しみトーンと整合）
-  (function(){const el=document.getElementById('resHook');if(!el)return;
-    const RH_LBL={ja:'🐶 わんこからのひとこと',en:'🐶 A word from your dog',ko:'🐶 강아지의 한마디',zh:'🐶 狗狗的悄悄话',tw:'🐶 狗狗的悄悄話'};
-    el.className='res-hook';
-    el.innerHTML='<div class="rh-lbl">'+(RH_LBL[L]||RH_LBL.ja)+'</div><div class="rh-text">'+(d.hook||d.tag)+'</div>';
-  })();
   // 結果発表バナー + 紙吹雪
   const annEl=document.getElementById('announce');
   if(annEl){const RES_EYE={ja:'診断結果',en:'YOUR RESULT',ko:'진단 결과',zh:'诊断结果',tw:'診斷結果'};annEl.innerHTML='<span class="eyebrow">🐾 '+(RES_EYE[L]||RES_EYE.ja)+'</span><div class="res-head">'+i.res_head+'</div>';}
