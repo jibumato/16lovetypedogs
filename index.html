@@ -471,20 +471,31 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
   background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);
   animation:omkSheen 1.05s ease-out .22s 1;pointer-events:none}
 @keyframes omkSheen{from{left:-65%}to{left:150%}}
-/* 大吉カードの特別装飾 */
-.omk-card.big{border-color:#f0cd78;background:linear-gradient(180deg,#fffaf0,var(--paper));
-  box-shadow:0 12px 32px -8px rgba(224,169,58,.4),inset 0 0 0 1px rgba(242,210,122,.55)}
 .omk-level{font-family:'M PLUS Rounded 1c';font-size:42px;font-weight:800;letter-spacing:.06em;margin-bottom:2px;color:var(--pink-deep)}
 .omk-card.pop .omk-level{animation:omkStamp .6s cubic-bezier(.2,1.4,.4,1) both}
 @keyframes omkStamp{0%{transform:scale(.3) rotate(-9deg);opacity:0}60%{transform:scale(1.16) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-.omk-card.big .omk-level{background:linear-gradient(100deg,#d4922b 0%,#ffe79a 25%,#e0a93a 50%,#ffe79a 75%,#d4922b 100%);
-  background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 2px 5px rgba(224,169,58,.45));animation:omkGold 2.6s linear infinite}
-.omk-card.big.pop .omk-level{animation:omkStamp .6s cubic-bezier(.2,1.4,.4,1) both,omkGold 2.6s linear .6s infinite}
 @keyframes omkGold{to{background-position:200% center}}
-.omk-card.big .omk-level::before,.omk-card.big .omk-level::after{-webkit-text-fill-color:initial;color:#f5b73d;font-size:.62em;vertical-align:middle;margin:0 .22em;display:inline-block;animation:omkTwinkle 1.2s ease-in-out infinite}
-.omk-card.big .omk-level::before{content:"✨"}.omk-card.big .omk-level::after{content:"✨"}
 @keyframes omkTwinkle{0%,100%{opacity:.45;transform:scale(.82)}50%{opacity:1;transform:scale(1.2)}}
+/* 運レベル別テーマ（全レベルにグラデ文字＋光彩＋装飾） */
+.omk-lvl-fx .omk-level{background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:omkGold 2.6s linear infinite}
+.omk-lvl-fx.pop .omk-level{animation:omkStamp .6s cubic-bezier(.2,1.4,.4,1) both,omkGold 2.6s linear .6s infinite}
+.omk-lvl-fx .omk-level::before,.omk-lvl-fx .omk-level::after{-webkit-text-fill-color:initial;color:#e58aa0;font-size:.62em;vertical-align:middle;margin:0 .22em;display:inline-block;animation:omkTwinkle 1.2s ease-in-out infinite}
+/* 大吉：金 */
+.omk-card.lv0{border-color:#f0cd78;background:linear-gradient(180deg,#fffaf0,var(--paper));box-shadow:0 12px 32px -8px rgba(224,169,58,.42),inset 0 0 0 1px rgba(242,210,122,.55)}
+.omk-card.lv0 .omk-level{background-image:linear-gradient(100deg,#c8881f,#ffd96b,#c8881f);filter:drop-shadow(0 2px 5px rgba(224,169,58,.45))}
+.omk-card.lv0 .omk-level::before{content:"✨"}.omk-card.lv0 .omk-level::after{content:"✨"}.omk-card.lv0 .omk-level::before,.omk-card.lv0 .omk-level::after{color:#f5b73d}
+/* 中吉：ローズ */
+.omk-card.lv1{border-color:#f3b9cb;background:linear-gradient(180deg,#fff5f8,var(--paper));box-shadow:0 12px 30px -8px rgba(224,106,134,.32),inset 0 0 0 1px rgba(243,185,203,.5)}
+.omk-card.lv1 .omk-level{background-image:linear-gradient(100deg,#c43e64,#ff8fb0,#c43e64);filter:drop-shadow(0 2px 5px rgba(224,106,134,.38))}
+.omk-card.lv1 .omk-level::before{content:"💕"}.omk-card.lv1 .omk-level::after{content:"💕"}
+/* 小吉：ミント */
+.omk-card.lv2{border-color:#a8ddc8;background:linear-gradient(180deg,#f1fbf7,var(--paper));box-shadow:0 12px 30px -8px rgba(79,174,142,.3),inset 0 0 0 1px rgba(168,221,200,.5)}
+.omk-card.lv2 .omk-level{background-image:linear-gradient(100deg,#2f8f70,#6fcaa8,#2f8f70);filter:drop-shadow(0 2px 5px rgba(79,174,142,.35))}
+.omk-card.lv2 .omk-level::before{content:"🍀"}.omk-card.lv2 .omk-level::after{content:"🍀"}.omk-card.lv2 .omk-level::before,.omk-card.lv2 .omk-level::after{color:#56b894}
+/* 末吉：スカイ */
+.omk-card.lv3{border-color:#aacdea;background:linear-gradient(180deg,#f1f7fd,var(--paper));box-shadow:0 12px 30px -8px rgba(90,155,208,.3),inset 0 0 0 1px rgba(170,205,234,.5)}
+.omk-card.lv3 .omk-level{background-image:linear-gradient(100deg,#3d7fb8,#79b4e3,#3d7fb8);filter:drop-shadow(0 2px 5px rgba(90,155,208,.35))}
+.omk-card.lv3 .omk-level::before{content:"💫"}.omk-card.lv3 .omk-level::after{content:"💫"}.omk-card.lv3 .omk-level::before,.omk-card.lv3 .omk-level::after{color:#6aa8dd}
 .omk-msg{font-size:15px;line-height:1.85;margin:10px 8px 16px;font-weight:700;color:var(--ink)}
 .omk-row{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;margin:10px 0;font-weight:700;color:var(--ink)}
 .omk-row .lab{font-weight:800;color:var(--ink-soft);font-size:11px}
@@ -1584,9 +1595,8 @@ function drawOmikuji(){
 }
 function omkCardHTML(r,animate){
   const i=I(),lv=OMK.levels[r.lvl],col=OMK.colors[r.colorIdx],dd=LOC[L][r.dog];
-  const lvColors=['#e58aa0','#cf9f43','#6ec3a0','#7fb0d8'];
-  return '<div class="omk-card'+(animate?' pop':'')+(r.lvl===0?' big':'')+'">'
-   +'<div class="omk-level" style="color:'+lvColors[r.lvl]+'">'+lv.lab[L]+'</div>'
+  return '<div class="omk-card omk-lvl-fx lv'+r.lvl+(animate?' pop':'')+'">'
+   +'<div class="omk-level">'+lv.lab[L]+'</div>'
    +'<div class="omk-msg">'+lv.msg[L]+'</div>'
    +'<div class="omk-dogline">'+dogImg(r.dog)+'<div style="text-align:left"><div class="lab" style="font-size:12px;font-weight:800;color:var(--ink-soft)">'+i.omk_dog+'</div><div style="font-weight:800;font-size:15px">'+dd.breed+'</div></div></div>'
    +'<div class="omk-row"><span class="lab">'+i.omk_color+'</span><span class="omk-swatch" style="background:'+col.hex+'"></span>'+col.name[L]+'</div>'
@@ -1595,15 +1605,22 @@ function omkCardHTML(r,animate){
      +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[r.itemIdx!=null?r.itemIdx:0])+'">'+i.aff_item+'</a></div>'
    +'<div class="omk-note">'+i.omk_note+'</div></div>';
 }
+/* 運レベル別の紙吹雪セット（0:大吉 1:中吉 2:小吉 3:末吉） */
+const LVL_FX=[
+  {emojis:['✨','💖','⭐','🌸','💛','🎉'], extra:['#ffe7a0','#ffd45e','#f7c948','#fff0bf'], N:56, ec:0.5},
+  {emojis:['💕','💗','🌸','✨'],          extra:['#ffd0de','#ff9fbb','#ffc2d4'],          N:46, ec:0.44},
+  {emojis:['🍀','🌿','🌸','✨'],          extra:['#bdebd9','#8fd9bd','#d8f3e8'],          N:42, ec:0.42},
+  {emojis:['💫','⭐','🌸','✨'],          extra:['#cfe6f8','#a7cdee','#e0eefb'],          N:40, ec:0.42}
+];
 function sakuraBurst(lvl,light){
   const layer=document.createElement('div');
   layer.className='sakura-layer';
   const petals=['#ffe1ec','#fbc9da','#f6a8c6','#ffd2e0','#f7b7d0'];
-  const gold=['#ffe7a0','#ffd45e','#f7c948','#fff0bf'];
-  const big=(lvl===0);                                   // 大吉
-  const N=light?16:(big?56:36);
-  const emojis=big?['✨','💖','⭐','🌸','💛','🎉']:['🌸','💗','✨'];
-  const emojiChance=light?0.2:(big?0.5:0.32);
+  const fx=light?null:(LVL_FX[lvl]||LVL_FX[2]);
+  const N=light?16:fx.N;
+  const emojis=light?['🌸','✨']:fx.emojis;
+  const emojiChance=light?0.18:fx.ec;
+  const pal=light?petals:petals.concat(fx.extra);
   let html='';
   for(let k=0;k<N;k++){
     const left=Math.round(Math.random()*100),
@@ -1615,7 +1632,6 @@ function sakuraBurst(lvl,light){
       html+='<i class="emp" style="left:'+left+'%;font-size:'+sz+'px;animation:sakuraFall '+dur+'s linear '+dl+'s forwards">'+em+'</i>';
     }else{
       const w=(10+Math.round(Math.random()*9)),h=(w-2),
-            pal=(big&&Math.random()<0.5)?gold:petals,
             c1=pal[Math.floor(Math.random()*pal.length)],
             c2=pal[Math.floor(Math.random()*pal.length)];
       html+='<i style="left:'+left+'%;width:'+w+'px;height:'+h+'px;background:linear-gradient(135deg,'+c1+','+c2+');animation:sakuraFall '+dur+'s linear '+dl+'s forwards"></i>';
