@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>感想コメント管理 | 16わんこ恋愛診断</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hiragino Kaku Gothic ProN',sans-serif;background:#fff9f5;color:#3a2e28;line-height:1.7;font-size:15px;padding:18px;max-width:720px;margin:0 auto}
+h1{font-size:18px;color:#e58aa0;margin-bottom:4px}
+.sub{font-size:12px;color:#7a6258;margin-bottom:16px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+input[type=password]{flex:1;min-width:180px;padding:9px 12px;border:1.5px solid #e7cf9f;border-radius:10px;font-size:14px}
+button{font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;border:0;border-radius:999px;padding:9px 16px}
+.load{background:#e58aa0;color:#fff}
+.empty{color:#7a6258;font-size:13px;padding:20px;text-align:center}
+.card{background:#fff;border:1px solid #f0e0d0;border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 4px 14px rgba(100,60,40,.07)}
+.meta{font-size:11px;color:#9c8676;margin-bottom:6px;display:flex;gap:10px;flex-wrap:wrap}
+.meta b{color:#e58aa0}
+.stars{color:#e6a93a;letter-spacing:1px}
+.body{font-size:14px;line-height:1.8;margin-bottom:10px;white-space:pre-wrap;word-break:break-word}
+.acts{display:flex;gap:8px}
+.ok{background:#5bb98a;color:#fff}
+.ng{background:#fff;color:#c45;border:1.5px solid #f0c4c4}
+.msg{font-size:12px;margin:10px 0;min-height:18px}
+.msg.err{color:#c45}.msg.good{color:#5bb98a}
+</style>
+</head>
+<body>
+  <h1>💬 感想コメント管理</h1>
+  <div class="sub">承認するとサイトに公開されます。却下すると削除されます。</div>
+  <div class="bar">
+    <input type="password" id="tok" placeholder="管理パスワード（ADMIN_TOKEN）" autocomplete="off">
+    <button class="load" onclick="load()">承認待ちを読み込む</button>
+  </div>
+  <div class="msg" id="msg"></div>
+  <div id="list"></div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  function tok(){return $('tok').value.trim();}
+  function setMsg(t,cls){const m=$('msg');m.textContent=t||'';m.className='msg'+(cls?' '+cls:'');}
+  function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function stars(n){n=n||0;return '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n);}
+
+  async function load(){
+    if(!tok()){setMsg('パスワードを入力してください','err');return;}
+    setMsg('読み込み中…');
+    try{
+      const r=await fetch('/api/feedback/admin?token='+encodeURIComponent(tok()));
+      const d=await r.json();
+      if(!d.ok){setMsg(d.error==='auth'?'パスワードが違います':d.error==='no-kv'?'KVが未設定です':'読み込みに失敗しました','err');return;}
+      render(d.pending||[]);
+      setMsg('承認待ち：'+(d.pending?d.pending.length:0)+'件','good');
+    }catch(e){setMsg('通信エラー','err');}
+  }
+
+  function render(list){
+    const el=$('list');
+    if(!list.length){el.innerHTML='<div class="empty">承認待ちのコメントはありません 🐾</div>';return;}
+    el.innerHTML=list.map(o=>
+      '<div class="card" data-id="'+esc(o.id)+'">'
+      +'<div class="meta"><span class="stars">'+stars(o.rating)+'</span>'
+      +(o.name?'<span><b>'+esc(o.name)+'</b></span>':'<span>（匿名）</span>')
+      +(o.type?'<span>'+esc(o.type)+'</span>':'')
+      +'<span>'+esc((o.ts||'').replace('T',' ').slice(0,16))+'</span></div>'
+      +'<div class="body">'+esc(o.comment)+'</div>'
+      +'<div class="acts"><button class="ok" onclick="act(this,\'approve\')">承認して公開</button>'
+      +'<button class="ng" onclick="act(this,\'reject\')">却下（削除）</button></div></div>'
+    ).join('');
+  }
+
+  async function act(btn,action){
+    const card=btn.closest('.card');const id=card.getAttribute('data-id');
+    btn.disabled=true;
+    try{
+      const r=await fetch('/api/feedback/admin',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Token':tok()},body:JSON.stringify({action,id})});
+      const d=await r.json();
+      if(d.ok){card.style.opacity=.4;card.querySelector('.acts').innerHTML='<span style="font-size:12px;color:#7a6258">'+(action==='approve'?'✅ 公開しました':'🗑 削除しました')+'</span>';}
+      else{setMsg('処理に失敗しました','err');btn.disabled=false;}
+    }catch(e){setMsg('通信エラー','err');btn.disabled=false;}
+  }
+</script>
+</body>
+</html>

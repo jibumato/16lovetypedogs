@@ -506,6 +506,30 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .omk-pr{font-size:10px;color:var(--ink-faint);margin-top:3px;letter-spacing:.02em}
 .omk-note{font-size:11px;color:var(--ink-faint);margin-top:14px}
 
+/* みんなの感想（ユーザー投稿） */
+.fb-sub{font-size:11.5px;color:var(--ink-soft);margin:-4px 0 14px 53px;line-height:1.6}
+.fb-form{background:rgba(255,255,255,.6);border:1px solid var(--glass-bd);border-radius:16px;padding:14px 14px 12px}
+.fb-stars{display:flex;gap:4px;justify-content:center;margin-bottom:10px}
+.fb-stars button{font-size:30px;line-height:1;background:none;border:0;cursor:pointer;color:#e0cfb4;padding:0;transition:transform .1s,color .12s;font-family:inherit}
+.fb-stars button.on{color:#e6a93a}
+.fb-stars button:active{transform:scale(1.2)}
+.fb-form textarea{width:100%;min-height:74px;resize:vertical;border:1.5px solid var(--glass-bd);border-radius:12px;padding:10px 12px;font-family:inherit;font-size:13.5px;line-height:1.7;color:var(--ink);background:#fff}
+.fb-form textarea:focus{outline:none;border-color:var(--pink)}
+.fb-name{width:100%;border:1.5px solid var(--glass-bd);border-radius:12px;padding:9px 12px;font-family:inherit;font-size:13px;color:var(--ink);background:#fff;margin-top:8px}
+.fb-name:focus{outline:none;border-color:var(--pink)}
+.fb-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.fb-send{display:block;width:100%;margin-top:10px;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:12px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.fb-send:active{transform:translateY(1px)}
+.fb-send:disabled{opacity:.55;cursor:default}
+.fb-note{font-size:10.5px;color:var(--ink-faint);text-align:center;margin-top:8px;line-height:1.6}
+.fb-thanks{text-align:center;padding:20px 10px;font-size:14px;font-weight:800;color:var(--pink-deep);line-height:1.8}
+.fb-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.fb-item{background:rgba(255,255,255,.7);border:1px solid var(--glass-bd);border-radius:14px;padding:11px 13px}
+.fb-item .fi-stars{color:#e6a93a;font-size:12px;letter-spacing:1px;margin-bottom:3px}
+.fb-item .fi-text{font-size:13px;line-height:1.8;color:var(--ink)}
+.fb-item .fi-meta{font-size:10.5px;color:var(--ink-soft);margin-top:5px;font-weight:700}
+.fb-empty{font-size:12px;color:var(--ink-faint);text-align:center;padding:12px}
+
 /* affiliate */
 .afflink{display:inline-block;margin-top:10px;font-family:inherit;font-weight:800;font-size:13px;
   color:var(--pink-deep);background:rgba(255,255,255,.7);border:1px solid var(--glass-bd);border-radius:999px;padding:8px 16px;
@@ -819,6 +843,9 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
         <button class="ic-btn save" aria-label="Save image" onclick="saveShareImg()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg></button>
       </div>
     </div>
+
+    <!-- 6.5 みんなの感想（ユーザー投稿・承認制） -->
+    <div class="sec mt" id="fbSection"></div>
 
     <!-- 7. 今日の恋愛おみくじ（毎日引けるリピート導線） -->
     <div class="sec mt omk-sec" id="omkSection" style="text-align:center"></div>
@@ -1557,6 +1584,7 @@ function renderResult(code,stay){
   renderUraChara(code);
   renderLoveGuide(code);
   renderResultOmikuji();
+  renderFeedback();
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
   const SHARE_NUDGE={ja:'🐾 結果をシェアして友だちにも教えよう！',en:'🐾 Share your result with friends!',ko:'🐾 결과를 친구에게도 공유해요!',zh:'🐾 把结果分享给朋友吧！',tw:'🐾 把結果分享給朋友吧！'};
@@ -1646,6 +1674,68 @@ function sakuraBurst(lvl,light){
   layer.innerHTML=html;
   document.body.appendChild(layer);
   setTimeout(function(){if(layer.parentNode)layer.parentNode.removeChild(layer);},9800);
+}
+/* ===== みんなの感想（ユーザー投稿・承認制） ===== */
+const FB_I18N={
+  ja:{head:'みんなの感想',sub:'診断してみた感想をひとことどうぞ🐾（承認後に掲載されます）',ph:'例：相性ランキングが当たってた！',name:'ニックネーム（任意）',send:'感想を投稿する',sending:'送信中…',thanks:'投稿ありがとう！🐾 承認後に掲載されます',note:'いただいた感想は確認のうえ掲載します。リンクを含む投稿は掲載できません。',empty:'最初の感想を投稿してみよう🐾',err:'送信できませんでした。少し時間をおいて再度お試しください。',rate:'続けての投稿は少し時間をおいてね',anon:'匿名さん'},
+  en:{head:'What everyone says',sub:'Leave a quick thought after your result 🐾 (shown after review)',ph:'e.g. The compatibility ranking was spot on!',name:'Nickname (optional)',send:'Post your thought',sending:'Sending…',thanks:'Thanks for posting! 🐾 It will appear after review',note:'Comments are shown after a quick review. Posts with links can’t be published.',empty:'Be the first to leave a thought 🐾',err:'Could not send. Please try again in a moment.',rate:'Please wait a bit before posting again',anon:'Anonymous'},
+  ko:{head:'모두의 감상',sub:'진단 후기를 한마디 남겨봐요 🐾 (승인 후 게재)',ph:'예: 궁합 랭킹이 딱 맞았어요!',name:'닉네임 (선택)',send:'감상 남기기',sending:'전송 중…',thanks:'남겨주셔서 감사해요! 🐾 승인 후 게재됩니다',note:'확인 후 게재합니다. 링크가 포함된 글은 게재할 수 없어요.',empty:'첫 감상을 남겨보세요 🐾',err:'전송하지 못했어요. 잠시 후 다시 시도해 주세요.',rate:'연속 투고는 잠시 후에 해주세요',anon:'익명'},
+  zh:{head:'大家的感想',sub:'留下你的测验感想吧 🐾（审核后展示）',ph:'例：契合度排行好准！',name:'昵称（可选）',send:'发表感想',sending:'发送中…',thanks:'感谢留言！🐾 审核后将展示',note:'留言会经审核后展示。含链接的留言无法发布。',empty:'来做第一个留言的人吧 🐾',err:'发送失败，请稍后再试。',rate:'请稍等片刻再发表',anon:'匿名'},
+  tw:{head:'大家的感想',sub:'留下你的測驗感想吧 🐾（審核後顯示）',ph:'例：契合度排行好準！',name:'暱稱（可選）',send:'發表感想',sending:'傳送中…',thanks:'感謝留言！🐾 審核後將顯示',note:'留言會經審核後顯示。含連結的留言無法發布。',empty:'來當第一個留言的人吧 🐾',err:'傳送失敗，請稍後再試。',rate:'請稍等片刻再發表',anon:'匿名'}
+};
+let fbRating=5;
+function fbStars(sel){let s='';for(let k=1;k<=5;k++)s+='<button type="button" class="'+(k<=sel?'on':'')+'" onclick="fbSetRating('+k+')" aria-label="'+k+'">★</button>';return s;}
+function fbSetRating(n){fbRating=n;const w=document.getElementById('fbStarsWrap');if(w)w.innerHTML=fbStars(n);}
+function fbItemHTML(o){
+  const t=FB_I18N[L]||FB_I18N.ja;
+  const st='★★★★★'.slice(0,o.rating||0)+'☆☆☆☆☆'.slice(0,5-(o.rating||0));
+  const nm=(o.name&&o.name.trim())?esc(o.name):t.anon;
+  const ty=o.type?' ・ '+esc(o.type):'';
+  return '<div class="fb-item"><div class="fi-stars">'+st+'</div><div class="fi-text">「'+esc(o.comment)+'」</div><div class="fi-meta">— '+nm+ty+'</div></div>';
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function renderFeedback(){
+  const sec=document.getElementById('fbSection');if(!sec)return;
+  fbRating=5;
+  const t=FB_I18N[L]||FB_I18N.ja;
+  sec.innerHTML='<h3><span class="dot">💬</span>'+t.head+'</h3>'
+    +'<div class="fb-sub">'+t.sub+'</div>'
+    +'<div class="fb-form">'
+    +'<div class="fb-stars" id="fbStarsWrap">'+fbStars(fbRating)+'</div>'
+    +'<textarea id="fbComment" maxlength="300" placeholder="'+t.ph.replace(/"/g,'&quot;')+'"></textarea>'
+    +'<input class="fb-name" id="fbName" maxlength="24" placeholder="'+t.name.replace(/"/g,'&quot;')+'">'
+    +'<input class="fb-hp" id="fbWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" placeholder="Website">'
+    +'<button class="fb-send" id="fbSend" onclick="submitFeedback()">'+t.send+'</button>'
+    +'<div class="fb-note">'+t.note+'</div>'
+    +'</div>'
+    +'<div class="fb-list" id="fbList"></div>';
+  // 公開済みコメントの読み込み
+  fetch('/api/feedback').then(r=>r.json()).then(d=>{
+    const list=document.getElementById('fbList');if(!list)return;
+    const cs=(d&&d.comments)||[];
+    if(!cs.length){list.innerHTML='<div class="fb-empty">'+t.empty+'</div>';return;}
+    list.innerHTML=cs.slice(0,8).map(fbItemHTML).join('');
+  }).catch(()=>{const list=document.getElementById('fbList');if(list)list.innerHTML='<div class="fb-empty">'+t.empty+'</div>';});
+}
+function submitFeedback(){
+  const t=FB_I18N[L]||FB_I18N.ja;
+  const btn=document.getElementById('fbSend');
+  const comment=(document.getElementById('fbComment').value||'').trim();
+  if(!comment){document.getElementById('fbComment').focus();return;}
+  const payload={rating:fbRating,comment:comment,name:(document.getElementById('fbName').value||'').trim(),type:current||'',website:(document.getElementById('fbWebsite').value||'')};
+  btn.disabled=true;btn.textContent=t.sending;
+  fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(r=>r.json().then(d=>({s:r.status,d})))
+    .then(({s,d})=>{
+      if(d&&d.ok){
+        const form=document.querySelector('#fbSection .fb-form');
+        if(form)form.outerHTML='<div class="fb-thanks">'+t.thanks+'</div>';
+        try{ if(window.gtag) gtag('event','select_content',{content_type:'feedback_submit',language:L}); }catch(e){}
+      }else{
+        btn.disabled=false;btn.textContent=t.send;
+        alert(s===429?t.rate:t.err);
+      }
+    }).catch(()=>{btn.disabled=false;btn.textContent=t.send;alert(t.err);});
 }
 /* ===== プレミアムレポート upsell ===== */
 const STRIPE_LINKS={
