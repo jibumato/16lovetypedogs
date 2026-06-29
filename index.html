@@ -235,6 +235,7 @@ body{
 /* 桜吹雪（おみくじ） */
 .sakura-layer{position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden}
 .sakura-layer i{position:absolute;top:-26px;width:13px;height:11px;background:linear-gradient(135deg,#ffe1ec,#f6a8c6);border-radius:100% 0 100% 0;opacity:.92;box-shadow:0 1px 2px rgba(210,98,143,.18);will-change:transform,opacity}
+.sakura-layer i.emp{width:auto;height:auto;background:none;box-shadow:none;border-radius:0;line-height:1;filter:drop-shadow(0 2px 3px rgba(210,98,143,.22))}
 @keyframes sakuraFall{0%{opacity:0;transform:translate3d(0,-30px,0) rotateZ(0)}8%{opacity:1}25%{transform:translate3d(24px,26vh,0) rotateZ(95deg)}50%{transform:translate3d(-16px,52vh,0) rotateZ(185deg)}75%{transform:translate3d(22px,78vh,0) rotateZ(275deg)}95%{opacity:1}100%{opacity:0;transform:translate3d(-10px,106vh,0) rotateZ(365deg)}}
 
 /* sections */
@@ -455,11 +456,35 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .dexcell-lock .q{font-size:12px;font-weight:800;margin-top:2px;letter-spacing:1px}
 
 /* omikuji */
-.omk-draw{font-size:72px;margin:24px 0 8px;display:inline-block;animation:bobble 1s ease-in-out infinite;cursor:pointer}
-.omk-card{background:var(--paper);border:1px solid var(--glass-bd);border-radius:24px;padding:26px 22px;box-shadow:var(--shadow);margin-top:6px}
+.omk-draw{font-size:72px;margin:24px 0 8px;display:inline-block;animation:bobble 1s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 6px 10px rgba(210,98,143,.25))}
+/* 抽選中の演出 */
+.omk-suspense{padding:20px 0 10px;text-align:center}
+.omk-shaker{font-size:74px;display:inline-block;animation:omkShake .42s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(210,98,143,.3))}
+.omk-suspense-txt{margin-top:12px;font-weight:800;color:var(--pink-deep);font-size:13px;letter-spacing:.1em;animation:omkPulse 1s ease-in-out infinite}
+@keyframes omkShake{0%,100%{transform:rotate(-13deg) translateY(0)}25%{transform:rotate(11deg) translateY(-7px)}50%{transform:rotate(-9deg) translateY(0)}75%{transform:rotate(13deg) translateY(-5px)}}
+@keyframes omkPulse{0%,100%{opacity:.55}50%{opacity:1}}
+.omk-card{position:relative;overflow:hidden;background:var(--paper);border:1px solid var(--glass-bd);border-radius:24px;padding:26px 22px;box-shadow:var(--shadow);margin-top:6px}
 .omk-card.pop{animation:pop .5s cubic-bezier(.2,1.2,.4,1)}
 @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+/* リール反射スイープ */
+.omk-card.pop::after{content:"";position:absolute;top:0;left:-65%;width:55%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);
+  animation:omkSheen 1.05s ease-out .22s 1;pointer-events:none}
+@keyframes omkSheen{from{left:-65%}to{left:150%}}
+/* 大吉カードの特別装飾 */
+.omk-card.big{border-color:#f0cd78;background:linear-gradient(180deg,#fffaf0,var(--paper));
+  box-shadow:0 12px 32px -8px rgba(224,169,58,.4),inset 0 0 0 1px rgba(242,210,122,.55)}
 .omk-level{font-family:'M PLUS Rounded 1c';font-size:42px;font-weight:800;letter-spacing:.06em;margin-bottom:2px;color:var(--pink-deep)}
+.omk-card.pop .omk-level{animation:omkStamp .6s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes omkStamp{0%{transform:scale(.3) rotate(-9deg);opacity:0}60%{transform:scale(1.16) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.omk-card.big .omk-level{background:linear-gradient(100deg,#d4922b 0%,#ffe79a 25%,#e0a93a 50%,#ffe79a 75%,#d4922b 100%);
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 5px rgba(224,169,58,.45));animation:omkGold 2.6s linear infinite}
+.omk-card.big.pop .omk-level{animation:omkStamp .6s cubic-bezier(.2,1.4,.4,1) both,omkGold 2.6s linear .6s infinite}
+@keyframes omkGold{to{background-position:200% center}}
+.omk-card.big .omk-level::before,.omk-card.big .omk-level::after{-webkit-text-fill-color:initial;color:#f5b73d;font-size:.62em;vertical-align:middle;margin:0 .22em;display:inline-block;animation:omkTwinkle 1.2s ease-in-out infinite}
+.omk-card.big .omk-level::before{content:"✨"}.omk-card.big .omk-level::after{content:"✨"}
+@keyframes omkTwinkle{0%,100%{opacity:.45;transform:scale(.82)}50%{opacity:1;transform:scale(1.2)}}
 .omk-msg{font-size:15px;line-height:1.85;margin:10px 8px 16px;font-weight:700;color:var(--ink)}
 .omk-row{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;margin:10px 0;font-weight:700;color:var(--ink)}
 .omk-row .lab{font-weight:800;color:var(--ink-soft);font-size:11px}
@@ -1537,6 +1562,7 @@ function renderResultOmikuji(){
     sec.innerHTML=head+'<div id="omkBody" class="center"><div class="omk-draw" onclick="drawOmikuji()">🎴</div><br><button class="btn" style="max-width:240px;margin:6px auto 0" onclick="drawOmikuji()">'+i.omk_draw+'</button></div>';
   }
 }
+const OMK_DRAWING={ja:'🔮 占っています…',en:'🔮 Reading your fortune…',ko:'🔮 운세를 보는 중…',zh:'🔮 正在占卜…',tw:'🔮 正在占卜…'};
 function drawOmikuji(){
   const weights=[2,4,5,3];let pool=[];weights.forEach((w,idx)=>{for(let k=0;k<w;k++)pool.push(idx);});
   const se2=curSeason(),al2=[];for(let k=0;k<LUCKY[L].length;k++){const ss=SEASON[k];if(ss==='all'||ss.indexOf(se2)>=0)al2.push(k);}
@@ -1544,15 +1570,22 @@ function drawOmikuji(){
            actIdx:Math.floor(Math.random()*OMK.act[L].length),dog:ORDER[Math.floor(Math.random()*ORDER.length)],
            itemIdx:al2[Math.floor(Math.random()*al2.length)]};
   try{localStorage.setItem('omk16',JSON.stringify({date:omkToday(),r:r}));}catch(e){}
-  const body=document.getElementById('omkBody');
-  if(body)body.innerHTML=omkCardHTML(r,true);
-  sakuraBurst();
   try{ if(window.gtag) gtag('event','select_content',{content_type:'omikuji_draw',language:L}); }catch(e){}
+  const body=document.getElementById('omkBody');
+  if(!body){return;}
+  /* 抽選サスペンス → リールスイープで結果オープン */
+  body.innerHTML='<div class="omk-suspense"><div class="omk-shaker">🎴</div><div class="omk-suspense-txt">'+(OMK_DRAWING[L]||OMK_DRAWING.ja)+'</div></div>';
+  sakuraBurst(0,true);
+  setTimeout(function(){
+    const b2=document.getElementById('omkBody');
+    if(b2)b2.innerHTML=omkCardHTML(r,true);
+    sakuraBurst(r.lvl,false);
+  },950);
 }
 function omkCardHTML(r,animate){
   const i=I(),lv=OMK.levels[r.lvl],col=OMK.colors[r.colorIdx],dd=LOC[L][r.dog];
   const lvColors=['#e58aa0','#cf9f43','#6ec3a0','#7fb0d8'];
-  return '<div class="omk-card'+(animate?' pop':'')+'">'
+  return '<div class="omk-card'+(animate?' pop':'')+(r.lvl===0?' big':'')+'">'
    +'<div class="omk-level" style="color:'+lvColors[r.lvl]+'">'+lv.lab[L]+'</div>'
    +'<div class="omk-msg">'+lv.msg[L]+'</div>'
    +'<div class="omk-dogline">'+dogImg(r.dog)+'<div style="text-align:left"><div class="lab" style="font-size:12px;font-weight:800;color:var(--ink-soft)">'+i.omk_dog+'</div><div style="font-weight:800;font-size:15px">'+dd.breed+'</div></div></div>'
@@ -1562,24 +1595,35 @@ function omkCardHTML(r,animate){
      +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[r.itemIdx!=null?r.itemIdx:0])+'">'+i.aff_item+'</a></div>'
    +'<div class="omk-note">'+i.omk_note+'</div></div>';
 }
-function sakuraBurst(){
+function sakuraBurst(lvl,light){
   const layer=document.createElement('div');
   layer.className='sakura-layer';
-  const cols=['#ffe1ec','#fbc9da','#f6a8c6','#ffd2e0','#f7b7d0'];
-  let html='';const N=34;
+  const petals=['#ffe1ec','#fbc9da','#f6a8c6','#ffd2e0','#f7b7d0'];
+  const gold=['#ffe7a0','#ffd45e','#f7c948','#fff0bf'];
+  const big=(lvl===0);                                   // 大吉
+  const N=light?16:(big?56:36);
+  const emojis=big?['✨','💖','⭐','🌸','💛','🎉']:['🌸','💗','✨'];
+  const emojiChance=light?0.2:(big?0.5:0.32);
+  let html='';
   for(let k=0;k<N;k++){
     const left=Math.round(Math.random()*100),
-          w=(10+Math.round(Math.random()*8)),
-          h=(w-2),
-          dur=(4.2+Math.random()*3.4).toFixed(2),
-          dl=(Math.random()*1.6).toFixed(2),
-          c1=cols[Math.floor(Math.random()*cols.length)],
-          c2=cols[Math.floor(Math.random()*cols.length)];
-    html+='<i style="left:'+left+'%;width:'+w+'px;height:'+h+'px;background:linear-gradient(135deg,'+c1+','+c2+');animation:sakuraFall '+dur+'s linear '+dl+'s forwards"></i>';
+          dur=(4.0+Math.random()*3.6).toFixed(2),
+          dl=(Math.random()*1.7).toFixed(2);
+    if(Math.random()<emojiChance){
+      const em=emojis[Math.floor(Math.random()*emojis.length)],
+            sz=(15+Math.round(Math.random()*16));
+      html+='<i class="emp" style="left:'+left+'%;font-size:'+sz+'px;animation:sakuraFall '+dur+'s linear '+dl+'s forwards">'+em+'</i>';
+    }else{
+      const w=(10+Math.round(Math.random()*9)),h=(w-2),
+            pal=(big&&Math.random()<0.5)?gold:petals,
+            c1=pal[Math.floor(Math.random()*pal.length)],
+            c2=pal[Math.floor(Math.random()*pal.length)];
+      html+='<i style="left:'+left+'%;width:'+w+'px;height:'+h+'px;background:linear-gradient(135deg,'+c1+','+c2+');animation:sakuraFall '+dur+'s linear '+dl+'s forwards"></i>';
+    }
   }
   layer.innerHTML=html;
   document.body.appendChild(layer);
-  setTimeout(function(){if(layer.parentNode)layer.parentNode.removeChild(layer);},9500);
+  setTimeout(function(){if(layer.parentNode)layer.parentNode.removeChild(layer);},9800);
 }
 /* ===== プレミアムレポート upsell ===== */
 const STRIPE_LINKS={
