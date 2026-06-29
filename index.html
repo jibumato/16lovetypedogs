@@ -1015,6 +1015,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 <nav class="tabbar" id="tabbar">
   <button class="tab" data-tab="home" onclick="navHome()"><span class="ti">🐶</span><span class="tl" id="t-tabhome">診断</span></button>
   <button class="tab" data-tab="share" onclick="navShare()"><span class="ti">📤</span><span class="tl" id="t-tabshare">シェア</span></button>
+  <button class="tab" data-tab="omikuji" onclick="navOmikuji()"><span class="ti">🎴</span><span class="tl" id="t-tabomk">おみくじ</span></button>
   <button class="tab" data-tab="article" onclick="navArticle()"><span class="ti">📚</span><span class="tl" id="t-tabart">記事</span></button>
 </nav>
 
@@ -1225,6 +1226,19 @@ function updateTabbar(id){
   });
 }
 function navHome(){ show('top'); }
+function navOmikuji(){
+  try{ if(window.gtag) gtag('event','select_content',{content_type:'navbar_omikuji',language:L}); }catch(e){}
+  const active=document.querySelector('.screen.active');
+  const sec=document.getElementById('omkSection');
+  if(active&&active.id==='result'&&current&&sec&&sec.innerHTML.trim()){
+    sec.scrollIntoView({behavior:'smooth',block:'start'});
+  }else if(current){
+    renderResult(current,true);show('result');
+    setTimeout(()=>{const s=document.getElementById('omkSection');if(s)s.scrollIntoView({behavior:'smooth',block:'start'});},60);
+  }else{
+    startQuiz();
+  }
+}
 function navArticle(){
   try{ if(window.gtag) gtag('event','select_content',{content_type:'navbar_article',language:L}); }catch(e){}
   location.href='/ranking-index.html';
