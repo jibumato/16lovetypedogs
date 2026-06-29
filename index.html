@@ -503,6 +503,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .omk-dogline{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0;padding-top:14px;border-top:1px dashed var(--hair)}
 .omk-dogline .dog{width:48px;height:48px;border-radius:15px;object-fit:contain;background:var(--accent-soft)}
 .omk-dogline .em{font-size:30px}
+.omk-pr{font-size:10px;color:var(--ink-faint);margin-top:3px;letter-spacing:.02em}
 .omk-note{font-size:11px;color:var(--ink-faint);margin-top:14px}
 
 /* affiliate */
@@ -1207,7 +1208,7 @@ function applyStatic(){
   document.querySelectorAll('.ic-btn.line').forEach(b=>b.style.display=(L==='ja'||L==='tw')?'inline-flex':'none');
   document.querySelectorAll('.ic-btn.kakao').forEach(b=>b.style.display=(L==='ko'&&KAKAO_JS_KEY)?'inline-flex':'none');
   document.getElementById('t-footer').innerHTML=i.footer.replace(/\n/g,'<br>')+'<br>'+i.aff_disclosure
-    +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
+    +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/tokushoho.html" style="color:inherit">特定商取引法に基づく表記</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
     +'<br>© 2026 '+i.title+' / Type&amp;Co';
   document.querySelectorAll('.lang-dd-menu button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));
   setText('t-langcur',LANG_NAMES[L]||LANG_NAMES.ja);
@@ -1574,6 +1575,7 @@ function renderResultOmikuji(){
   }
 }
 const OMK_DRAWING={ja:'🔮 占っています…',en:'🔮 Reading your fortune…',ko:'🔮 운세를 보는 중…',zh:'🔮 正在占卜…',tw:'🔮 正在占卜…'};
+const OMK_PR={ja:'PR・Amazonアソシエイトのリンクを含みます',en:'Ad · contains Amazon affiliate links',ko:'광고·아마존 제휴 링크 포함',zh:'广告·含亚马逊联盟链接',tw:'廣告·含亞馬遜聯盟連結'};
 function drawOmikuji(){
   const weights=[2,4,5,3];let pool=[];weights.forEach((w,idx)=>{for(let k=0;k<w;k++)pool.push(idx);});
   const se2=curSeason(),al2=[];for(let k=0;k<LUCKY[L].length;k++){const ss=SEASON[k];if(ss==='all'||ss.indexOf(se2)>=0)al2.push(k);}
@@ -1602,7 +1604,8 @@ function omkCardHTML(r,animate){
    +'<div class="omk-row"><span class="lab">'+i.omk_color+'</span><span class="omk-swatch" style="background:'+col.hex+'"></span>'+col.name[L]+'</div>'
    +'<div class="omk-row" style="flex-direction:column;gap:2px"><span class="lab">'+i.omk_action+'</span><span>'+OMK.act[L][r.actIdx]+'</span></div>'
    +'<div class="omk-row" style="flex-direction:column;gap:4px"><span class="lab">'+i.omk_item+'</span><span>'+LUCKY[L][r.itemIdx!=null?r.itemIdx:0]+'</span>'
-     +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[r.itemIdx!=null?r.itemIdx:0])+'">'+i.aff_item+'</a></div>'
+     +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[r.itemIdx!=null?r.itemIdx:0])+'">'+i.aff_item+'</a>'
+     +'<div class="omk-pr">'+(OMK_PR[L]||OMK_PR.ja)+'</div></div>'
    +'<div class="omk-note">'+i.omk_note+'</div></div>';
 }
 /* 運レベル別の紙吹雪セット（0:大吉 1:中吉 2:小吉 3:末吉） */
