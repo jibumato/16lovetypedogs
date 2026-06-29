@@ -1208,7 +1208,7 @@ function applyStatic(){
   document.querySelectorAll('.ic-btn.line').forEach(b=>b.style.display=(L==='ja'||L==='tw')?'inline-flex':'none');
   document.querySelectorAll('.ic-btn.kakao').forEach(b=>b.style.display=(L==='ko'&&KAKAO_JS_KEY)?'inline-flex':'none');
   document.getElementById('t-footer').innerHTML=i.footer.replace(/\n/g,'<br>')+'<br>'+i.aff_disclosure
-    +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/tokushoho.html" style="color:inherit">特定商取引法に基づく表記</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
+    +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/privacy.html#tokushoho" style="color:inherit">特定商取引法に基づく表記</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
     +'<br>© 2026 '+i.title+' / Type&amp;Co';
   document.querySelectorAll('.lang-dd-menu button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));
   setText('t-langcur',LANG_NAMES[L]||LANG_NAMES.ja);
