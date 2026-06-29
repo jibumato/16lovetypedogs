@@ -629,6 +629,9 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-pay .pl{font-size:11px;color:var(--ink-soft);font-weight:700}
 .lg-pay .chip{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid var(--glass-bd);border-radius:999px;padding:4px 11px;font-size:11.5px;font-weight:800;color:var(--ink)}
 .lg-pay .chip.pp{gap:5px;padding-left:7px}
+.lg-pay .chip.pp.soon{opacity:.6}
+.lg-pay .chip.pp.soon .pp-logo{filter:grayscale(.5)}
+.lg-pay .chip.pp .soon-tag{margin-left:3px;font-size:9.5px;font-weight:800;color:#fff;background:var(--ink-faint);border-radius:999px;padding:1px 6px;letter-spacing:.02em}
 .lg-pay .pp-logo{width:18px;height:18px;display:block;border-radius:4px}
 .lg-re{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 14px;margin-top:14px}
 .lg-re span{font-size:11px;color:var(--ink-soft)}.lg-re span::before{content:"✓ ";color:var(--sj);font-weight:800}
@@ -1673,11 +1676,11 @@ const COUPON_BADGE={
 };
 /* 支払い方法バッジ（Stripe決済：カード＋PayPay。PayPayはJP顧客に表示） */
 const PAY_I18N={
-  ja:{pl:"お支払い",card:"カード"},
-  en:{pl:"Pay with",card:"Card"},
-  ko:{pl:"결제",card:"카드"},
-  zh:{pl:"支付方式",card:"信用卡"},
-  tw:{pl:"付款方式",card:"信用卡"}
+  ja:{pl:"お支払い",card:"カード",soon:"準備中"},
+  en:{pl:"Pay with",card:"Card",soon:"Coming soon"},
+  ko:{pl:"결제",card:"카드",soon:"준비 중"},
+  zh:{pl:"支付方式",card:"信用卡",soon:"准备中"},
+  tw:{pl:"付款方式",card:"信用卡",soon:"準備中"}
 };
 /* オファーのベネフィット6つ＋FAQ（PDF実物の内容に基づく／競合の課金トリックを誠実な回答で打ち返す） */
 const GUIDE_EXTRA={
@@ -2161,7 +2164,7 @@ function renderLoveGuide(code){
       <div class="lg-tax">${g.tax}</div>
       <div class="lg-pages">${g.pages}<b>${g.pagesB}</b>${g.pagesAf||''}</div>
       <a class="lg-buy" id="lgBuy" href="${guideBuyUrl(code,L)}" onclick="trackCheckout('${code}','${L}')">${g.buy}<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
-      <div class="lg-pay"><span class="pl">${PAY_I18N[L]?.pl||PAY_I18N.ja.pl}</span><span class="chip">💳 ${PAY_I18N[L]?.card||PAY_I18N.ja.card}</span><span class="chip pp"><img class="pp-logo" src="/paypay-logo.png" alt="PayPay" width="18" height="18" decoding="async">PayPay</span></div>
+      <div class="lg-pay"><span class="pl">${PAY_I18N[L]?.pl||PAY_I18N.ja.pl}</span><span class="chip">💳 ${PAY_I18N[L]?.card||PAY_I18N.ja.card}</span><span class="chip pp soon"><img class="pp-logo" src="/paypay-logo.png" alt="PayPay" width="18" height="18" decoding="async">PayPay<span class="soon-tag">${PAY_I18N[L]?.soon||PAY_I18N.ja.soon}</span></span></div>
       <div class="lg-coupon">🎟 ${g.coupon||''}</div>
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}${g.refund?`<span>${g.refund}</span>`:''}</div>
       ${g.jpOnly?`<div class="lg-jponly">${g.jpOnly}</div>`:''}
