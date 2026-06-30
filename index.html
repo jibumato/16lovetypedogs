@@ -1782,7 +1782,7 @@ function submitSaveResult(btn){
   const code=(sec&&sec.dataset.code)||current||'';
   const dl=LOC[L]&&LOC[L][code]?LOC[L][code]:{};
   btn.disabled=true;btn.textContent=t.sending;
-  fetch('/api/save-result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,type:code,lang:L,breed:dl.breed||'',typeName:dl.name||''})})
+  fetch('/api/save-result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,type:code,lang:L,breed:dl.breed||'',typeName:dl.name||'',tag:dl.tag||'',role:dl.role||''})})
     .then(r=>r.json().then(d=>({s:r.status,d})))
     .then(({s,d})=>{
       if(d&&d.ok){
