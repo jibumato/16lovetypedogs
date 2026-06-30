@@ -6,8 +6,7 @@
     "directory": "./",
     "binding": "ASSETS",
     "not_found_handling": "404-page"
-  }
-  // 診断数カウンタを使う場合は、KV名前空間を作成して以下を追記:
-  //   npx wrangler kv namespace create COUNTER
-  // "kv_namespaces": [{ "binding": "COUNTER", "id": "<作成されたid>" }]
+  },
+  // 診断数カウンタ・感想コメント・メールリード保存に使うKV
+  "kv_namespaces": [{ "binding": "COUNTER", "id": "bc0214b4bef04bf081931cef357e168b" }]
 }
