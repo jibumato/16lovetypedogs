@@ -34,11 +34,15 @@ FONTS = {
     "en_bold": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "zh": "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
     "zh_bold": "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+    "ko": "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+    "ko_bold": "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+    "tw": "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+    "tw_bold": "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
 }
 
-LABEL   = {"en": "My love-dog is", "zh": "我的恋爱犬是"}
-EYEBROW = {"en": "MBTI  ×  LOVE  ×  DOG", "zh": "MBTI  ×  恋爱  ×  犬种"}
-RESULT  = {"en": "16 Love-Type Dogs  result", "zh": "16恋爱犬测验  结果"}
+LABEL   = {"en": "My love-dog is", "zh": "我的恋爱犬是", "ko": "내 연애견은", "tw": "我的戀愛犬是"}
+EYEBROW = {"en": "16 TYPES  ×  LOVE  ×  DOG", "zh": "16类型  ×  恋爱  ×  犬种", "ko": "16유형  ×  연애  ×  강아지", "tw": "16類型  ×  戀愛  ×  犬種"}
+RESULT  = {"en": "16 Love-Type Dogs  result", "zh": "16恋爱犬测验  结果", "ko": "16 연애견 진단  결과", "tw": "16戀愛犬測驗  結果"}
 SITE    = "16lovetypedogs.com"
 
 
@@ -178,10 +182,10 @@ REDIRECT = """<!DOCTYPE html>
 <meta property="og:locale" content="{locale}">
 <meta property="og:title" content="{ogtitle}">
 <meta property="og:description" content="{desc}">
-<meta property="og:image" content="https://16lovetypedogs.com/ogp/{lang}/{slug}.png?v=4">
+<meta property="og:image" content="https://16lovetypedogs.com/ogp/{lang}/{slug}.png?v=5">
 <meta property="og:url" content="https://16lovetypedogs.com/{lang}/{slug}.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://16lovetypedogs.com/ogp/{lang}/{slug}.png?v=4">
+<meta name="twitter:image" content="https://16lovetypedogs.com/ogp/{lang}/{slug}.png?v=5">
 <link rel="canonical" href="https://16lovetypedogs.com/{lang}/{slug}.html">
 <script>location.replace('https://16lovetypedogs.com/?type={code}&lang={lang}');</script>
 </head>
@@ -191,9 +195,9 @@ REDIRECT = """<!DOCTYPE html>
 </html>
 """
 
-LOCALE = {"en": "en_US", "zh": "zh_CN"}
-OGTITLE = {"en": "My love-dog is {breed} ({code})", "zh": "我的恋爱犬是{breed}（{code}）"}
-CTA = {"en": "See your 16 Love-Type Dogs result", "zh": "查看16恋爱犬测验结果"}
+LOCALE = {"en": "en_US", "zh": "zh_CN", "tw": "zh_TW"}
+OGTITLE = {"en": "My love-dog is {breed} ({code})", "zh": "我的恋爱犬是{breed}（{code}）", "tw": "我的戀愛犬是{breed}（{code}）"}
+CTA = {"en": "See your 16 Love-Type Dogs result", "zh": "查看16恋爱犬测验结果", "tw": "查看16戀愛犬測驗結果"}
 
 
 def make_page(lang, code):
@@ -201,7 +205,7 @@ def make_page(lang, code):
     slug = code.lower()
     html = REDIRECT.format(
         lang=lang, slug=slug, code=code, locale=LOCALE[lang],
-        title=OGTITLE[lang].format(breed=d["breed"], code=code) + (" | 16 Love-Type Dogs" if lang=="en" else "｜16恋爱犬测验"),
+        title=OGTITLE[lang].format(breed=d["breed"], code=code) + ({"en":" | 16 Love-Type Dogs","zh":"｜16恋爱犬测验","tw":"｜16戀愛犬測驗"}.get(lang, "")),
         ogtitle=OGTITLE[lang].format(breed=d["breed"], code=code),
         desc=d["tag"], cta=CTA[lang],
     )
@@ -211,8 +215,15 @@ def make_page(lang, code):
 
 
 if __name__ == "__main__":
-    for lang in ("en", "zh"):
+    import sys
+    # 画像カードは en/zh/ko/tw 全てを生成。リダイレクトページは en/zh/tw のみ
+    #（ko の /ko/*.html はフルページのため別管理。上書きしない）
+    card_langs = sys.argv[1].split(",") if len(sys.argv) > 1 else ["en", "zh", "ko", "tw"]
+    page_langs = [l for l in card_langs if l != "ko"]
+    for lang in card_langs:
         for code in ORDER:
             make_card(lang, code)
+    for lang in page_langs:
+        for code in ORDER:
             make_page(lang, code)
-    print("generated en/zh OGP cards and share pages for", len(ORDER), "types each")
+    print("generated OGP cards for", card_langs, "and share pages for", page_langs)
