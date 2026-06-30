@@ -502,14 +502,16 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .omk-card.lv3{border-color:#aacdea;background:linear-gradient(180deg,#f1f7fd,var(--paper));box-shadow:0 12px 30px -8px rgba(90,155,208,.3),inset 0 0 0 1px rgba(170,205,234,.5)}
 .omk-card.lv3 .omk-level{background-image:linear-gradient(100deg,#3d7fb8,#79b4e3,#3d7fb8);filter:drop-shadow(0 2px 5px rgba(90,155,208,.35))}
 .omk-card.lv3 .omk-level::before{content:"💫"}.omk-card.lv3 .omk-level::after{content:"💫"}.omk-card.lv3 .omk-level::before,.omk-card.lv3 .omk-level::after{color:#6aa8dd}
-.omk-msg{font-size:15px;line-height:1.85;margin:10px 8px 16px;font-weight:700;color:var(--ink)}
-.omk-row{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;margin:10px 0;font-weight:700;color:var(--ink)}
-.omk-row .lab{font-weight:800;color:var(--ink-soft);font-size:11px}
-.omk-swatch{width:18px;height:18px;border-radius:50%;border:1px solid var(--hair)}
-.omk-dogline{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0;padding-top:14px;border-top:1px dashed var(--hair)}
-.omk-dogline .dog{width:48px;height:48px;border-radius:15px;object-fit:contain;background:var(--accent-soft)}
-.omk-dogline .em{font-size:30px}
-.omk-pr{font-size:10px;color:var(--ink-faint);margin-top:3px;letter-spacing:.02em}
+.omk-msg{font-size:14.5px;line-height:1.85;margin:8px 6px 16px;font-weight:700;color:var(--ink)}
+.omk-info{margin:0 0 4px;border-top:1px dashed var(--hair)}
+.omk-attr{display:flex;align-items:center;gap:12px;padding:10px 2px;border-bottom:1px dashed var(--hair);text-align:left}
+.omk-lbl{flex:0 0 86px;font-size:10.5px;font-weight:800;color:var(--ink-soft);letter-spacing:.04em;line-height:1.45}
+.omk-val{flex:1;font-size:13px;font-weight:700;color:var(--ink);line-height:1.6;display:flex;align-items:center;gap:9px;flex-wrap:wrap;min-width:0}
+.omk-val .dog{flex:none;width:42px;height:42px;border-radius:13px;object-fit:contain;background:var(--accent-soft)}
+.omk-val .em{font-size:28px}
+.omk-swatch{flex:none;width:16px;height:16px;border-radius:50%;border:1px solid var(--hair)}
+.omk-aff{display:inline-block;margin-top:16px;font-family:inherit;font-weight:800;font-size:13px;color:var(--pink-deep);background:rgba(255,255,255,.7);border:1px solid var(--glass-bd);border-radius:999px;padding:9px 18px;text-decoration:none;transition:.15s}
+.omk-aff:active{transform:translateY(1px)}
 .omk-note{font-size:11px;color:var(--ink-faint);margin-top:14px}
 
 /* みんなの感想（ユーザー投稿） */
@@ -1630,7 +1632,6 @@ function renderResultOmikuji(){
   }
 }
 const OMK_DRAWING={ja:'🔮 占っています…',en:'🔮 Reading your fortune…',ko:'🔮 운세를 보는 중…',zh:'🔮 正在占卜…',tw:'🔮 正在占卜…'};
-const OMK_PR={ja:'PR・Amazonアソシエイトのリンクを含みます',en:'Ad · contains Amazon affiliate links',ko:'광고·아마존 제휴 링크 포함',zh:'广告·含亚马逊联盟链接',tw:'廣告·含亞馬遜聯盟連結'};
 function drawOmikuji(){
   const weights=[2,4,5,3];let pool=[];weights.forEach((w,idx)=>{for(let k=0;k<w;k++)pool.push(idx);});
   const se2=curSeason(),al2=[];for(let k=0;k<LUCKY[L].length;k++){const ss=SEASON[k];if(ss==='all'||ss.indexOf(se2)>=0)al2.push(k);}
@@ -1652,15 +1653,17 @@ function drawOmikuji(){
 }
 function omkCardHTML(r,animate){
   const i=I(),lv=OMK.levels[r.lvl],col=OMK.colors[r.colorIdx],dd=LOC[L][r.dog];
+  const item=LUCKY[L][r.itemIdx!=null?r.itemIdx:0];
   return '<div class="omk-card omk-lvl-fx lv'+r.lvl+(animate?' pop':'')+'">'
    +'<div class="omk-level">'+lv.lab[L]+'</div>'
    +'<div class="omk-msg">'+lv.msg[L]+'</div>'
-   +'<div class="omk-dogline">'+dogImg(r.dog)+'<div style="text-align:left"><div class="lab" style="font-size:12px;font-weight:800;color:var(--ink-soft)">'+i.omk_dog+'</div><div style="font-weight:800;font-size:15px">'+dd.breed+'</div></div></div>'
-   +'<div class="omk-row"><span class="lab">'+i.omk_color+'</span><span class="omk-swatch" style="background:'+col.hex+'"></span>'+col.name[L]+'</div>'
-   +'<div class="omk-row" style="flex-direction:column;gap:2px"><span class="lab">'+i.omk_action+'</span><span>'+OMK.act[L][r.actIdx]+'</span></div>'
-   +'<div class="omk-row" style="flex-direction:column;gap:4px"><span class="lab">'+i.omk_item+'</span><span>'+LUCKY[L][r.itemIdx!=null?r.itemIdx:0]+'</span>'
-     +'<a class="afflink" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[r.itemIdx!=null?r.itemIdx:0])+'">'+i.aff_item+'</a>'
-     +'<div class="omk-pr">'+(OMK_PR[L]||OMK_PR.ja)+'</div></div>'
+   +'<div class="omk-info">'
+     +'<div class="omk-attr"><span class="omk-lbl">'+i.omk_dog+'</span><span class="omk-val">'+dogImg(r.dog)+'<b>'+dd.breed+'</b></span></div>'
+     +'<div class="omk-attr"><span class="omk-lbl">'+i.omk_color+'</span><span class="omk-val"><span class="omk-swatch" style="background:'+col.hex+'"></span>'+col.name[L]+'</span></div>'
+     +'<div class="omk-attr"><span class="omk-lbl">'+i.omk_action+'</span><span class="omk-val">'+OMK.act[L][r.actIdx]+'</span></div>'
+     +'<div class="omk-attr"><span class="omk-lbl">'+i.omk_item+'</span><span class="omk-val">'+item+'</span></div>'
+   +'</div>'
+   +'<a class="omk-aff" target="_blank" rel="nofollow sponsored noopener" href="'+affUrl(LKEYWORD[r.itemIdx!=null?r.itemIdx:0])+'">'+i.aff_item+'</a>'
    +'<div class="omk-note">'+i.omk_note+'</div></div>';
 }
 /* 運レベル別の紙吹雪セット（0:大吉 1:中吉 2:小吉 3:末吉） */
