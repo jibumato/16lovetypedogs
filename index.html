@@ -469,6 +469,11 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .omk-suspense-txt{margin-top:12px;font-weight:800;color:var(--pink-deep);font-size:13px;letter-spacing:.1em;animation:omkPulse 1s ease-in-out infinite}
 @keyframes omkShake{0%,100%{transform:rotate(-13deg) translateY(0)}25%{transform:rotate(11deg) translateY(-7px)}50%{transform:rotate(-9deg) translateY(0)}75%{transform:rotate(13deg) translateY(-5px)}}
 @keyframes omkPulse{0%,100%{opacity:.55}50%{opacity:1}}
+/* タメ：いったん引いてから、ぐっと大きく＋金色に発光 */
+.omk-shaker.tame{animation:omkCharge .62s cubic-bezier(.5,-0.4,.3,1.5) forwards}
+@keyframes omkCharge{0%{transform:scale(1) rotate(0);filter:drop-shadow(0 6px 10px rgba(210,98,143,.3))}45%{transform:scale(.82) rotate(-4deg)}100%{transform:scale(1.32) rotate(0);filter:drop-shadow(0 0 24px rgba(247,201,72,.85)) drop-shadow(0 6px 10px rgba(210,98,143,.35))}}
+.omk-suspense-txt.tame{animation:omkTamePop .4s ease-out forwards;color:#d8961f;font-size:15px;letter-spacing:.14em}
+@keyframes omkTamePop{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
 .omk-card{position:relative;overflow:hidden;background:var(--paper);border:1px solid var(--glass-bd);border-radius:24px;padding:26px 22px;box-shadow:var(--shadow);margin-top:6px}
 .omk-card.pop{animation:pop .5s cubic-bezier(.2,1.2,.4,1)}
 @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
@@ -1632,6 +1637,7 @@ function renderResultOmikuji(){
   }
 }
 const OMK_DRAWING={ja:'🔮 占っています…',en:'🔮 Reading your fortune…',ko:'🔮 운세를 보는 중…',zh:'🔮 正在占卜…',tw:'🔮 正在占卜…'};
+const OMK_TAME={ja:'…結果は…！',en:'…and the result is…!',ko:'…결과는…!',zh:'…结果是…！',tw:'…結果是…！'};
 function drawOmikuji(){
   const weights=[2,4,5,3];let pool=[];weights.forEach((w,idx)=>{for(let k=0;k<w;k++)pool.push(idx);});
   const se2=curSeason(),al2=[];for(let k=0;k<LUCKY[L].length;k++){const ss=SEASON[k];if(ss==='all'||ss.indexOf(se2)>=0)al2.push(k);}
@@ -1642,14 +1648,19 @@ function drawOmikuji(){
   try{ if(window.gtag) gtag('event','select_content',{content_type:'omikuji_draw',language:L}); }catch(e){}
   const body=document.getElementById('omkBody');
   if(!body){return;}
-  /* 抽選サスペンス → リールスイープで結果オープン */
-  body.innerHTML='<div class="omk-suspense"><div class="omk-shaker">🎴</div><div class="omk-suspense-txt">'+(OMK_DRAWING[L]||OMK_DRAWING.ja)+'</div></div>';
+  /* 抽選サスペンス → タメ（ぐっと溜めて光る）→ リールスイープで結果オープン */
+  body.innerHTML='<div class="omk-suspense"><div class="omk-shaker" id="omkShaker">🎴</div><div class="omk-suspense-txt" id="omkSusTxt">'+(OMK_DRAWING[L]||OMK_DRAWING.ja)+'</div></div>';
   sakuraBurst(0,true);
-  setTimeout(function(){
+  setTimeout(function(){            // タメ：振動を止めて引きつけ、光をためる
+    const sh=document.getElementById('omkShaker'),tx=document.getElementById('omkSusTxt');
+    if(sh)sh.classList.add('tame');
+    if(tx){tx.textContent=(OMK_TAME[L]||OMK_TAME.ja);tx.classList.add('tame');}
+  },900);
+  setTimeout(function(){            // 開放：結果オープン＋紙吹雪
     const b2=document.getElementById('omkBody');
     if(b2)b2.innerHTML=omkCardHTML(r,true);
     sakuraBurst(r.lvl,false);
-  },950);
+  },1550);
 }
 function omkCardHTML(r,animate){
   const i=I(),lv=OMK.levels[r.lvl],col=OMK.colors[r.colorIdx],dd=LOC[L][r.dog];
