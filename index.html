@@ -2025,9 +2025,17 @@ const GUIDE_EXTRA={
     ] }
 };
 /* タイプコード → Payment Link を返す（プロモコードを自動プリフィル） */
+/* GA4のクライアントIDを_gaクッキーから取得（例 GA1.1.123.456 → "123.456"） */
+function gaClientId(){
+  try{ var m=document.cookie.match(/_ga=GA\d\.\d\.(\d+\.\d+)/); return m?m[1]:''; }catch(e){ return ''; }
+}
 function guideBuyUrl(code,lang){
   var u=STRIPE_LINKS[code]; if(!u) return '#';
-  return u+(u.indexOf('?')<0?'?':'&')+'prefilled_promo_code=DISCOUNT20';
+  u+=(u.indexOf('?')<0?'?':'&')+'prefilled_promo_code=DISCOUNT20';
+  /* Webhookでのサーバー側purchase計測用に「タイプ_GAクライアントID」を client_reference_id で渡す */
+  var gid=gaClientId();
+  if(gid){ u+='&client_reference_id='+encodeURIComponent(code+'_'+gid.replace('.','-')); }
+  return u;
 }
 /* 購入クリック計測（決済はStripe外部のため、離脱前にbegin_checkoutを発火） */
 function trackCheckout(code,lang){
