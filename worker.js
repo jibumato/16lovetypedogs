@@ -139,6 +139,87 @@ export default {
       }
     }
 
+    // ───────── 結果メール保存 ─────────
+    if (url.pathname === "/api/save-result") {
+      if (request.method !== "POST") return j({ ok: false }, 405);
+      if (!env.COUNTER) return j({ ok: false, error: "no-kv" });
+
+      try {
+        const ip = request.headers.get("CF-Connecting-IP") || "0";
+        const rlKey = "sr-rl:" + ip;
+        if (await env.COUNTER.get(rlKey)) return j({ ok: false, error: "rate" }, 429);
+
+        const b = await request.json();
+        const email = String(b.email || "").trim().toLowerCase().slice(0, 254);
+        const type  = String(b.type  || "").slice(0, 8).toUpperCase();
+        const lang  = String(b.lang  || "ja").slice(0, 8);
+        const breed = String(b.breed    || "").slice(0, 80);
+        const typeName = String(b.typeName || "").slice(0, 80);
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+          return j({ ok: false, error: "invalid" }, 400);
+        }
+
+        const id = "lead:" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+        await env.COUNTER.put(id, JSON.stringify({ email, type, lang, breed, typeName, ts: new Date().toISOString() }), { expirationTtl: 60 * 60 * 24 * 730 });
+        await env.COUNTER.put(rlKey, "1", { expirationTtl: 300 });
+
+        // Resendでメール送信（RESEND_API_KEYが設定されている場合のみ）
+        if (env.RESEND_API_KEY && email) {
+          const subjectMap = {
+            ja: `あなたの恋愛わんこは ${breed}（${type}）🐾`,
+            en: `Your Love Dog Result: ${breed} (${type}) 🐾`,
+            ko: `나의 연애 강아지는 ${breed}（${type}）🐾`,
+            zh: `你的恋爱汪汪是 ${breed}（${type}）🐾`,
+            tw: `你的戀愛汪汪是 ${breed}（${type}）🐾`,
+          };
+          const ctaMap = {
+            ja: "サイトで結果を見る",
+            en: "View your result",
+            ko: "결과 보기",
+            zh: "查看结果",
+            tw: "查看結果",
+          };
+          const noteMap = {
+            ja: "このメールは16lovetypedogs.comの診断結果保存機能からお送りしています。",
+            en: "This email was sent from the result-save feature at 16lovetypedogs.com.",
+            ko: "이 이메일은 16lovetypedogs.com의 결과 저장 기능에서 발송되었습니다.",
+            zh: "此邮件由 16lovetypedogs.com 的结果保存功能发送。",
+            tw: "此郵件由 16lovetypedogs.com 的結果儲存功能發送。",
+          };
+          const subject = subjectMap[lang] || subjectMap.ja;
+          const cta = ctaMap[lang] || ctaMap.ja;
+          const note = noteMap[lang] || noteMap.ja;
+          const siteUrl = "https://16lovetypedogs.com";
+          const html = `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#fff9f5;color:#3a2e28">
+<div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🐾</span></div>
+<h1 style="color:#e58aa0;font-size:20px;margin:0 0 8px">${breed}</h1>
+<p style="color:#7a6258;font-size:15px;margin:0 0 24px">${typeName} · ${type}</p>
+<a href="${siteUrl}" style="display:inline-block;background:#e58aa0;color:#fff;text-decoration:none;border-radius:999px;padding:13px 28px;font-weight:800;font-size:15px">${cta} →</a>
+<hr style="margin:32px 0;border:none;border-top:1px solid #f0e0d0">
+<p style="font-size:11px;color:#b0a09a;line-height:1.7">${note}</p>
+</body></html>`;
+          await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + env.RESEND_API_KEY,
+            },
+            body: JSON.stringify({
+              from: "16わんこ恋愛診断 <noreply@16lovetypedogs.com>",
+              to: [email],
+              subject,
+              html,
+            }),
+          });
+        }
+
+        return j({ ok: true });
+      } catch (e) {
+        return j({ ok: false }, 400);
+      }
+    }
+
     // それ以外は静的アセットへフォールバック
     return env.ASSETS.fetch(request);
   },
