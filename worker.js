@@ -183,7 +183,12 @@ export default {
           const t = T[lang] || T.ja;
           const subject = t.subject;
           const siteUrl = "https://16lovetypedogs.com";
-          const dogUrl = type ? `${siteUrl}/${type.toLowerCase()}.webp` : "";
+          const lc = type.toLowerCase();
+          const dogUrl = type ? `${siteUrl}/${lc}.webp` : "";
+          // 結果に直接飛ぶディープリンク（SPAは ?type/?lang を読んで結果を描画。koは静的タイプページ）
+          const resultUrl = !type ? siteUrl
+            : lang === "ko" ? `${siteUrl}/ko/${lc}.html`
+            : `${siteUrl}/?type=${type}&lang=${lang}`;
           const p = RARITY[type];
           const rare = p != null && p <= 5;
           const badge = p == null ? "" :
@@ -204,7 +209,7 @@ ${dogImg}
 ${roleLine}
 ${tagLine}
 <div style="margin:20px 0 4px;color:#f3c9da;font-size:15px">🐾 ───────── 🐾</div>
-<a href="${siteUrl}" style="display:inline-block;margin-top:16px;background:#d2628f;color:#fff;text-decoration:none;border-radius:999px;padding:15px 34px;font-size:15px;font-weight:900">${t.cta} →</a>
+<a href="${resultUrl}" style="display:inline-block;margin-top:16px;background:#d2628f;color:#fff;text-decoration:none;border-radius:999px;padding:15px 34px;font-size:15px;font-weight:900">${t.cta} →</a>
 <div style="margin-top:18px;font-size:12px;color:#938aa3">${t.share}</div>
 </td></tr></table>
 </td></tr>
