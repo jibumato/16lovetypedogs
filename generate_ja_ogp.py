@@ -30,7 +30,7 @@ def make(code,lang="ja"):
     bd.ellipse([-140,-180,220,180],fill=BLOB+(120,));bd.ellipse([W-260,H-220,W+120,H+160],fill=BLOB+(110,))
     img=Image.alpha_composite(img.convert("RGBA"),blob).convert("RGB");dr=ImageDraw.Draw(img)
     LX=60;LW=540
-    ef=fb(26);et="MBTI  ×  恋愛  ×  犬種";ew=dr.textlength(et,font=ef)
+    ef=fb(26);et="16タイプ  ×  恋愛  ×  犬種";ew=dr.textlength(et,font=ef)
     dr.rounded_rectangle([LX,44,LX+ew+48,96],26,fill=PILL_BG);dr.text((LX+24,70),et,font=ef,fill=PINK,anchor="lm")
     y=124;dr.text((LX,y),"私の恋愛わんこは",font=fr(34),fill=INK_SOFT,anchor="lm");y+=54
     bs=84
