@@ -1743,10 +1743,8 @@ function renderSaveResult(code){
   const sec=document.getElementById('saveResultSection');if(!sec)return;
   const t=SAVE_I18N[L]||SAVE_I18N.ja;
   sec.innerHTML='<h3><span class="dot">📩</span>'+t.head+'</h3>'
-    +'<div class="sv-sub">'+t.sub+'</div>'
     +'<div class="sv-box">'
     +'<div class="sv-row"><input type="email" id="svEmail" placeholder="'+t.ph.replace(/"/g,'&quot;')+'" maxlength="254" autocomplete="email"><button class="sv-btn" id="svBtn" onclick="submitSaveResult()">'+t.send+'</button></div>'
-    +'<div class="sv-note">'+t.note+'</div>'
     +'</div>';
   sec.dataset.code=code;
 }
@@ -1768,8 +1766,8 @@ function submitSaveResult(){
         try{if(window.gtag)gtag('event','generate_lead',{method:'email_save',language:L});}catch(e){}
       }else{
         btn.disabled=false;btn.textContent=t.send;
-        const note=document.querySelector('#saveResultSection .sv-note');
-        if(note)note.textContent=(d&&d.error==='rate')?t.rate:t.err;
+        const box=document.querySelector('#saveResultSection .sv-box');
+        if(box){let n=box.querySelector('.sv-err');if(!n){n=document.createElement('div');n.className='sv-note sv-err';box.appendChild(n);}n.textContent=(d&&d.error==='rate')?t.rate:t.err;}
       }
     }).catch(()=>{btn.disabled=false;btn.textContent=t.send;});
 }
