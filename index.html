@@ -545,6 +545,18 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .fb-item .fi-meta{font-size:10.5px;color:var(--ink-soft);margin-top:5px;font-weight:700}
 .fb-empty{font-size:12px;color:var(--ink-faint);text-align:center;padding:12px}
 
+/* 結果メール保存 */
+.sv-sub{font-size:11.5px;color:var(--ink-soft);margin:-4px 0 14px 53px;line-height:1.6}
+.sv-box{background:rgba(255,255,255,.6);border:1px solid var(--glass-bd);border-radius:16px;padding:16px 14px 14px}
+.sv-row{display:flex;gap:8px;align-items:center}
+.sv-row input[type=email]{flex:1;border:1.5px solid var(--glass-bd);border-radius:12px;padding:11px 13px;font-family:inherit;font-size:13.5px;color:var(--ink);background:#fff;min-width:0}
+.sv-row input[type=email]:focus{outline:none;border-color:var(--pink)}
+.sv-btn{flex-shrink:0;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:11px 20px;font-family:inherit;font-size:13.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+.sv-btn:active{transform:translateY(1px)}
+.sv-btn:disabled{opacity:.55;cursor:default}
+.sv-note{font-size:10.5px;color:var(--ink-faint);text-align:center;margin-top:8px;line-height:1.6}
+.sv-thanks{text-align:center;padding:16px 10px;font-size:14px;font-weight:800;color:var(--pink-deep);line-height:1.8}
+
 /* affiliate */
 .afflink{display:inline-block;margin-top:10px;font-family:inherit;font-weight:800;font-size:13px;
   color:var(--pink-deep);background:rgba(255,255,255,.7);border:1px solid var(--glass-bd);border-radius:999px;padding:8px 16px;
@@ -860,6 +872,9 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
         <button class="ic-btn save" aria-label="Save image" onclick="saveShareImg()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg></button>
       </div>
     </div>
+
+    <!-- 6.3 結果をメールで保存 -->
+    <div class="sec mt" id="saveResultSection"></div>
 
     <!-- 6.5 みんなの感想（ユーザー投稿・承認制） -->
     <div class="sec mt" id="fbSection"></div>
@@ -1617,6 +1632,7 @@ function renderResult(code,stay){
   renderUraChara(code);
   renderLoveGuide(code);
   renderResultOmikuji();
+  renderSaveResult(code);
   renderFeedback();
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
@@ -1715,6 +1731,49 @@ function sakuraBurst(lvl,light){
   document.body.appendChild(layer);
   setTimeout(function(){if(layer.parentNode)layer.parentNode.removeChild(layer);},9800);
 }
+/* ===== 結果メール保存 ===== */
+const SAVE_I18N={
+  ja:{head:'結果をメールで受け取る',sub:'あとで見返せます',ph:'メールアドレス',send:'送る',sending:'送信中…',thanks:'✅ 送りました！受信箱をご確認ください 🐾',err:'送信に失敗しました。もう一度お試しください。',rate:'しばらく経ってから再度お試しください',note:'スパムメールは送りません。配信停止はいつでも。'},
+  en:{head:'Get your result by email',sub:'Easy to look back anytime',ph:'Email address',send:'Send',sending:'Sending…',thanks:'✅ Sent! Check your inbox 🐾',err:'Something went wrong. Please try again.',rate:'Please wait a moment before trying again',note:'No spam, ever. Unsubscribe anytime.'},
+  ko:{head:'결과를 이메일로 받기',sub:'나중에 다시 확인하기 편해요',ph:'이메일 주소',send:'받기',sending:'전송 중…',thanks:'✅ 보냈어요! 받은편지함을 확인하세요 🐾',err:'전송에 실패했습니다. 다시 시도해주세요.',rate:'잠시 후 다시 시도해주세요',note:'스팸 없음. 언제든지 수신 취소 가능.'},
+  zh:{head:'邮件接收结果',sub:'随时都能回看',ph:'邮箱地址',send:'发送',sending:'发送中…',thanks:'✅ 已发送！请查收邮件 🐾',err:'发送失败，请稍后再试。',rate:'请稍等片刻再试',note:'不会发送垃圾邮件，随时可取消订阅。'},
+  tw:{head:'郵件接收結果',sub:'隨時都能回看',ph:'郵件地址',send:'傳送',sending:'傳送中…',thanks:'✅ 已傳送！請查收郵件 🐾',err:'傳送失敗，請稍後再試。',rate:'請稍等片刻再試',note:'不會傳送垃圾郵件，隨時可取消訂閱。'}
+};
+function renderSaveResult(code){
+  const sec=document.getElementById('saveResultSection');if(!sec)return;
+  const t=SAVE_I18N[L]||SAVE_I18N.ja;
+  sec.innerHTML='<h3><span class="dot">📩</span>'+t.head+'</h3>'
+    +'<div class="sv-sub">'+t.sub+'</div>'
+    +'<div class="sv-box">'
+    +'<div class="sv-row"><input type="email" id="svEmail" placeholder="'+t.ph.replace(/"/g,'&quot;')+'" maxlength="254" autocomplete="email"><button class="sv-btn" id="svBtn" onclick="submitSaveResult()">'+t.send+'</button></div>'
+    +'<div class="sv-note">'+t.note+'</div>'
+    +'</div>';
+  sec.dataset.code=code;
+}
+function submitSaveResult(){
+  const sec=document.getElementById('saveResultSection');
+  const t=SAVE_I18N[L]||SAVE_I18N.ja;
+  const btn=document.getElementById('svBtn');
+  const email=(document.getElementById('svEmail').value||'').trim();
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){document.getElementById('svEmail').focus();return;}
+  const code=(sec&&sec.dataset.code)||current||'';
+  const dl=LOC[L]&&LOC[L][code]?LOC[L][code]:{};
+  btn.disabled=true;btn.textContent=t.sending;
+  fetch('/api/save-result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,type:code,lang:L,breed:dl.breed||'',typeName:dl.name||''})})
+    .then(r=>r.json().then(d=>({s:r.status,d})))
+    .then(({s,d})=>{
+      if(d&&d.ok){
+        const box=document.querySelector('#saveResultSection .sv-box');
+        if(box)box.outerHTML='<div class="sv-thanks">'+t.thanks+'</div>';
+        try{if(window.gtag)gtag('event','generate_lead',{method:'email_save',language:L});}catch(e){}
+      }else{
+        btn.disabled=false;btn.textContent=t.send;
+        const note=document.querySelector('#saveResultSection .sv-note');
+        if(note)note.textContent=(d&&d.error==='rate')?t.rate:t.err;
+      }
+    }).catch(()=>{btn.disabled=false;btn.textContent=t.send;});
+}
+
 /* ===== みんなの感想（ユーザー投稿・承認制） ===== */
 const FB_I18N={
   ja:{head:'みんなの感想',sub:'診断してみた感想をひとことどうぞ🐾（承認後に掲載されます）',ph:'例：相性ランキングが当たってた！',name:'ニックネーム（任意）',send:'感想を投稿する',sending:'送信中…',thanks:'投稿ありがとう！🐾 承認後に掲載されます',note:'いただいた感想は確認のうえ掲載します。リンクを含む投稿は掲載できません。',empty:'最初の感想を投稿してみよう🐾',err:'送信できませんでした。少し時間をおいて再度お試しください。',rate:'続けての投稿は少し時間をおいてね',anon:'匿名さん'},

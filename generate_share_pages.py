@@ -178,10 +178,10 @@ REDIRECT = """<!DOCTYPE html>
 <meta property="og:locale" content="{locale}">
 <meta property="og:title" content="{ogtitle}">
 <meta property="og:description" content="{desc}">
-<meta property="og:image" content="https://16lovetypedogs.com/ogp/{lang}/{slug}.png?v=3">
+<meta property="og:image" content="https://16lovetypedogs.com/ogp/{lang}/{slug}.png?v=4">
 <meta property="og:url" content="https://16lovetypedogs.com/{lang}/{slug}.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://16lovetypedogs.com/ogp/{lang}/{slug}.png?v=3">
+<meta name="twitter:image" content="https://16lovetypedogs.com/ogp/{lang}/{slug}.png?v=4">
 <link rel="canonical" href="https://16lovetypedogs.com/{lang}/{slug}.html">
 <script>location.replace('https://16lovetypedogs.com/?type={code}&lang={lang}');</script>
 </head>
