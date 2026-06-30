@@ -28,6 +28,14 @@ const RARITY = { INTJ:2.1, INTP:3.3, ENTJ:1.8, ENTP:3.2, INFJ:1.5, INFP:4.4, ENF
 const j = (obj, status = 200) => Response.json(obj, { status });
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 
+// 配信停止リンクの改ざん防止トークン（emailのHMAC先頭24桁）
+async function hmacHex(secret, msg) {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(msg));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+const unsubSecret = (env) => env.UNSUB_SECRET || env.ADMIN_TOKEN || "16ltd-unsub-v1";
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -198,14 +206,15 @@ export default {
         await env.COUNTER.put(id, JSON.stringify({ email, type, lang, breed, typeName, ts: new Date().toISOString() }), { expirationTtl: 60 * 60 * 24 * 730 });
         await env.COUNTER.put(rlKey, "1", { expirationTtl: 300 });
 
-        // Resendでメール送信（RESEND_API_KEYが設定されている場合のみ）
-        if (env.RESEND_API_KEY && email) {
+        // Resendでメール送信（RESEND_API_KEYが設定されていて、配信停止していない場合のみ）
+        const isUnsub = await env.COUNTER.get("unsub:" + email);
+        if (env.RESEND_API_KEY && email && !isUnsub) {
           const T = {
-            ja: { subject:`あなたの恋愛わんこは ${breed}（${type}）🐾`, header:"恋愛血統書", rare:"希少タイプ", common:"人気タイプ", pct:(p)=>`約${p}%`, cta:"サイトで詳しい結果を見る", share:"📸 結果カードを保存して友だちにもシェア🐾", note:"このメールは16lovetypedogs.comの診断結果保存機能からお送りしています。", brand:"16わんこ恋愛診断" },
-            en: { subject:`Your Love Dog: ${breed} (${type}) 🐾`, header:"Pedigree of Love", rare:"RARE type", common:"Popular type", pct:(p)=>`~${p}%`, cta:"See your full result", share:"📸 Save your card and share it with friends 🐾", note:"This email was sent from the result-save feature at 16lovetypedogs.com.", brand:"16 Love Type Dogs" },
-            ko: { subject:`나의 연애 강아지는 ${breed}（${type}）🐾`, header:"연애 혈통서", rare:"희귀 타입", common:"인기 타입", pct:(p)=>`약${p}%`, cta:"사이트에서 자세한 결과 보기", share:"📸 결과 카드를 저장해서 친구에게도 공유해요 🐾", note:"이 이메일은 16lovetypedogs.com의 결과 저장 기능에서 발송되었습니다.", brand:"16 연애 강아지 진단" },
-            zh: { subject:`你的恋爱汪汪是 ${breed}（${type}）🐾`, header:"恋爱血统书", rare:"稀有类型", common:"人气类型", pct:(p)=>`约${p}%`, cta:"在网站查看详细结果", share:"📸 保存结果卡片，分享给朋友吧 🐾", note:"此邮件由 16lovetypedogs.com 的结果保存功能发送。", brand:"16汪汪恋爱诊断" },
-            tw: { subject:`你的戀愛汪汪是 ${breed}（${type}）🐾`, header:"戀愛血統書", rare:"稀有類型", common:"人氣類型", pct:(p)=>`約${p}%`, cta:"在網站查看詳細結果", share:"📸 儲存結果卡片，分享給朋友吧 🐾", note:"此郵件由 16lovetypedogs.com 的結果儲存功能發送。", brand:"16汪汪戀愛診斷" },
+            ja: { subject:`あなたの恋愛わんこは ${breed}（${type}）🐾`, header:"恋愛血統書", rare:"希少タイプ", common:"人気タイプ", pct:(p)=>`約${p}%`, cta:"サイトで詳しい結果を見る", share:"📸 結果カードを保存して友だちにもシェア🐾", note:"このメールは16lovetypedogs.comの診断結果保存機能からお送りしています。", brand:"16わんこ恋愛診断", unsub:"配信を停止する" },
+            en: { subject:`Your Love Dog: ${breed} (${type}) 🐾`, header:"Pedigree of Love", rare:"RARE type", common:"Popular type", pct:(p)=>`~${p}%`, cta:"See your full result", share:"📸 Save your card and share it with friends 🐾", note:"This email was sent from the result-save feature at 16lovetypedogs.com.", brand:"16 Love Type Dogs", unsub:"Unsubscribe" },
+            ko: { subject:`나의 연애 강아지는 ${breed}（${type}）🐾`, header:"연애 혈통서", rare:"희귀 타입", common:"인기 타입", pct:(p)=>`약${p}%`, cta:"사이트에서 자세한 결과 보기", share:"📸 결과 카드를 저장해서 친구에게도 공유해요 🐾", note:"이 이메일은 16lovetypedogs.com의 결과 저장 기능에서 발송되었습니다.", brand:"16 연애 강아지 진단", unsub:"수신 거부" },
+            zh: { subject:`你的恋爱汪汪是 ${breed}（${type}）🐾`, header:"恋爱血统书", rare:"稀有类型", common:"人气类型", pct:(p)=>`约${p}%`, cta:"在网站查看详细结果", share:"📸 保存结果卡片，分享给朋友吧 🐾", note:"此邮件由 16lovetypedogs.com 的结果保存功能发送。", brand:"16汪汪恋爱诊断", unsub:"退订" },
+            tw: { subject:`你的戀愛汪汪是 ${breed}（${type}）🐾`, header:"戀愛血統書", rare:"稀有類型", common:"人氣類型", pct:(p)=>`約${p}%`, cta:"在網站查看詳細結果", share:"📸 儲存結果卡片，分享給朋友吧 🐾", note:"此郵件由 16lovetypedogs.com 的結果儲存功能發送。", brand:"16汪汪戀愛診斷", unsub:"取消訂閱" },
           };
           const t = T[lang] || T.ja;
           const subject = t.subject;
@@ -216,6 +225,9 @@ export default {
           const resultUrl = !type ? siteUrl
             : lang === "ko" ? `${siteUrl}/ko/${lc}.html`
             : `${siteUrl}/?type=${type}&lang=${lang}`;
+          // 配信停止リンク（特定電子メール法対応・改ざん防止トークン付き）
+          const unsubTok = (await hmacHex(unsubSecret(env), email)).slice(0, 24);
+          const unsubUrl = `${siteUrl}/api/unsubscribe?e=${encodeURIComponent(email)}&lang=${lang}&t=${unsubTok}`;
           const p = RARITY[type];
           const rare = p != null && p <= 5;
           const badge = p == null ? "" :
@@ -240,7 +252,7 @@ ${tagLine}
 <div style="margin-top:18px;font-size:12px;color:#938aa3">${t.share}</div>
 </td></tr></table>
 </td></tr>
-<tr><td align="center" style="padding:20px 20px 8px"><div style="font-size:11px;color:#b0a4bd;line-height:1.7">${t.note}<br>${t.brand}</div></td></tr>
+<tr><td align="center" style="padding:20px 20px 8px"><div style="font-size:11px;color:#b0a4bd;line-height:1.7">${t.note}<br>${t.brand}<br><a href="${unsubUrl}" style="color:#b0a4bd;text-decoration:underline">${t.unsub}</a></div></td></tr>
 </table>
 </td></tr></table>
 </body></html>`;
@@ -263,6 +275,48 @@ ${tagLine}
       } catch (e) {
         return j({ ok: false }, 400);
       }
+    }
+
+    // ───────── メール配信停止（特定電子メール法対応） ─────────
+    if (url.pathname === "/api/unsubscribe") {
+      const email = (url.searchParams.get("e") || "").trim().toLowerCase();
+      const lang = (url.searchParams.get("lang") || "ja").slice(0, 8);
+      const tk = url.searchParams.get("t") || "";
+      const M = {
+        ja: { t:"配信停止", ok:"配信を停止しました", okb:"今後このメールアドレスへの配信は行いません。ご利用ありがとうございました🐾", ng:"リンクが無効です", ngb:"リンクの有効期限が切れているか、URLが正しくない可能性があります。", back:"サイトへ戻る" },
+        en: { t:"Unsubscribe", ok:"You're unsubscribed", okb:"We won't send any more emails to this address. Thank you 🐾", ng:"Invalid link", ngb:"This link may be expired or incorrect.", back:"Back to site" },
+        ko: { t:"수신 거부", ok:"수신을 거부했습니다", okb:"앞으로 이 주소로 메일을 보내지 않습니다. 이용해 주셔서 감사합니다 🐾", ng:"잘못된 링크", ngb:"링크가 만료되었거나 올바르지 않을 수 있습니다.", back:"사이트로 돌아가기" },
+        zh: { t:"退订", ok:"已退订", okb:"今后不会再向此邮箱发送邮件。感谢您的使用 🐾", ng:"链接无效", ngb:"链接可能已过期或不正确。", back:"返回网站" },
+        tw: { t:"取消訂閱", ok:"已取消訂閱", okb:"今後不會再向此信箱發送郵件。感謝您的使用 🐾", ng:"連結無效", ngb:"連結可能已過期或不正確。", back:"返回網站" },
+      };
+      const m = M[lang] || M.ja;
+      const page = (title, body) => new Response(
+        `<!DOCTYPE html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${title}</title>`
+        + `<style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#fdf4f8,#f3eefb);font-family:'Hiragino Kaku Gothic ProN',sans-serif;color:#574f63;padding:24px}`
+        + `.c{max-width:380px;text-align:center;background:#fffdfb;border:1px solid #f3d3e0;border-radius:22px;padding:34px 26px;box-shadow:0 18px 44px -22px rgba(180,120,160,.5)}`
+        + `.e{font-size:40px}h1{font-size:18px;color:#d2628f;margin:14px 0 8px}p{font-size:13.5px;line-height:1.8;color:#7a6258;margin:0 0 20px}`
+        + `a{display:inline-block;background:#d2628f;color:#fff;text-decoration:none;border-radius:999px;padding:11px 24px;font-size:13px;font-weight:800}</style></head>`
+        + `<body><div class="c"><div class="e">🐾</div><h1>${title}</h1><p>${body}</p><a href="https://16lovetypedogs.com/?lang=${lang}">${m.back}</a></div></body></html>`,
+        { headers: { "Content-Type": "text/html; charset=utf-8" }, status: 200 }
+      );
+      if (!email || !env.COUNTER) return page(m.ng, m.ngb);
+      const expect = (await hmacHex(unsubSecret(env), email)).slice(0, 24);
+      if (!tk || tk !== expect) return page(m.ng, m.ngb);
+      try {
+        await env.COUNTER.put("unsub:" + email, new Date().toISOString());
+        // 既存リードからも該当メールを削除
+        let cursor;
+        do {
+          const list = await env.COUNTER.list({ prefix: "lead:", cursor });
+          for (const k of list.keys) {
+            const v = await env.COUNTER.get(k.name);
+            if (!v) continue;
+            try { if (JSON.parse(v).email === email) await env.COUNTER.delete(k.name); } catch (e) {}
+          }
+          cursor = list.list_complete ? null : list.cursor;
+        } while (cursor);
+      } catch (e) {}
+      return page(m.ok, m.okb);
     }
 
     // それ以外は静的アセットへフォールバック
