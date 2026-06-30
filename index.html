@@ -1191,7 +1191,7 @@ function resultUrl(code){
    ja は per-type OGP を持つ type-*.html、ko は /ko/*.html。en/zh は専用OGP未整備のため従来の結果URL。 */
 /* SNSカードのキャッシュバスター。OGP画像を差し替えたら数字を上げると、
    X/LINE等が共有URLを新規とみなしてカードを再取得する（旧カードのはみ出し対策） */
-const SHARE_CARD_V='3';
+const SHARE_CARD_V='4';
 function shareUrl(code){
   var q='?s='+SHARE_CARD_V;
   if(L==='ko')return SITE_URL+'ko/'+code.toLowerCase()+'.html'+q;

@@ -8,6 +8,7 @@ import json, os, sys
 from PIL import Image, ImageDraw, ImageFont
 ROOT=os.path.dirname(os.path.abspath(__file__))
 LOC=json.load(open("/tmp/LOC.json",encoding="utf-8"));I18N=json.load(open("/tmp/I18N.json",encoding="utf-8"))
+RARITY=json.load(open("/tmp/RARITY.json",encoding="utf-8"))
 REG="/tmp/MPLUSRounded1c-Regular.ttf";BOLD="/tmp/MPLUSRounded1c-ExtraBold.ttf"
 CREAM=(252,244,239);BLOB=(247,224,233);PINK=(210,98,143);PINK_BD=(242,184,204)
 PILL_BG=(247,217,228);INK=(87,79,99);INK_SOFT=(147,138,163);WHITE=(255,255,255)
@@ -59,6 +60,16 @@ def make(code,lang="ja"):
     dr.text((tcx,CY+422),d.get("role",""),font=fr(24),fill=INK_SOFT,anchor="mm")
     dr.line([CX+40,CY+444,CX+CW-40,CY+444],fill=PINK_BD,width=2)
     dr.text((tcx,CY+462),"16わんこ恋愛診断  結果",font=fr(22),fill=INK_SOFT,anchor="mm")
+    # 希少性バッジ（結果カード上端のタブ）
+    p=RARITY.get(code)
+    if p is not None:
+        rare=p<=5
+        rbg=(142,84,184) if rare else (200,140,40)
+        rt=("希少タイプ" if rare else "人気タイプ")+f"  約{p}%"
+        rf=fb(23);rw=dr.textlength(rt,font=rf);ph=40;pw=int(rw)+36
+        bx1=tcx-pw//2;by1=CY-ph//2;bx2=tcx+pw//2;by2=by1+ph
+        dr.rounded_rectangle([bx1,by1,bx2,by2],ph//2,fill=rbg)
+        dr.text((tcx,by1+ph//2),rt,font=rf,fill=WHITE,anchor="mm")
     return img
 
 ORDER=["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"]
