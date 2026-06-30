@@ -319,6 +319,58 @@ ${tagLine}
       return page(m.ok, m.okb);
     }
 
+    // ───────── Stripe Webhook → GA4 購入計測（サーバー側・取りこぼし防止） ─────────
+    if (url.pathname === "/api/stripe-webhook") {
+      if (request.method !== "POST") return j({ ok: false }, 405);
+      const raw = await request.text();
+      // 署名検証（未設定なら安全にno-opで200を返す）
+      if (!env.STRIPE_WEBHOOK_SECRET) return j({ ok: true, skipped: "no-secret" });
+      try {
+        const sigHeader = request.headers.get("stripe-signature") || "";
+        const parts = {};
+        sigHeader.split(",").forEach((kv) => { const i = kv.indexOf("="); if (i > 0) parts[kv.slice(0, i).trim()] = kv.slice(i + 1).trim(); });
+        const t = parts.t, v1 = parts.v1;
+        const expected = await hmacHex(env.STRIPE_WEBHOOK_SECRET, `${t}.${raw}`);
+        if (!t || !v1 || expected !== v1) return j({ ok: false, error: "bad-signature" }, 400);
+
+        const event = JSON.parse(raw);
+        if (event.type === "checkout.session.completed") {
+          const s = event.data.object || {};
+          // client_reference_id = "<TYPE>_<gaClientId(dot→dash)>"
+          const crid = String(s.client_reference_id || "");
+          const usx = crid.indexOf("_");
+          const type = usx > 0 ? crid.slice(0, usx) : "";
+          const cidRaw = usx > 0 ? crid.slice(usx + 1) : "";
+          const clientId = cidRaw ? cidRaw.replace("-", ".") : (s.id || "555.555");
+          const cur = String(s.currency || "jpy").toLowerCase();
+          const zeroDec = cur === "jpy" || cur === "krw";
+          const value = (s.amount_total != null) ? (zeroDec ? s.amount_total : s.amount_total / 100) : 944;
+
+          const mid = env.GA_MEASUREMENT_ID || "G-C3W7FBQRCD";
+          if (env.GA_MP_API_SECRET) {
+            await fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${mid}&api_secret=${env.GA_MP_API_SECRET}`, {
+              method: "POST",
+              body: JSON.stringify({
+                client_id: clientId,
+                events: [{
+                  name: "purchase",
+                  params: {
+                    transaction_id: s.id,                 // クライアント側と同一IDでGA4が自動重複排除
+                    currency: cur.toUpperCase(),
+                    value: value,
+                    items: [{ item_id: type || "love-guide", item_name: "love-guide", price: value, quantity: 1 }],
+                  },
+                }],
+              }),
+            });
+          }
+        }
+        return j({ ok: true });
+      } catch (e) {
+        return j({ ok: false }, 400);
+      }
+    }
+
     // それ以外は静的アセットへフォールバック
     return env.ASSETS.fetch(request);
   },
