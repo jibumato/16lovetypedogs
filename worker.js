@@ -144,6 +144,33 @@ export default {
       }
     }
 
+    // ───────── メールリード一覧（管理API・トークン保護） ─────────
+    if (url.pathname === "/api/leads/admin") {
+      if (!env.COUNTER) return j({ ok: false, error: "no-kv" });
+      const token = request.headers.get("X-Admin-Token") || url.searchParams.get("token") || "";
+      if (!env.ADMIN_TOKEN || token !== env.ADMIN_TOKEN) return j({ ok: false, error: "auth" }, 401);
+
+      if (request.method === "GET") {
+        try {
+          const leads = [];
+          let cursor;
+          do {
+            const list = await env.COUNTER.list({ prefix: "lead:", cursor });
+            for (const k of list.keys) {
+              const v = await env.COUNTER.get(k.name);
+              if (!v) continue;
+              try { leads.push(JSON.parse(v)); } catch (e) {}
+            }
+            cursor = list.list_complete ? null : list.cursor;
+          } while (cursor);
+          leads.sort((a, b) => (a.ts < b.ts ? 1 : -1));
+          return j({ ok: true, leads });
+        } catch (e) {
+          return j({ ok: false }, 500);
+        }
+      }
+    }
+
     // ───────── 結果メール保存 ─────────
     if (url.pathname === "/api/save-result") {
       if (request.method !== "POST") return j({ ok: false }, 405);
