@@ -691,6 +691,26 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-sc-info .lg-tax{margin-top:3px}
 .lg-guarantee{display:flex;align-items:center;gap:10px;text-align:left;margin-top:14px;background:#f3fbf7;border:1px solid #cdeede;border-radius:12px;padding:9px 12px;font-size:11.5px;color:#3a8a68;font-weight:700;line-height:1.5}
 .lg-guarantee .gbadge{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:#5bb98a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;box-shadow:0 4px 10px -3px rgba(91,185,138,.6)}
+/* 結果直後の有料ティーザー（コンパクト版オファー・感情ピークで提示） */
+.tz{position:relative;margin-top:18px;background:#fffdfb;border:2px solid #ecc98f;border-radius:22px;padding:26px 18px 18px;text-align:center;box-shadow:0 20px 44px -20px rgba(180,140,80,.55)}
+.tz::before{content:"PREMIUM";position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#e7b85f,#d99a3a);color:#fff;font-size:10px;font-weight:900;letter-spacing:.18em;border-radius:999px;padding:5px 18px;box-shadow:0 6px 14px -5px rgba(190,140,60,.6)}
+.tz h3{font-size:17px;font-weight:900;color:var(--ink);margin:0 0 4px;line-height:1.5;display:block}
+.tz .tz-lead{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;line-height:1.7}
+.tz-list{text-align:left;margin:0 auto 14px;max-width:300px}
+.tz-list .li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--ink);padding:7px 0;border-bottom:1px dashed #f0d6e0;line-height:1.55}
+.tz-list .li:last-child{border-bottom:0}
+.tz-list .lk{flex-shrink:0;font-size:14px;line-height:1.55}
+.tz-list em{font-style:normal;color:var(--pink-deep);font-weight:800}
+.tz .lg-price{margin-bottom:12px}
+.tz-note{margin-top:11px;font-size:11px;color:#3a8a68;font-weight:700}
+/* 追従ボタン（結果画面のみ・タブバーの上に浮く。オファー可視中は自動で隠す） */
+.lg-fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(64px + env(safe-area-inset-bottom,0px));width:calc(100% - 28px);max-width:452px;z-index:55;background:linear-gradient(135deg,#f3d28a,#dcab57 55%,#caa04a);border:1px solid #e8c477;border-radius:16px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 16px 34px -10px rgba(180,140,60,.7);cursor:pointer;text-align:left;font-family:inherit;transition:opacity .25s,visibility .25s}
+.lg-fab.hide{opacity:0;visibility:hidden;pointer-events:none}
+.lg-fab .fab-tx{min-width:0}
+.lg-fab .t1{display:block;font-size:13.5px;font-weight:900;color:#fff;text-shadow:0 1px 2px rgba(150,100,30,.45)}
+.lg-fab .t2{display:block;font-size:10.5px;font-weight:700;color:#fff;opacity:.95;text-shadow:0 1px 2px rgba(150,100,30,.45)}
+.lg-fab .go{flex-shrink:0;background:#fff;color:#b5852a;font-weight:900;font-size:12.5px;border-radius:999px;padding:8px 15px;white-space:nowrap}
+.lg-fab:active{transform:translateX(-50%) translateY(1px)}
 .lg-price{display:flex;align-items:baseline;justify-content:center;flex-wrap:wrap;gap:5px;margin-bottom:2px}
 .lg-now{font-weight:800;font-size:34px;color:#e23a55}
 .lg-yen{font-size:16px;font-weight:800;color:#e23a55}
@@ -874,6 +894,10 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 
     <!-- 2.5 結果をメールで保存（カード直下・コンパクトバー） -->
     <div id="saveResultTop"></div>
+
+    <!-- 2.7 有料ティーザー（感情ピークでオファー提示。76%が下部オファー未到達だった対策） -->
+    <div id="payTeaser"></div>
+    <button class="lg-fab hide" id="lgFab" type="button" onclick="fabToOffer()"></button>
 
     <!-- 3. あなたの恋愛人格・傾向の詳細（無料の中身で信頼構築） -->
     <div class="sec" id="desc"></div>
@@ -1670,6 +1694,8 @@ function renderResult(code,stay){
   renderResultOmikuji();
   renderSaveBar(code);
   renderSaveResult(code);
+  renderPayTeaser(code);
+  setupPayFab(code);
   renderFeedback();
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
@@ -2069,13 +2095,78 @@ function guideBuyUrl(code,lang){
   return u;
 }
 /* 購入クリック計測（決済はStripe外部のため、離脱前にbegin_checkoutを発火） */
-function trackCheckout(code,lang){
+function trackCheckout(code,lang,loc){
   const cfg=guideCfg(lang);
   try{ if(window.gtag) gtag('event','begin_checkout',{
     currency:cfg.currency, value:Number(cfg.price)||0, coupon:cfg.promo||undefined,
     items:[{item_id:code,item_name:'love-guide',price:Number(cfg.price)||0,quantity:1}],
-    lang:lang, location:'index_guide'
+    lang:lang, location:loc||'index_guide'
   }); }catch(e){}
+}
+
+/* ===== 結果直後の有料ティーザー＋追従ボタン =====
+   view_item到達が診断完了者の24%に留まっていたため、感情ピーク（結果直後）に
+   コンパクト版オファーを提示し、下部のフル版オファーへは追従ボタンでいつでも飛べるようにする */
+const TZ_I18N={
+  ja:{title:'あなたのタイプ専用<br>恋愛レポート（完全版）',lead:'無料で見えているのは全体のほんの一部。<br>本当のあなたの恋愛は、この先に。',
+    items:['全16タイプとの<em>詳しい相性＋攻略コメント</em>','あなたが繰り返す<em>3つの恋愛の罠と抜け道</em>','シーン別<em>LINE例文・告白のコツ</em>','ケンカ・倦怠期の<em>3ステップ仲直り法</em>'],
+    buy:'今すぐ受け取る →',sub:'全30ページPDF・即ダウンロード',note:'🛡 30日間の返金保証つき',fab1:'📖 あなたのタイプ専用レポート',go:'見る →'},
+  en:{title:'Your Type-Only<br>Love Report (Full Edition)',lead:'What you see for free is just a glimpse.<br>The real story of your love life starts here.',
+    items:['Detailed <em>compatibility + tips for all 16 types</em>','The <em>3 love traps you repeat — and the way out</em>','<em>Message templates</em> for every scene','The <em>3-step make-up method</em> for fights'],
+    buy:'Get it now →',sub:'30-page PDF · instant download',note:'🛡 30-day money-back guarantee',fab1:'📖 Your type-only report',go:'View →'},
+  ko:{title:'당신의 타입 전용<br>연애 리포트(완전판)',lead:'무료로 보이는 건 전체의 일부일 뿐.<br>진짜 당신의 연애는 이 다음에.',
+    items:['전 16타입과의 <em>상세 궁합＋공략 코멘트</em>','당신이 반복하는 <em>3가지 연애의 함정과 탈출법</em>','장면별 <em>메시지 예문·고백 팁</em>','싸움·권태기의 <em>3단계 화해법</em>'],
+    buy:'지금 받기 →',sub:'전 30페이지 PDF·즉시 다운로드',note:'🛡 30일 환불 보장',fab1:'📖 내 타입 전용 리포트',go:'보기 →'},
+  zh:{title:'你的类型专属<br>恋爱报告（完全版）',lead:'免费看到的只是全部的一小部分。<br>真正的你的恋爱，在这之后。',
+    items:['与全16类型的<em>详细契合＋攻略点评</em>','你反复陷入的<em>3个恋爱陷阱与出路</em>','分场景<em>消息范例·告白技巧</em>','吵架·倦怠期的<em>3步和好法</em>'],
+    buy:'立即获取 →',sub:'共30页PDF·即时下载',note:'🛡 30天退款保障',fab1:'📖 你的类型专属报告',go:'查看 →'},
+  tw:{title:'你的類型專屬<br>戀愛報告（完全版）',lead:'免費看到的只是全部的一小部分。<br>真正的你的戀愛，在這之後。',
+    items:['與全16類型的<em>詳細契合＋攻略點評</em>','你反覆陷入的<em>3個戀愛陷阱與出路</em>','分場景<em>訊息範例·告白技巧</em>','吵架·倦怠期的<em>3步和好法</em>'],
+    buy:'立即取得 →',sub:'共30頁PDF·即時下載',note:'🛡 30天退款保障',fab1:'📖 你的類型專屬報告',go:'查看 →'}
+};
+function tzPriceHTML(cfg,lang){
+  if(!cfg.off) return '<span class="lg-now">$'+cfg.price+'</span>';
+  if(cfg.currency==='USD') return '<span class="lg-off">'+cfg.off+'</span><span class="lg-orig">$'+cfg.orig+'</span><span class="lg-now">$'+cfg.price+'</span>';
+  return '<span class="lg-off">'+cfg.off+'</span><span class="lg-orig">'+cfg.orig+'</span><span class="lg-now">'+cfg.price+'</span><span class="lg-yen">'+(lang==='ja'?'円':lang==='ko'?'엔':'日元')+'</span>';
+}
+function renderPayTeaser(code){
+  const box=document.getElementById('payTeaser');if(!box)return;
+  if(!hasGuideLink(code,L)){box.innerHTML='';return;}
+  const t=TZ_I18N[L]||TZ_I18N.ja,cfg=guideCfg(L);
+  box.innerHTML='<div class="tz">'
+    +'<h3>'+t.title+'</h3>'
+    +'<div class="tz-lead">'+t.lead+'</div>'
+    +'<div class="tz-list">'+t.items.map(it=>'<div class="li"><span class="lk">🔒</span><span>'+it+'</span></div>').join('')+'</div>'
+    +'<div class="lg-price">'+tzPriceHTML(cfg,L)+'</div>'
+    +'<a class="lg-buy" href="'+guideBuyUrl(code,L)+'" onclick="trackCheckout(\''+code+'\',\''+L+'\',\'teaser\')">'+t.buy+'<span class="s">'+t.sub+'</span></a>'
+    +'<div class="tz-note">'+t.note+'</div>'
+    +'</div>';
+}
+let fabIO=null;
+function setupPayFab(code){
+  const fab=document.getElementById('lgFab');if(!fab)return;
+  if(fabIO){try{fabIO.disconnect();}catch(e){} fabIO=null;}
+  if(!hasGuideLink(code,L)){fab.classList.add('hide');fab.dataset.on='';return;}
+  const t=TZ_I18N[L]||TZ_I18N.ja,cfg=guideCfg(L),g=GUIDE_I18N[L]||GUIDE_I18N.ja;
+  const pr=(cfg.currency==='USD'?'$'+cfg.price:cfg.price+(L==='ja'?'円':L==='ko'?'엔':'日元'));
+  fab.innerHTML='<span class="fab-tx"><span class="t1">'+t.fab1+'</span><span class="t2">'+(cfg.off?cfg.off+' ':'')+pr+'・'+g.pagesB+'</span></span><span class="go">'+t.go+'</span>';
+  fab.dataset.on='1';fab.classList.remove('hide');
+  /* ティーザー or 下部オファーが画面内にある間は追従ボタンを隠す（重複表示を防ぐ） */
+  try{
+    if(!('IntersectionObserver' in window))return;
+    const targets=[document.querySelector('#payTeaser .tz'),document.querySelector('#loveGuide .lg-cta')].filter(Boolean);
+    if(!targets.length)return;
+    const vis=new Set();
+    fabIO=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting)vis.add(e.target); else vis.delete(e.target); });
+      if(fab.dataset.on)fab.classList.toggle('hide',vis.size>0);
+    },{threshold:0.05});
+    targets.forEach(function(el){fabIO.observe(el);});
+  }catch(e){}
+}
+function fabToOffer(){
+  try{ if(window.gtag) gtag('event','select_content',{content_type:'fab_guide',language:L}); }catch(e){}
+  guideToCta();
 }
 /* 攻略書チラ見せデータ（INFPは実コンテンツを多言語で、他はフォールバック） */
 const GUIDE={
