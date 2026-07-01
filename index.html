@@ -1918,14 +1918,14 @@ const STRIPE_LINKS_BY_LANG={
     ESFP:'https://buy.stripe.com/bJe6oG8gF0zV2Xfgeo8Ra19'
   }
 };
-/* 通貨・割引はja(JPY・20%OFFプロモ済)とen(USD・割引なし)で構成が異なるため言語別に保持 */
+/* 通貨・割引はja(JPY・表示価格のみ、プロモコードなし)とen(USD・割引なし)で構成が異なるため言語別に保持 */
 const GUIDE_CFG_BY_LANG={
-  ja:{ price:"944", orig:"1180", off:"20%OFF", currency:"JPY" },
+  ja:{ price:"1180", orig:"1475", off:"20%OFF", currency:"JPY" },
   en:{ price:"9.99", orig:null, off:null, currency:"USD" }
 };
 function guideCfg(lang){ return GUIDE_CFG_BY_LANG[lang]||GUIDE_CFG_BY_LANG.ja; }
 const COUPON_BADGE={
-  ja:"🎟 20%OFFクーポン適用済み｜診断した方限定",
+  ja:"🎟 20%OFFセール価格｜診断した方限定",
   en:"📖 Instant PDF download",
   ko:"🎟 20% 할인 쿠폰 적용됨 · 진단한 분 한정",
   zh:"🎟 20%OFF优惠券已套用 · 仅限测验者",
@@ -2061,8 +2061,6 @@ function hasGuideLink(code,lang){ return !!((STRIPE_LINKS_BY_LANG[lang]||{})[cod
 function guideBuyUrl(code,lang){
   var links=STRIPE_LINKS_BY_LANG[lang]||{};
   var u=links[code]; if(!u) return '#';
-  /* DISCOUNT20クーポンはJPY向けのみ設定済み。他通貨は専用プロモが用意でき次第ここに追加 */
-  if(lang==='ja') u+=(u.indexOf('?')<0?'?':'&')+'prefilled_promo_code=DISCOUNT20';
   /* Webhookでのサーバー側purchase計測用に「タイプ_GAクライアントID」を client_reference_id で渡す */
   var gid=gaClientId();
   if(gid){ u+=(u.indexOf('?')<0?'?':'&')+'client_reference_id='+encodeURIComponent(code+'_'+gid.replace('.','-')); }
@@ -2072,7 +2070,7 @@ function guideBuyUrl(code,lang){
 function trackCheckout(code,lang){
   const cfg=guideCfg(lang);
   try{ if(window.gtag) gtag('event','begin_checkout',{
-    currency:cfg.currency, value:Number(cfg.price)||0, coupon:cfg.off?'DISCOUNT20':undefined,
+    currency:cfg.currency, value:Number(cfg.price)||0,
     items:[{item_id:code,item_name:'love-guide',price:Number(cfg.price)||0,quantity:1}],
     lang:lang, location:'index_guide'
   }); }catch(e){}
@@ -2113,7 +2111,7 @@ const GUIDE_I18N={
       ["恋愛の罠と対策","1つだけ","3つ＋抜け道"],["LINE・メッセージ攻略","x","シーン別例文"],
       ["ケンカ・倦怠期の対処","x","3ステップ仲直り"],["結婚観・長続きの条件","x","条件チェック"],
       ["書き込みワークシート","x","2枚つき"]],
-    tax:"税込・買い切り / ダウンロードPDF", coupon:"944円はプロモコード適用後の価格です", jpOnly:"🇯🇵 プレミアムレポートは現在、日本語版のみの限定販売です", refund:"万が一ご満足いただけない場合は30日間の返金保証あり", pages:"フルカラー", pagesB:"全30ページ", pagesAf:"・スマホでも読みやすいA4縦",
+    tax:"税込・買い切り / ダウンロードPDF", coupon:"", jpOnly:"🇯🇵 プレミアムレポートは現在、日本語版のみの限定販売です", refund:"万が一ご満足いただけない場合は30日間の返金保証あり", pages:"フルカラー", pagesB:"全30ページ", pagesAf:"・スマホでも読みやすいA4縦",
     buy:"あなたのタイプ専用のプレミアムレポートを受け取る", buySub:"版 ・ 今すぐダウンロード",
     re:["購入後すぐ読める","スマホ／PC対応","追加課金なし"], other:"他の言語で読む：" },
   en:{ eyebrow:"PREMIUM EDITION", head1:"The rest is in your ", headAc:"type-only", head2:" Premium Report.",
