@@ -1918,15 +1918,15 @@ const STRIPE_LINKS_BY_LANG={
     ESFP:'https://buy.stripe.com/bJe6oG8gF0zV2Xfgeo8Ra19'
   }
 };
-/* 通貨・割引はja(JPY・表示価格のみ、プロモコードなし)とen(USD・割引なし)で構成が異なるため言語別に保持 */
+/* 通貨・割引はja(JPY・表示価格のみ、プロモコードなし)とen(USD・DISCOUNT20を自動適用)で構成が異なるため言語別に保持 */
 const GUIDE_CFG_BY_LANG={
-  ja:{ price:"1180", orig:"1475", off:"20%OFF", currency:"JPY" },
-  en:{ price:"9.99", orig:null, off:null, currency:"USD" }
+  ja:{ price:"1180", orig:"1475", off:"20%OFF", currency:"JPY", promo:null },
+  en:{ price:"7.99", orig:"9.99", off:"20%OFF", currency:"USD", promo:"DISCOUNT20" }
 };
 function guideCfg(lang){ return GUIDE_CFG_BY_LANG[lang]||GUIDE_CFG_BY_LANG.ja; }
 const COUPON_BADGE={
   ja:"🎟 20%OFFサービス開始記念価格｜診断した方限定",
-  en:"📖 Instant PDF download",
+  en:"🎟 20% OFF coupon applied · quiz-takers only",
   ko:"🎟 20% 할인 쿠폰 적용됨 · 진단한 분 한정",
   zh:"🎟 20%OFF优惠券已套用 · 仅限测验者",
   tw:"🎟 20%OFF折價券已套用 · 僅限測驗者"
@@ -2061,6 +2061,8 @@ function hasGuideLink(code,lang){ return !!((STRIPE_LINKS_BY_LANG[lang]||{})[cod
 function guideBuyUrl(code,lang){
   var links=STRIPE_LINKS_BY_LANG[lang]||{};
   var u=links[code]; if(!u) return '#';
+  var cfg=guideCfg(lang);
+  if(cfg.promo) u+=(u.indexOf('?')<0?'?':'&')+'prefilled_promo_code='+encodeURIComponent(cfg.promo);
   /* Webhookでのサーバー側purchase計測用に「タイプ_GAクライアントID」を client_reference_id で渡す */
   var gid=gaClientId();
   if(gid){ u+=(u.indexOf('?')<0?'?':'&')+'client_reference_id='+encodeURIComponent(code+'_'+gid.replace('.','-')); }
@@ -2070,7 +2072,7 @@ function guideBuyUrl(code,lang){
 function trackCheckout(code,lang){
   const cfg=guideCfg(lang);
   try{ if(window.gtag) gtag('event','begin_checkout',{
-    currency:cfg.currency, value:Number(cfg.price)||0,
+    currency:cfg.currency, value:Number(cfg.price)||0, coupon:cfg.promo||undefined,
     items:[{item_id:code,item_name:'love-guide',price:Number(cfg.price)||0,quantity:1}],
     lang:lang, location:'index_guide'
   }); }catch(e){}
@@ -2133,7 +2135,7 @@ const GUIDE_I18N={
       ["Love traps & fixes","just 1","3 + solutions"],["Chat / message tips","x","scene examples"],
       ["Fights & slumps","x","3-step recovery"],["Marriage & longevity","x","checklist"],
       ["Worksheets","x","2 sheets"]],
-    tax:"One-time payment / PDF download", coupon:"", jpOnly:"🇯🇵 The Premium Report is currently sold in Japanese only.", refund:"30-day money-back guarantee if not satisfied", pages:"Full color ", pagesB:"30 pages", pagesAf:" · A4 portrait",
+    tax:"One-time payment / PDF download", coupon:"$7.99 is the price after the promo code is applied.", jpOnly:"🇯🇵 The Premium Report is currently sold in Japanese only.", refund:"30-day money-back guarantee if not satisfied", pages:"Full color ", pagesB:"30 pages", pagesAf:" · A4 portrait",
     buy:"Get your type-only Premium Report", buySub:" edition · download now",
     re:["Read instantly","Phone & PC","No extra charge"], other:"Read in another language: " },
   ko:{ eyebrow:"PREMIUM EDITION", head1:"이어지는 건, ", headAc:"당신 타입 전용", head2:" 프리미엄 리포트로.",
@@ -2480,7 +2482,7 @@ function renderLoveGuide(code){
         </div>
         <div class="lg-sc-info">
           <div class="lg-sc-h">${SC_H[L]||SC_H.ja}</div>
-          <div class="lg-price">${cfg.off?`<span class="lg-off">${cfg.off}</span><span class="lg-orig">${cfg.orig}</span><span class="lg-now">${cfg.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':cfg.currency}</span>`:`<span class="lg-now">$${cfg.price}</span>`}</div>
+          <div class="lg-price">${cfg.off?(cfg.currency==='USD'?`<span class="lg-off">${cfg.off}</span><span class="lg-orig">$${cfg.orig}</span><span class="lg-now">$${cfg.price}</span>`:`<span class="lg-off">${cfg.off}</span><span class="lg-orig">${cfg.orig}</span><span class="lg-now">${cfg.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':cfg.currency}</span>`):`<span class="lg-now">$${cfg.price}</span>`}</div>
           <div class="lg-tax">${g.tax}</div>
         </div>
       </div>

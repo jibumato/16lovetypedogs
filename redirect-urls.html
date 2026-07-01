@@ -26,7 +26,7 @@ h1{font-size:18px;color:#e58aa0;margin-bottom:4px}
   <h1>🔗 英語版 Stripe リダイレクトURL一覧</h1>
   <div class="sub">各Payment Linkの「支払い後リダイレクト」に、対応するURLを貼り付けてください。</div>
   <div class="price">
-    <label>価格(USD)：$</label><input type="text" id="price" value="9.99">
+    <label>価格(USD・クーポン適用後)：$</label><input type="text" id="price" value="7.99">
     <button class="copyall" onclick="copyAll()">全16件をまとめてコピー</button>
   </div>
   <div id="list"></div>
@@ -39,7 +39,7 @@ const TYPES=[
   ['ISTP','Miniature Dachshund'],['ISFP','French Bulldog'],['ESTP','Beagle'],['ESFP','Pomeranian']
 ];
 function buildUrl(code){
-  const price=(document.getElementById('price').value||'9.99').trim();
+  const price=(document.getElementById('price').value||'7.99').trim();
   return 'https://16lovetypedogs.com/love-guide-thanks.html?type='+code+'&lang=en&currency=USD&value='+price;
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
