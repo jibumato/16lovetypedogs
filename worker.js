@@ -344,7 +344,7 @@ ${tagLine}
           const clientId = cidRaw ? cidRaw.replace("-", ".") : (s.id || "555.555");
           const cur = String(s.currency || "jpy").toLowerCase();
           const zeroDec = cur === "jpy" || cur === "krw";
-          const value = (s.amount_total != null) ? (zeroDec ? s.amount_total : s.amount_total / 100) : 944;
+          const value = (s.amount_total != null) ? (zeroDec ? s.amount_total : s.amount_total / 100) : 1180;
 
           const mid = env.GA_MEASUREMENT_ID || "G-C3W7FBQRCD";
           if (env.GA_MP_API_SECRET) {
