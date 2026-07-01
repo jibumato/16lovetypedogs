@@ -272,11 +272,9 @@ body{
 .taglist span{background:rgba(255,255,255,.8);border:1px solid rgba(200,180,220,.35);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--ink)}
 
 /* hook */
-/* 希少性バッジ（MBTI出現率）。血統書カード(.cert)の上端枠に取り付けるタブ */
-.cert-wrap{position:relative;margin-top:16px}
-.cert-wrap .cert{margin-top:0}
-.rarity{position:absolute;top:0;left:0;right:0;display:flex;justify-content:center;z-index:2;pointer-events:none;animation:hookIn .5s cubic-bezier(.2,1.1,.4,1) both}
-.rarity-chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;padding:6px 15px;border-radius:999px;letter-spacing:.02em;line-height:1.3;text-align:center;transform:translateY(-50%);box-shadow:0 6px 14px -6px rgba(120,70,150,.4)}
+/* 希少性バッジ（MBTI出現率）。血統書カード(.cert)内の最上部に入れ子表示 */
+.cert .rarity{display:flex;justify-content:center;margin:0 0 12px;padding-right:82px;animation:hookIn .5s cubic-bezier(.2,1.1,.4,1) both}
+.rarity-chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;padding:6px 13px;border-radius:999px;letter-spacing:.02em;line-height:1.3;text-align:center;white-space:nowrap;box-shadow:0 4px 10px -5px rgba(120,70,150,.4)}
 .rarity-chip.rare{background:linear-gradient(135deg,#fbe8ff,#efe2fb);border:1.5px solid #d9b8ee;color:#8e54b8}
 .rarity-chip.common{background:linear-gradient(135deg,#fff3e0,#ffe9c7);border:1.5px solid #f0cd84;color:#b07d2a}
 @keyframes hookIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -879,11 +877,8 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <span id="t-reshead" style="display:none"></span>
     <div class="confetti" id="confetti"></div>
     <div class="announce" id="announce"></div>
-    <div class="cert-wrap">
-      <div class="cert" id="cert"></div>
-      <!-- 1.5 希少性バッジ（MBTI出現率＝specialnessの演出）。血統書カード上端に取り付け -->
-      <div id="rarity"></div>
-    </div>
+    <!-- 1.5 希少性バッジ（MBTI出現率＝specialnessの演出）。血統書カード内の最上部に入れ子表示 -->
+    <div class="cert" id="cert"></div>
     <!-- 2. 軽いシェア（結果直後・感情のピークで拡散を捕捉） -->
     <div class="share-nudge">
       <span class="sn-cap" id="t-snudge"></span>
@@ -1636,7 +1631,14 @@ function renderResult(code,stay){
   const axw=AXW[L]||AXW.ja;
   const axes=code.split('').map(l=>'<div class="axis"><b>'+l+'</b><i>'+axw[l]+'</i></div>').join('');
   const titleTxt=(i.ribbon||'').replace(/🐾/g,'').trim();
+  // 希少性バッジ（MBTI出現率＝「あなたは特別」を演出）。血統書カード内の最上部に入れ子表示
+  let rarityHTML='';
+  (function(){const pp=RARITY[code];if(pp==null)return;
+    const rt=RARITY_I18N[L]||RARITY_I18N.ja;const rare=pp<=5;
+    rarityHTML='<div class="rarity"><span class="rarity-chip '+(rare?'rare':'common')+'">'+(rare?'✨':'👑')+' '+(rare?rt.rare:rt.common)+' ・ '+rt.pct(pp)+'</span></div>';
+  })();
   cert.innerHTML='<div class="frame"></div>'
+    +rarityHTML
     +'<div class="seal"><span class="cf">'+i.badge+'</span><span>'+i.stamp+'</span><small>16 WANKO</small></div>'
     +'<div class="regrow"><span>No. '+cidx+' / 16</span><span>'+cdate+'</span></div>'
     +'<div class="ribbon">OFFICIAL PEDIGREE OF LOVE</div>'
@@ -1649,13 +1651,6 @@ function renderResult(code,stay){
     +'<div class="axes">'+axes+'</div>'
     +'<div class="paramhead">'+i.h_param+'</div><div class="params">'+pr+'</div>'
     +'<div class="sign">🐾 '+i.title+' 🐾</div>';
-  // 希少性バッジ（MBTI出現率＝「あなたは特別」を演出）
-  (function(){const el=document.getElementById('rarity');if(!el)return;
-    const pp=RARITY[code];if(pp==null){el.innerHTML='';el.className='';return;}
-    const rt=RARITY_I18N[L]||RARITY_I18N.ja;const rare=pp<=5;
-    el.className='rarity';
-    el.innerHTML='<span class="rarity-chip '+(rare?'rare':'common')+'">'+(rare?'✨':'👑')+' '+(rare?rt.rare:rt.common)+' ・ '+rt.pct(pp)+'</span>';
-  })();
   // 結果発表バナー + 紙吹雪
   const annEl=document.getElementById('announce');
   if(annEl){const RES_EYE={ja:'診断結果',en:'YOUR RESULT',ko:'진단 결과',zh:'诊断结果',tw:'診斷結果'};annEl.innerHTML='<span class="eyebrow">🐾 '+(RES_EYE[L]||RES_EYE.ja)+'</span><div class="res-head">'+i.res_head+'</div>';}
