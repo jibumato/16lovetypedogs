@@ -1900,13 +1900,33 @@ const STRIPE_LINKS_BY_LANG={
     ESFP:'https://buy.stripe.com/28E00igNbfuP7dv3rC8Ra0Z'
   },
   en:{
-    // 例: INTJ:'https://buy.stripe.com/xxxxxxxxxxxxxxxxxxxxxxxx',
+    INTJ:'https://buy.stripe.com/aFa6oG7cB1DZbtL4vG8Ra1e',
+    INTP:'https://buy.stripe.com/3cI28q40pbez41j6DO8Ra1f',
+    ENTJ:'https://buy.stripe.com/28E14m8gF1DZfK1d2c8Ra16',
+    ENTP:'https://buy.stripe.com/14AeVc1ShfuP8hzfak8Ra17',
+    INFJ:'https://buy.stripe.com/5kQbJ07cBfuP2XfbY88Ra1c',
+    INFP:'https://buy.stripe.com/7sY8wO68x5Uf55n1ju8Ra1d',
+    ENFJ:'https://buy.stripe.com/9B6cN4dAZ82n0P71ju8Ra14',
+    ENFP:'https://buy.stripe.com/14AfZg1Sh6Yj9lDd2c8Ra15',
+    ISTJ:'https://buy.stripe.com/7sYfZg54tdmHeFX6DO8Ra1i',
+    ISFJ:'https://buy.stripe.com/8x25kCaoNaav69raU48Ra1g',
+    ESTJ:'https://buy.stripe.com/28E5kCgNbeqL69r6DO8Ra1a',
+    ESFJ:'https://buy.stripe.com/4gM6oG2Wl96rbtL3rC8Ra18',
+    ISTP:'https://buy.stripe.com/eVq4gyaoN96r0P72ny8Ra1j',
+    ISFP:'https://buy.stripe.com/7sYaEW0OdciDdBTe6g8Ra1h',
+    ESTP:'https://buy.stripe.com/6oU14m54t82n2Xf0fq8Ra1b',
+    ESFP:'https://buy.stripe.com/bJe6oG8gF0zV2Xfgeo8Ra19'
   }
 };
-const GUIDE_CFG={ price:"944", orig:"1180", off:"20%OFF" };
+/* 通貨・割引はja(JPY・20%OFFプロモ済)とen(USD・割引なし)で構成が異なるため言語別に保持 */
+const GUIDE_CFG_BY_LANG={
+  ja:{ price:"944", orig:"1180", off:"20%OFF", currency:"JPY" },
+  en:{ price:"9.99", orig:null, off:null, currency:"USD" }
+};
+function guideCfg(lang){ return GUIDE_CFG_BY_LANG[lang]||GUIDE_CFG_BY_LANG.ja; }
 const COUPON_BADGE={
   ja:"🎟 20%OFFクーポン適用済み｜診断した方限定",
-  en:"🎟 20% OFF coupon applied · quiz-takers only",
+  en:"📖 Instant PDF download",
   ko:"🎟 20% 할인 쿠폰 적용됨 · 진단한 분 한정",
   zh:"🎟 20%OFF优惠券已套用 · 仅限测验者",
   tw:"🎟 20%OFF折價券已套用 · 僅限測驗者"
@@ -2050,9 +2070,10 @@ function guideBuyUrl(code,lang){
 }
 /* 購入クリック計測（決済はStripe外部のため、離脱前にbegin_checkoutを発火） */
 function trackCheckout(code,lang){
+  const cfg=guideCfg(lang);
   try{ if(window.gtag) gtag('event','begin_checkout',{
-    currency:'JPY', value:Number(GUIDE_CFG.price)||944, coupon:'DISCOUNT20',
-    items:[{item_id:code,item_name:'love-guide',price:Number(GUIDE_CFG.price)||944,quantity:1}],
+    currency:cfg.currency, value:Number(cfg.price)||0, coupon:cfg.off?'DISCOUNT20':undefined,
+    items:[{item_id:code,item_name:'love-guide',price:Number(cfg.price)||0,quantity:1}],
     lang:lang, location:'index_guide'
   }); }catch(e){}
 }
@@ -2114,7 +2135,7 @@ const GUIDE_I18N={
       ["Love traps & fixes","just 1","3 + solutions"],["Chat / message tips","x","scene examples"],
       ["Fights & slumps","x","3-step recovery"],["Marriage & longevity","x","checklist"],
       ["Worksheets","x","2 sheets"]],
-    tax:"Tax incl. / one-time / PDF download", coupon:"¥944 is the price after the promo code is applied.", jpOnly:"🇯🇵 The Premium Report is currently sold in Japanese only.", refund:"30-day money-back guarantee if not satisfied", pages:"Full color ", pagesB:"30 pages", pagesAf:" · A4 portrait",
+    tax:"One-time payment / PDF download", coupon:"", jpOnly:"🇯🇵 The Premium Report is currently sold in Japanese only.", refund:"30-day money-back guarantee if not satisfied", pages:"Full color ", pagesB:"30 pages", pagesAf:" · A4 portrait",
     buy:"Get your type-only Premium Report", buySub:" edition · download now",
     re:["Read instantly","Phone & PC","No extra charge"], other:"Read in another language: " },
   ko:{ eyebrow:"PREMIUM EDITION", head1:"이어지는 건, ", headAc:"당신 타입 전용", head2:" 프리미엄 리포트로.",
@@ -2303,6 +2324,7 @@ function renderLoveGuide(code){
   const SC_H={ja:'あなた専用の<br>恋愛レポート',en:'Your personal<br>love report',ko:'나만을 위한<br>연애 리포트',zh:'你的专属<br>恋爱报告',tw:'你的專屬<br>戀愛報告'};
   const BUY_NOW={ja:'今すぐ受け取る',en:'Get it now',ko:'지금 받기',zh:'立即获取',tw:'立即取得'};
   const buyOk=hasGuideLink(code,L);
+  const cfg=guideCfg(L);
   /* ベスト相性1位を算出（自分以外で最高スコア） */
   const top=ORDER.filter(c=>c!==code).map(c=>({c:c,s:compatScore(code,c)[0]})).sort((a,b)=>b.s-a.s)[0];
   const bd=LOC[L][top.c], breed=bd.breed;
@@ -2460,14 +2482,14 @@ function renderLoveGuide(code){
         </div>
         <div class="lg-sc-info">
           <div class="lg-sc-h">${SC_H[L]||SC_H.ja}</div>
-          <div class="lg-price"><span class="lg-off">${GUIDE_CFG.off}</span><span class="lg-orig">${GUIDE_CFG.orig}</span><span class="lg-now">${GUIDE_CFG.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':'JPY'}</span></div>
+          <div class="lg-price">${cfg.off?`<span class="lg-off">${cfg.off}</span><span class="lg-orig">${cfg.orig}</span><span class="lg-now">${cfg.price}</span><span class="lg-yen">${L==='ja'?'円':L==='ko'?'엔':L==='zh'?'日元':cfg.currency}</span>`:`<span class="lg-now">$${cfg.price}</span>`}</div>
           <div class="lg-tax">${g.tax}</div>
         </div>
       </div>
       <a class="lg-buy${buyOk?'':' disabled'}" id="lgBuy" href="${buyOk?guideBuyUrl(code,L):'javascript:void(0)'}" ${buyOk?`onclick="trackCheckout('${code}','${L}')"`:'aria-disabled="true"'}>${BUY_NOW[L]||BUY_NOW.ja} →<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
       <div class="lg-pay"><span class="pl">${PAY_I18N[L]?.pl||PAY_I18N.ja.pl}</span><span class="chip">💳 ${PAY_I18N[L]?.card||PAY_I18N.ja.card}</span><span class="chip pp soon"><img class="pp-logo" src="/paypay-logo.png" alt="PayPay" width="18" height="18" decoding="async">PayPay<span class="soon-tag">${PAY_I18N[L]?.soon||PAY_I18N.ja.soon}</span></span></div>
       ${g.refund?`<div class="lg-guarantee"><span class="gbadge">✓</span><span>${g.refund}</span></div>`:''}
-      <div class="lg-coupon">🎟 ${g.coupon||''}</div>
+      ${g.coupon?`<div class="lg-coupon">🎟 ${g.coupon}</div>`:''}
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}</div>
       ${(!buyOk&&g.jpOnly)?`<div class="lg-jponly">${g.jpOnly}</div>`:''}
     </div>
@@ -2486,9 +2508,10 @@ function observeGuideView(code){
       for(const en of entries){
         if(en.isIntersecting&&!fired){
           fired=true; io.disconnect();
+          const vc=guideCfg(L);
           try{ if(window.gtag) gtag('event','view_item',{
-            currency:'JPY', value:Number(GUIDE_CFG.price)||944,
-            items:[{item_id:code,item_name:'love-guide',price:Number(GUIDE_CFG.price)||944,quantity:1}],
+            currency:vc.currency, value:Number(vc.price)||0,
+            items:[{item_id:code,item_name:'love-guide',price:Number(vc.price)||0,quantity:1}],
             lang:L, location:'index_guide'
           }); }catch(e){}
         }
