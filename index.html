@@ -85,7 +85,10 @@ body{
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
   .rt-track{animation:rtScroll 38s linear infinite!important}
   .rt-track.rt-reverse{animation-direction:reverse!important}
-  .lg-buy::before{animation:lgShine 3.4s ease-in-out infinite!important}}
+  .lg-buy::before{animation:lgShine 3.4s ease-in-out infinite!important}
+  /* 桜吹雪・紙吹雪は一瞬の演出のため、モーション削減設定でも動かす（off-screen初期位置のまま消えない事故を防ぐ） */
+  .sakura-layer i{animation:sakuraFall var(--sd,5s) linear var(--sdl,0s) forwards!important}
+  .confetti i{animation:confettiFall var(--cd,2.2s) cubic-bezier(.3,.6,.5,1) var(--cdl,0s) forwards!important}}
 
 /* glass card helper applied via individual selectors */
 .card,.qcard,.cert,.compat-pick,.omk-card,.unlock,.result-next,.seo-static,.lg-peek,.lg-cta,.lg-cmp{
@@ -231,10 +234,10 @@ body{
 .announce .sub{font-size:12.5px;font-weight:700;color:var(--ink-soft);margin:10px 0 0}
 @media (max-width:360px){.announce .res-head{font-size:22px}}
 .confetti{position:absolute;top:0;left:-18px;right:-18px;height:440px;overflow:hidden;pointer-events:none;z-index:6}
-.confetti i{position:absolute;top:-14px;display:block}
+.confetti i{position:absolute;top:-14px;display:block;animation:confettiFall var(--cd,2.2s) cubic-bezier(.3,.6,.5,1) var(--cdl,0s) forwards}
 /* 桜吹雪（おみくじ） */
 .sakura-layer{position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden}
-.sakura-layer i{position:absolute;top:-26px;width:13px;height:11px;background:linear-gradient(135deg,#ffe1ec,#f6a8c6);border-radius:100% 0 100% 0;opacity:.92;box-shadow:0 1px 2px rgba(210,98,143,.18);will-change:transform,opacity}
+.sakura-layer i{position:absolute;top:-26px;width:13px;height:11px;background:linear-gradient(135deg,#ffe1ec,#f6a8c6);border-radius:100% 0 100% 0;opacity:.92;box-shadow:0 1px 2px rgba(210,98,143,.18);will-change:transform,opacity;animation:sakuraFall var(--sd,5s) linear var(--sdl,0s) forwards}
 .sakura-layer i.emp{width:auto;height:auto;background:none;box-shadow:none;border-radius:0;line-height:1;filter:drop-shadow(0 2px 3px rgba(210,98,143,.22))}
 @keyframes sakuraFall{0%{opacity:0;transform:translate3d(0,-30px,0) rotateZ(0)}8%{opacity:1}25%{transform:translate3d(24px,26vh,0) rotateZ(95deg)}50%{transform:translate3d(-16px,52vh,0) rotateZ(185deg)}75%{transform:translate3d(22px,78vh,0) rotateZ(275deg)}95%{opacity:1}100%{opacity:0;transform:translate3d(-10px,106vh,0) rotateZ(365deg)}}
 
@@ -1627,7 +1630,7 @@ function renderResult(code,stay){
   const annEl=document.getElementById('announce');
   if(annEl){const RES_EYE={ja:'診断結果',en:'YOUR RESULT',ko:'진단 결과',zh:'诊断结果',tw:'診斷結果'};annEl.innerHTML='<span class="eyebrow">🐾 '+(RES_EYE[L]||RES_EYE.ja)+'</span><div class="res-head">'+i.res_head+'</div>';}
   const confEl=document.getElementById('confetti');
-  if(confEl){const ccol=['#f7a8c4','#c9a6f0','#ffd49a','#92d7bc','#a7c7e7','#ffffff','#ef94b8'];let cf='';for(let k=0;k<22;k++){const cl=Math.round(Math.random()*100),cw=6+Math.round(Math.random()*6),chh=8+Math.round(Math.random()*8),cc=ccol[Math.floor(Math.random()*ccol.length)],cr=Math.random()<.4?'50%':'2px',cdur=(1.8+Math.random()*1.4).toFixed(2),cdl=(Math.random()*0.5).toFixed(2);cf+='<i style="left:'+cl+'%;width:'+cw+'px;height:'+chh+'px;background:'+cc+';border-radius:'+cr+';animation:confettiFall '+cdur+'s cubic-bezier(.3,.6,.5,1) '+cdl+'s forwards"></i>';}confEl.innerHTML=cf;}
+  if(confEl){const ccol=['#f7a8c4','#c9a6f0','#ffd49a','#92d7bc','#a7c7e7','#ffffff','#ef94b8'];let cf='';for(let k=0;k<22;k++){const cl=Math.round(Math.random()*100),cw=6+Math.round(Math.random()*6),chh=8+Math.round(Math.random()*8),cc=ccol[Math.floor(Math.random()*ccol.length)],cr=Math.random()<.4?'50%':'2px',cdur=(1.8+Math.random()*1.4).toFixed(2),cdl=(Math.random()*0.5).toFixed(2);cf+='<i style="left:'+cl+'%;width:'+cw+'px;height:'+chh+'px;background:'+cc+';border-radius:'+cr+';--cd:'+cdur+'s;--cdl:'+cdl+'s"></i>';}confEl.innerHTML=cf;}
   (function(){const el=document.getElementById('guideTeaser');if(!el)return;
     const T={ja:'📖 プレミアムレポートを見る ↓',en:'📖 See the Premium Report ↓',ko:'📖 프리미엄 리포트 보기 ↓',zh:'📖 查看深度报告 ↓',tw:'📖 查看深度報告 ↓'};
     el.className='guide-teaser';
@@ -1751,12 +1754,12 @@ function sakuraBurst(lvl,light){
     if(Math.random()<emojiChance){
       const em=emojis[Math.floor(Math.random()*emojis.length)],
             sz=(15+Math.round(Math.random()*16));
-      html+='<i class="emp" style="left:'+left+'%;font-size:'+sz+'px;animation:sakuraFall '+dur+'s linear '+dl+'s forwards">'+em+'</i>';
+      html+='<i class="emp" style="left:'+left+'%;font-size:'+sz+'px;--sd:'+dur+'s;--sdl:'+dl+'s">'+em+'</i>';
     }else{
       const w=(10+Math.round(Math.random()*9)),h=(w-2),
             c1=pal[Math.floor(Math.random()*pal.length)],
             c2=pal[Math.floor(Math.random()*pal.length)];
-      html+='<i style="left:'+left+'%;width:'+w+'px;height:'+h+'px;background:linear-gradient(135deg,'+c1+','+c2+');animation:sakuraFall '+dur+'s linear '+dl+'s forwards"></i>';
+      html+='<i style="left:'+left+'%;width:'+w+'px;height:'+h+'px;background:linear-gradient(135deg,'+c1+','+c2+');--sd:'+dur+'s;--sdl:'+dl+'s"></i>';
     }
   }
   layer.innerHTML=html;
