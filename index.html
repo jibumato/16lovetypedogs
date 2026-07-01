@@ -2141,27 +2141,47 @@ function renderPayTeaser(code){
     +'<div class="tz-note">'+t.note+'</div>'
     +'</div>';
 }
-let fabIO=null;
+let fabIO=null,fabScrollHandler=null;
 function setupPayFab(code){
   const fab=document.getElementById('lgFab');if(!fab)return;
   if(fabIO){try{fabIO.disconnect();}catch(e){} fabIO=null;}
+  if(fabScrollHandler){try{window.removeEventListener('scroll',fabScrollHandler);}catch(e){} fabScrollHandler=null;}
   if(!hasGuideLink(code,L)){fab.classList.add('hide');fab.dataset.on='';return;}
   const t=TZ_I18N[L]||TZ_I18N.ja,cfg=guideCfg(L),g=GUIDE_I18N[L]||GUIDE_I18N.ja;
   const pr=(cfg.currency==='USD'?'$'+cfg.price:cfg.price+(L==='ja'?'円':L==='ko'?'엔':'日元'));
   fab.innerHTML='<span class="fab-tx"><span class="t1">'+t.fab1+'</span><span class="t2">'+(cfg.off?cfg.off+' ':'')+pr+'・'+g.pagesB+'</span></span><span class="go">'+t.go+'</span>';
-  fab.dataset.on='1';fab.classList.remove('hide');
-  /* ティーザー or 下部オファーが画面内にある間は追従ボタンを隠す（重複表示を防ぐ） */
+  fab.dataset.on='1';fab.classList.add('hide'); // 最初のCTA（ティーザー）を通過するまでは表示しない
+  /* ティーザーを通過(上に抜ける)するまで非表示。以降はティーザー/下部オファーが画面内にある間だけ隠す。
+     非同期コールバックの順序に依存しないよう、発火のたびに現在のgetBoundingClientRectを直接再計算する */
   try{
+    const tzEl=document.querySelector('#payTeaser .tz');
+    const offerEl=document.querySelector('#loveGuide .lg-cta');
+    const targets=[tzEl,offerEl].filter(Boolean);
+    if(!targets.length){fab.classList.remove('hide');return;}
+    const update=function(){
+      if(!fab.dataset.on)return;
+      const vh=window.innerHeight;
+      const tzR=tzEl?tzEl.getBoundingClientRect():null;
+      const offerR=offerEl?offerEl.getBoundingClientRect():null;
+      const tzPassed=tzR?tzR.bottom<0:true;
+      const tzVisible=tzR?(tzR.bottom>0&&tzR.top<vh):false;
+      const offerVisible=offerR?(offerR.bottom>0&&offerR.top<vh):false;
+      fab.classList.toggle('hide', !tzPassed || tzVisible || offerVisible);
+    };
+    update();
+    /* scroll-behavior:smoothでのアニメーション中にしきい値を跨いだ後、
+       アニメーション完了までIntersectionObserverが再発火しないことがあるため、
+       スクロールイベントでも念のため再計算する（rAFで間引き） */
+    let ticking=false;
+    fabScrollHandler=function(){
+      if(ticking)return;ticking=true;
+      requestAnimationFrame(function(){update();ticking=false;});
+    };
+    window.addEventListener('scroll',fabScrollHandler,{passive:true});
     if(!('IntersectionObserver' in window))return;
-    const targets=[document.querySelector('#payTeaser .tz'),document.querySelector('#loveGuide .lg-cta')].filter(Boolean);
-    if(!targets.length)return;
-    const vis=new Set();
-    fabIO=new IntersectionObserver(function(es){
-      es.forEach(function(e){ if(e.isIntersecting)vis.add(e.target); else vis.delete(e.target); });
-      if(fab.dataset.on)fab.classList.toggle('hide',vis.size>0);
-    },{threshold:0.05});
+    fabIO=new IntersectionObserver(function(){ update(); },{threshold:0.05});
     targets.forEach(function(el){fabIO.observe(el);});
-  }catch(e){}
+  }catch(e){fab.classList.remove('hide');}
 }
 function fabToOffer(){
   try{ if(window.gtag) gtag('event','select_content',{content_type:'fab_guide',language:L}); }catch(e){}
