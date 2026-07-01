@@ -124,7 +124,7 @@ const T = {
       box.innerHTML = '<a class="btn dl" href="'+pdfUrl+'" target="_blank" rel="noopener">'+t.dl+'</a><br>';
     }
 
-    var value = Number(p.get('value')) || (lang==='en' ? 9.99 : 1180);
+    var value = Number(p.get('value')) || (lang==='en' ? 7.99 : 1180);
     var currency = (p.get('currency')||(lang==='en'?'USD':'JPY')).toUpperCase();
     var txid = tx || ('tx-'+Date.now());
     /* リロードによる二重計上を防止（同一取引IDは1回のみ） */
