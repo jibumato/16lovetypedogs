@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>英語版 Stripe リダイレクトURL一覧 | 16わんこ恋愛診断</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hiragino Kaku Gothic ProN',sans-serif;background:#fff9f5;color:#3a2e28;line-height:1.7;font-size:15px;padding:18px;max-width:640px;margin:0 auto}
+h1{font-size:18px;color:#e58aa0;margin-bottom:4px}
+.sub{font-size:12.5px;color:#7a6258;margin-bottom:18px}
+.row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f0e0d0;border-radius:12px;padding:11px 13px;margin-bottom:8px;box-shadow:0 2px 8px rgba(100,60,40,.05)}
+.code{flex-shrink:0;width:56px;font-weight:800;color:#e58aa0;font-size:13px}
+.breed{flex-shrink:0;width:150px;font-size:12.5px;color:#7a6258}
+.url{flex:1;font-size:11.5px;color:#3a2e28;word-break:break-all;font-family:ui-monospace,monospace}
+.copy{flex-shrink:0;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;border:0;border-radius:999px;padding:8px 14px;background:#e58aa0;color:#fff;white-space:nowrap}
+.copy.done{background:#5bb98a}
+.price{display:flex;gap:8px;align-items:center;margin-bottom:16px}
+.price input{width:90px;padding:8px 10px;border:1.5px solid #e7cf9f;border-radius:10px;font-size:14px}
+.price label{font-size:12.5px;color:#7a6258}
+.copyall{font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;border:0;border-radius:999px;padding:9px 16px;background:#7a6258;color:#fff;margin-bottom:16px}
+</style>
+</head>
+<body>
+  <h1>🔗 英語版 Stripe リダイレクトURL一覧</h1>
+  <div class="sub">各Payment Linkの「支払い後リダイレクト」に、対応するURLを貼り付けてください。</div>
+  <div class="price">
+    <label>価格(USD)：$</label><input type="text" id="price" value="9.99">
+    <button class="copyall" onclick="copyAll()">全16件をまとめてコピー</button>
+  </div>
+  <div id="list"></div>
+
+<script>
+const TYPES=[
+  ['INTJ','Chihuahua'],['INTP','Miniature Schnauzer'],['ENTJ','Corgi'],['ENTP','Jack Russell Terrier'],
+  ['INFJ','Cavalier'],['INFP','Maltese'],['ENFJ','Golden Retriever'],['ENFP','Toy Poodle'],
+  ['ISTJ','Shiba Inu'],['ISFJ','Shih Tzu'],['ESTJ','Boston Terrier'],['ESFJ','Labrador Retriever'],
+  ['ISTP','Miniature Dachshund'],['ISFP','French Bulldog'],['ESTP','Beagle'],['ESFP','Pomeranian']
+];
+function buildUrl(code){
+  const price=(document.getElementById('price').value||'9.99').trim();
+  return 'https://16lovetypedogs.com/love-guide-thanks.html?type='+code+'&lang=en&currency=USD&value='+price;
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function render(){
+  document.getElementById('list').innerHTML=TYPES.map(([code,breed])=>
+    '<div class="row"><span class="code">'+code+'</span><span class="breed">'+breed+'</span>'
+    +'<span class="url" id="u-'+code+'">'+esc(buildUrl(code))+'</span>'
+    +'<button class="copy" onclick="copyOne(this,\''+code+'\')">コピー</button></div>'
+  ).join('');
+}
+function copyOne(btn,code){
+  const url=buildUrl(code);
+  navigator.clipboard.writeText(url).then(()=>{
+    btn.textContent='✓ コピー済';btn.classList.add('done');
+    setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('done');},1500);
+  });
+}
+function copyAll(){
+  const text=TYPES.map(([code,breed])=>code+' | '+breed+' | '+buildUrl(code)).join('\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    const b=document.querySelector('.copyall');
+    const orig=b.textContent;b.textContent='✓ コピーしました';
+    setTimeout(()=>{b.textContent=orig;},1500);
+  });
+}
+document.getElementById('price').addEventListener('input',render);
+render();
+</script>
+</body>
+</html>
