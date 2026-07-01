@@ -1703,7 +1703,6 @@ function drawOmikuji(){
   if(!body){return;}
   /* 抽選サスペンス → タメ（ぐっと溜めて光る）→ リールスイープで結果オープン */
   body.innerHTML='<div class="omk-suspense"><div class="omk-shaker" id="omkShaker">🎴</div><div class="omk-suspense-txt" id="omkSusTxt">'+(OMK_DRAWING[L]||OMK_DRAWING.ja)+'</div></div>';
-  sakuraBurst(0,true);
   setTimeout(function(){            // タメ：振動を止めて引きつけ、光をためる
     const sh=document.getElementById('omkShaker'),tx=document.getElementById('omkSusTxt');
     if(sh)sh.classList.add('tame');
