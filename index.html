@@ -562,15 +562,6 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .sv-btn:disabled{opacity:.55;cursor:default}
 .sv-note{font-size:10.5px;color:var(--ink-faint);text-align:center;margin-top:10px;line-height:1.6}
 .sv-thanks{text-align:center;padding:16px 10px;font-size:14px;font-weight:800;color:var(--pink-deep);line-height:1.8}
-/* カード直下のコンパクト1行バー */
-#saveResultTop{margin-top:14px}
-.sv-bar{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #f0d6e0;border-radius:999px;padding:5px 5px 5px 16px;box-shadow:0 8px 20px -14px rgba(210,98,143,.5)}
-.sv-bar .sv-ic{font-size:15px;flex-shrink:0;line-height:1}
-.sv-bar input[type=email]{flex:1;border:0;background:transparent;font-family:inherit;font-size:13px;color:var(--ink);padding:8px 2px;min-width:0}
-.sv-bar input[type=email]:focus{outline:none}
-.sv-bar .sv-btn{flex-shrink:0;background:var(--pink-deep);color:#fff;border:0;border-radius:999px;padding:9px 17px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap}
-.sv-bar .sv-btn:active{transform:translateY(1px)}
-.sv-bar .sv-btn:disabled{opacity:.55;cursor:default}
 
 /* affiliate */
 .afflink{display:inline-block;margin-top:10px;font-family:inherit;font-weight:800;font-size:13px;
@@ -891,10 +882,8 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       </div>
     </div>
 
-    <!-- 2.5 結果をメールで保存（カード直下・コンパクトバー） -->
-    <div id="saveResultTop"></div>
-
-    <!-- 2.7 有料ティーザー（感情ピークでオファー提示。76%が下部オファー未到達だった対策） -->
+    <!-- 2.7 有料ティーザー（感情ピークでオファー提示。76%が下部オファー未到達だった対策）
+         ※メール保存は下部(6.3)に一本化（課金導線の簡素化） -->
     <div id="payTeaser"></div>
     <button class="lg-fab hide" id="lgFab" type="button" onclick="fabToOffer()"></button>
 
@@ -1691,7 +1680,6 @@ function renderResult(code,stay){
   renderUraChara(code);
   renderLoveGuide(code);
   renderResultOmikuji();
-  renderSaveBar(code);
   renderSaveResult(code);
   renderPayTeaser(code);
   setupPayFab(code);
@@ -1807,18 +1795,10 @@ function renderSaveResult(code){
     +'</div>';
   sec.dataset.code=code;
 }
-function renderSaveBar(code){
-  const sec=document.getElementById('saveResultTop');if(!sec)return;
-  const t=SAVE_I18N[L]||SAVE_I18N.ja;
-  sec.innerHTML='<div class="sv-bar"><span class="sv-ic">📩</span>'
-    +'<input type="email" placeholder="'+t.bar.replace(/^📩\s*/,'').replace(/"/g,'&quot;')+'" maxlength="254" autocomplete="email">'
-    +'<button class="sv-btn" onclick="submitSaveResult(this)">'+t.send+'</button></div>';
-  sec.dataset.code=code;
-}
 function submitSaveResult(btn){
   const t=SAVE_I18N[L]||SAVE_I18N.ja;
-  const wrap=btn.closest('.sv-box,.sv-bar');
-  const sec=btn.closest('#saveResultSection,#saveResultTop');
+  const wrap=btn.closest('.sv-box');
+  const sec=btn.closest('#saveResultSection');
   const input=wrap&&wrap.querySelector('input[type=email]');
   const email=((input&&input.value)||'').trim();
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){if(input)input.focus();return;}
@@ -1830,8 +1810,6 @@ function submitSaveResult(btn){
     .then(({s,d})=>{
       if(d&&d.ok){
         if(wrap)wrap.outerHTML='<div class="sv-thanks">'+t.thanks+'</div>';
-        // 同一画面のもう一方のフォームも完了表示に揃える
-        document.querySelectorAll('#saveResultSection .sv-box,#saveResultTop .sv-bar').forEach(function(w){w.outerHTML='<div class="sv-thanks">'+t.thanks+'</div>';});
         try{if(window.gtag)gtag('event','generate_lead',{method:'email_save',language:L});}catch(e){}
       }else{
         btn.disabled=false;btn.textContent=t.send;
@@ -2435,9 +2413,6 @@ function renderLoveGuide(code){
   const BUY_NOW={ja:'今すぐ受け取る',en:'Get it now',ko:'지금 받기',zh:'立即获取',tw:'立即取得'};
   const buyOk=hasGuideLink(code,L);
   const cfg=guideCfg(L);
-  /* ベスト相性1位を算出（自分以外で最高スコア） */
-  const top=ORDER.filter(c=>c!==code).map(c=>({c:c,s:compatScore(code,c)[0]})).sort((a,b)=>b.s-a.s)[0];
-  const bd=LOC[L][top.c], breed=bd.breed;
   /* 罠（INFPは実データ、他は共通フォールバック） */
   const tr=[ guideTrap(code,0, d.cons[0]||"理想化の罠"),
              guideTrap(code,1, d.cons[1]||"我慢グセ"),
@@ -2555,11 +2530,7 @@ function renderLoveGuide(code){
       <div class="sub">${g.sub}</div>
     </div>
     <div class="lg-peeks">
-      <div class="lg-peek lk" onclick="guideToCta()">
-        <span class="lg-tag">${g.tagBest}</span>
-        <h4>${g.bestQ}<br><span class="lg-blur">${breed}</span><span class="lg-sc">${top.s}%</span></h4>
-        <div class="lg-hint">${g.bestHint}</div>
-      </div>
+      <!-- チラ見せは罠カード1枚のみ（1つ目を開放＝中身の質の証明。相性はランキング欄、他はティーザーが担うため重複を削減） -->
       <div class="lg-peek lk" onclick="guideToCta()">
         <span class="lg-tag g">${g.tagTrap}</span>
         <ul class="lg-traps">
@@ -2569,17 +2540,10 @@ function renderLoveGuide(code){
         </ul>
         <div class="lg-hint">${g.trapHint}</div>
       </div>
-      <div class="lg-peek lk" onclick="guideToCta()">
-        <span class="lg-tag m">${g.tagSign}</span>
-        <h4>${g.signQ}</h4>
-        <div class="lg-line">${g.signLine}</div>
-        <div class="lg-hint">${g.signHint}</div>
-      </div>
     </div>
     <div class="lg-divider" style="margin-top:22px"><span class="line">CONTENTS</span><h3 style="font-size:16px">${ge.tocHead}</h3></div>
     <div class="lg-toc">${ge.toc.map(sec=>`<div class="lg-toc-sec"><div class="lg-toc-part"><span class="pt">${sec.p}</span>${sec.l}</div><ul>${sec.it.map(it=>`<li><span class="ti">${it[0].replace('{breed}',d.breed).replace('{code}',code)}</span><span class="dt"></span><span class="pg">${it[1]}</span></li>`).join('')}</ul></div>`).join('')}</div>
     <div class="lg-toc-note">${ge.tocNote}</div>
-    <div class="lg-benefits"><h4>${ge.benefitsHead}</h4><ul>${ge.benefits.map(b=>`<li>${b}</li>`).join('')}</ul></div>
     <div class="lg-cta">
       <div class="lg-coupon-badge">${COUPON_BADGE[L]||COUPON_BADGE.ja}</div>
       <div class="lg-showcase">
