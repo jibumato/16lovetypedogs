@@ -249,6 +249,9 @@ body{
 .sec h3 .lbl{display:flex;flex-direction:column;line-height:1.15}
 .sec h3 .lbl .jp{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--ink-faint)}
 .sec p{font-size:14px;line-height:1.8;color:var(--ink);text-align:left;word-break:normal;line-break:strict}
+/* 統合セクション内の小見出し（恋人になると→ケンカした時 等） */
+.sec .sec-sub{display:flex;align-items:center;gap:7px;margin:16px 0 8px;font-size:13.5px;font-weight:800;color:var(--ink-soft)}
+.sec .sec-sub .dot-s{font-size:15px;line-height:1}
 .sec-clamp .clamp-body{position:relative;max-height:9.4em;overflow:hidden;transition:max-height .4s ease}
 .sec-clamp.open .clamp-body{max-height:1800px}
 .sec-clamp .clamp-body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3.4em;background:linear-gradient(transparent,var(--paper));pointer-events:none;transition:opacity .3s}
@@ -1650,11 +1653,13 @@ function renderResult(code,stay){
     el.className='guide-teaser';
     el.innerHTML='<a href="#loveGuide" onclick="event.preventDefault();var t=document.getElementById(\'loveGuide\');if(t)t.scrollIntoView({behavior:\'smooth\'})">'+(T[L]||T.ja)+'</a>';
   })();
+  /* 無料セクションは層構造で提供:
+     性格=折りたたみ(読む人だけ開く) / 恋人になると=ケンカと統合の中量 / タグ=一瞬で見る /
+     恋愛傾向(d.love)は性格と内容重複のため廃止（カジュアル層の読了負荷軽減） */
   document.getElementById('desc').innerHTML=
-     '<div class="sec"><h3><span class="dot">🐶</span>'+i.h_pers+'</h3><p>'+d.personality+'</p></div>'
-    +'<div class="sec"><h3><span class="dot">💕</span>'+i.h_love+'</h3><p>'+d.love+'</p></div>'
-    +'<div class="sec"><h3><span class="dot">💞</span>'+i.h_couple+'</h3><p>'+d.couple+'</p></div>'
-    +'<div class="sec"><h3><span class="dot">🌧</span>'+i.h_fight+'</h3><p>'+d.fight+'</p></div>'
+     clampBlock('🐶',i.h_pers,d.personality)
+    +'<div class="sec"><h3><span class="dot">💞</span>'+i.h_couple+'</h3><p>'+d.couple+'</p>'
+    +'<div class="sec-sub"><span class="dot-s">🌧</span>'+i.h_fight+'</div><p>'+d.fight+'</p></div>'
     +'<div class="sec"><h3><span class="dot">💗</span>'+i.h_pros+'</h3><div class="taglist">'+d.pros.map(p=>'<span>'+p+'</span>').join('')+'</div></div>'
     +'<div class="sec"><h3><span class="dot">🐾</span>'+i.h_cons+'</h3><div class="taglist cons">'+d.cons.map(p=>'<span>'+p+'</span>').join('')+'</div></div>'
     +lockedBlock('🫶',i.h_howto,d.howto,code);
