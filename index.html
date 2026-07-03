@@ -212,18 +212,16 @@ body{
 .cert .divider:before,.cert .divider:after{content:"";flex:1;height:1px;background:rgba(120,90,140,.22)}
 .cert .divider span{font-size:11px;opacity:.45}
 .cert .tagline{font-size:15px;text-align:center;font-weight:700;margin:14px 8px 0;line-height:1.75;color:var(--ink);text-wrap:pretty}
-.cert .axes{display:flex;justify-content:center;gap:7px;margin-top:18px}
-.cert .axis{flex:1;max-width:72px;text-align:center;background:rgba(255,255,255,.75);border:1px solid rgba(210,98,143,.14);border-radius:14px;padding:9px 4px}
-.cert .axis b{font-family:'M PLUS Rounded 1c';font-size:18px;font-weight:800;color:var(--pink-deep);line-height:1;display:block}
-.cert .axis i{font-size:10px;font-weight:700;color:var(--ink-soft);font-style:normal;margin-top:3px;display:block}
+.cert .axscore{max-width:300px;margin:0 auto;display:grid;gap:12px}
+.cert .axrow{font-size:11px}
+.cert .axtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.cert .axtop .lbl{font-size:11.5px;font-weight:700;color:var(--ink-soft)}
+.cert .axtop .lbl.on{font-weight:800;color:var(--pink-deep)}
+.cert .axtop .pct{font-size:11px;font-weight:800;color:var(--pink-deep)}
+.cert .axbar{position:relative;height:8px;border-radius:999px;background:var(--track);overflow:hidden}
+.cert .axbar i{position:absolute;top:0;bottom:0;border-radius:999px;background:var(--accent)}
 .cert .paramhead{display:flex;align-items:center;gap:10px;max-width:280px;margin:24px auto 14px;font-size:10.5px;font-weight:800;letter-spacing:.16em;color:var(--ink-soft);text-align:center;justify-content:center}
 .cert .paramhead:before,.cert .paramhead:after{content:"";flex:1;height:1px;background:rgba(120,90,140,.22)}
-.params{max-width:300px;margin:0 auto;display:grid;gap:9px}
-.prow{display:flex;align-items:center;gap:12px;font-size:12px}
-.plabel{flex:none;width:60px;font-weight:700;color:var(--ink-soft)}
-.pbar{flex:1;height:9px;border-radius:999px;background:var(--track);overflow:hidden}
-.pbar i{display:block;height:100%;border-radius:999px;background:var(--accent)}
-.pstars{flex:none;width:32px;text-align:right;font-weight:800;color:var(--pink-deep)}
 .cert .sign{text-align:center;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--ink-soft);margin-top:24px}
 .cert .stamp,.cert .corner{display:none}
 
@@ -1381,6 +1379,8 @@ const NAV_SHARE_TEXT={
   zh:'用狗狗品种诊断你的恋爱 🐾 #16恋爱犬测验',
   tw:'用狗狗品種診斷你的戀愛 🐾 #16戀愛犬測驗'
 };
+/* シェア画像・文言の「巻き込み」CTA：見た側への問いかけ（IGストーリー経由はここが唯一の入口） */
+const SHARE_CTA_Q={ja:'あなたの恋は、何わんこ？',en:"What's YOUR love-dog?",ko:'당신의 연애견은 어떤 강아지?',zh:'你的恋爱犬是哪只？',tw:'你的戀愛犬是哪隻？'};
 function updateTabbar(id){
   document.querySelectorAll('.tab').forEach(t=>{
     const k=t.dataset.tab;
@@ -1618,13 +1618,27 @@ function renderResult(code,stay){
   const d=LOC[L][code],g=BASE[code].g,col=GROUP[g],i=I();
   const cert=document.getElementById('cert');
   cert.style.setProperty('--tint',hex(g));
-  const P=PARAM[code];
   const cidx=String(ORDER.indexOf(code)+1).padStart(2,'0');
   const _dt=new Date(),cdate=_dt.getFullYear()+'.'+String(_dt.getMonth()+1).padStart(2,'0')+'.'+String(_dt.getDate()).padStart(2,'0');
-  let pr='';for(let k=0;k<5;k++)pr+='<div class="prow"><span class="plabel">'+i.param_labels[k]+'</span><span class="pbar"><i style="width:'+(P[k]/5*100)+'%"></i></span><span class="pstars">'+P[k]+'/5</span></div>';
   const AXW={ja:{E:'外向',I:'内向',N:'直観',S:'感覚',T:'思考',F:'感情',J:'計画',P:'探索'},en:{E:'Extro',I:'Intro',N:'Intuit',S:'Sense',T:'Think',F:'Feel',J:'Judge',P:'Percv'},ko:{E:'외향',I:'내향',N:'직관',S:'감각',T:'사고',F:'감정',J:'계획',P:'탐색'},zh:{E:'外向',I:'内向',N:'直觉',S:'实感',T:'思考',F:'情感',J:'计划',P:'探索'},tw:{E:'外向',I:'內向',N:'直覺',S:'實感',T:'思考',F:'情感',J:'計劃',P:'探索'}};
   const axw=AXW[L]||AXW.ja;
-  const axes=code.split('').map(l=>'<div class="axis"><b>'+l+'</b><i>'+axw[l]+'</i></div>').join('');
+  // 4軸バランススコア：回答から算出（12問で「ちゃんと測られた」信頼を作る）。
+  // 実回答(score)があればそれで、URL来訪で回答が無い場合はコードから安定的に導出。
+  const AXPAIR=[['E','I'],['S','N'],['T','F'],['J','P']];
+  const AXHEAD={ja:'🧭 あなたの4軸バランス',en:'🧭 Your 4-axis balance',ko:'🧭 나의 4축 밸런스',zh:'🧭 你的四轴平衡',tw:'🧭 你的四軸平衡'};
+  function axHash(cd,ix){let h=0;const s=cd+':'+ix;for(let k=0;k<s.length;k++)h=(h*31+s.charCodeAt(k))>>>0;return [61,68,74,79,85,92,100][h%7];}
+  const axes=AXPAIR.map((pr,ix)=>{
+    const a=pr[0],b=pr[1],sa=(score[a]||0),sb=(score[b]||0),tot=sa+sb;
+    let dom,domPct;
+    if(tot>0){dom=(sa>=sb)?a:b;domPct=Math.round(Math.max(sa,sb)/tot*100);}
+    else{dom=code[ix];domPct=axHash(code,ix);}
+    const domLeft=(dom===a);
+    return '<div class="axrow"><div class="axtop">'
+      +'<span class="lbl'+(domLeft?' on':'')+'">'+axw[a]+'</span>'
+      +'<span class="pct">'+domPct+'%</span>'
+      +'<span class="lbl'+(domLeft?'':' on')+'">'+axw[b]+'</span></div>'
+      +'<div class="axbar"><i style="'+(domLeft?'left:0':'right:0')+';width:'+domPct+'%"></i></div></div>';
+  }).join('');
   const titleTxt=(i.ribbon||'').replace(/🐾/g,'').trim();
   // 希少性バッジ（MBTI出現率＝「あなたは特別」を演出）。血統書カード内の最上部に入れ子表示
   let rarityHTML='';
@@ -1643,8 +1657,7 @@ function renderResult(code,stay){
     +'<div class="breed">'+d.breed+'<span class="cd">'+code+' · '+d.role+'</span></div>'
     +'<div class="divider"><span>🐾</span></div>'
     +'<div class="tagline">'+d.tag+'</div>'
-    +'<div class="axes">'+axes+'</div>'
-    +'<div class="paramhead">'+i.h_param+'</div><div class="params">'+pr+'</div>'
+    +'<div class="paramhead">'+(AXHEAD[L]||AXHEAD.ja)+'</div><div class="axscore">'+axes+'</div>'
     +'<div class="sign">🐾 '+i.title+' 🐾</div>';
   // 結果発表バナー + 紙吹雪
   const annEl=document.getElementById('announce');
@@ -1697,7 +1710,7 @@ function renderResult(code,stay){
   renderFeedback();
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
-  const SHARE_NUDGE={ja:'🐾 結果をシェアして友だちにも教えよう！',en:'🐾 Share your result with friends!',ko:'🐾 결과를 친구에게도 공유해요!',zh:'🐾 把结果分享给朋友吧！',tw:'🐾 把結果分享給朋友吧！'};
+  const SHARE_NUDGE={ja:'🐾 この結果を送って「あなたは何わんこ？」って聞いてみて',en:'🐾 Send this and ask: "What\'s your love-dog?"',ko:'🐾 결과를 보내고 "너는 무슨 연애견?" 하고 물어봐요',zh:'🐾 把结果发给朋友，问问「你是哪只恋爱犬？」',tw:'🐾 把結果發給朋友，問問「你是哪隻戀愛犬？」'};
   setText('t-snudge',SHARE_NUDGE[L]||SHARE_NUDGE.ja);
   if(!stay)show('result');
 }
@@ -2839,7 +2852,8 @@ function drawCompatCard(cb){
     x.strokeStyle='#f7a8c4';x.lineCap='round';x.beginPath();x.arc(W/2,cy,rad,-Math.PI/2,-Math.PI/2+Math.PI*2*s/100);x.stroke();x.lineCap='butt';
     x.fillStyle='#d2628f';x.font='800 92px '+FF;x.fillText(s+'%',W/2,cy+32);
     x.font='500 33px '+FF;wrapLines(x,msg,W/2,cy+rad+76,W-240,46,'#6b5648');
-    x.fillStyle='#9c8676';x.font='400 28px '+FF;x.fillText('#'+i.hashtag+'  ·  16lovetypedogs.com',W/2,H-104);
+    x.fillStyle='#d2628f';x.font='800 40px '+FF;x.fillText(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja,W/2,H-156);
+    x.fillStyle='#b88a3a';x.font='800 38px '+FF;x.fillText('16lovetypedogs.com',W/2,H-102);
     cb(c);
   }
   [a,b].forEach(code=>{const im=new Image();im.onload=()=>{imgs[code]=im;if(++loaded===2)done();};im.onerror=()=>{if(++loaded===2)done();};im.src=imgPath(code);});
@@ -2867,11 +2881,11 @@ function saveCompatImg(){
 function shareX(){
   const d=LOC[L][current],i=I(),hook=d.hook||d.tag;
   const T={
-    ja:'私の恋愛わんこは【'+d.breed+'】('+current+') 🐾\n\n「'+hook+'」\n\n…当たってて笑った😳\nあなたの恋は何わんこ？',
-    en:'My love-dog is '+d.breed+' ('+current+') 🐾\n\n"'+hook+'"\n\n…scarily accurate 😳\nWhat\'s your love-dog?',
-    ko:'내 연애견은 【'+d.breed+'】('+current+') 🐾\n\n"'+hook+'"\n\n…너무 정확해서 웃었다 😳\n당신의 연애견은?',
-    zh:'我的恋爱犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…准到笑出来😳\n你的恋爱犬是哪只？',
-    tw:'我的戀愛犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…準到笑出來😳\n你的戀愛犬是哪隻？'
+    ja:'私の恋愛わんこは【'+d.breed+'】('+current+') 🐾\n\n「'+hook+'」\n\n…当たってて笑った😳\nあなたは何わんこ？診断したら教えて🐶',
+    en:'My love-dog is '+d.breed+' ('+current+') 🐾\n\n"'+hook+'"\n\n…scarily accurate 😳\nWhat\'s YOUR love-dog? Take it and tell me 🐶',
+    ko:'내 연애견은 【'+d.breed+'】('+current+') 🐾\n\n"'+hook+'"\n\n…너무 정확해서 웃었다 😳\n너는 무슨 연애견? 진단하고 알려줘 🐶',
+    zh:'我的恋爱犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…准到笑出来😳\n你是哪只恋爱犬？测完告诉我🐶',
+    tw:'我的戀愛犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…準到笑出來😳\n你是哪隻戀愛犬？測完告訴我🐶'
   };
   const text=T[L]||T.ja;
   const url=shareUrl(current);
@@ -2880,11 +2894,11 @@ function shareX(){
 }
 function shareLine(){
   const d=LOC[L][current];let text;
-  if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\nあなたの恋は何わんこ？\n'+shareUrl(current);
-  else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\nWhat is your love-dog?\n'+shareUrl(current);
-  else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n당신의 연애견은?\n'+shareUrl(current);
-  else if(L==='tw')text='我的戀愛犬是【'+d.breed+'】('+current+'）！🐾\n你的戀愛犬是哪隻？\n'+shareUrl(current);
-  else text='我的恋爱犬是【'+d.breed+'】('+current+'）！🐾\n你的恋爱犬是哪只？\n'+shareUrl(current);
+  if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\nあなたも診断して何わんこか教えて！2人の相性も見れるよ💞\n'+shareUrl(current);
+  else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\nTake it and tell me yours — we can even check our compatibility 💞\n'+shareUrl(current);
+  else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n너도 진단하고 알려줘! 둘의 궁합도 볼 수 있어 💞\n'+shareUrl(current);
+  else if(L==='tw')text='我的戀愛犬是【'+d.breed+'】('+current+'）！🐾\n你也測測告訴我吧！還能看我們倆的契合度💞\n'+shareUrl(current);
+  else text='我的恋爱犬是【'+d.breed+'】('+current+'）！🐾\n你也测测告诉我吧！还能看我们俩的契合度💞\n'+shareUrl(current);
   gtag('event','share',{method:'line',content_type:'result',item_id:current});
   window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl(current))+'&text='+encodeURIComponent(text),'_blank');
 }
@@ -2980,9 +2994,10 @@ function drawShareCard(code,cb){
         ry+=50;
       }
     }
+    /* 見た人を診断に誘うCTA：画像単体で拡散されても入口が伝わるように大きく */
     x.textAlign='center';
-    x.fillStyle='#b88a3a';x.font='700 34px '+FF;x.fillText(i.title,W/2,H-156);
-    x.fillStyle='#9c8676';x.font='400 26px '+FF;x.fillText('#'+i.hashtag+'  ·  16lovetypedogs.com',W/2,H-110);
+    x.fillStyle='#d2628f';x.font='800 46px '+FF;x.fillText(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja,W/2,H-212);
+    x.fillStyle=gg(H-190,H-130);x.font='800 44px '+FF;x.fillText('16lovetypedogs.com',W/2,H-148);
     cb&&cb();
   }
   const dog=new Image();dog.onload=()=>render(dog);dog.onerror=()=>render(null);dog.src=imgPath(code);
@@ -2996,7 +3011,7 @@ function saveShareImg(){
         if(!blob)return;
         const file=new File([blob],'16lovedog_'+current+'.png',{type:'image/png'});
         const d=LOC[L][current],i=I();
-        const text=d.name+' / '+d.breed+' ('+current+')  #'+i.hashtag+'\n'+shareUrl(current);
+        const text=d.name+' / '+d.breed+' ('+current+')  #'+i.hashtag+'\n'+(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja)+'\n'+shareUrl(current);
         gtag('event','share',{method:'native_or_download',content_type:'result_image',item_id:current});
         if(navigator.canShare&&navigator.canShare({files:[file]})){
           try{await navigator.share({files:[file],text:text,url:shareUrl(current)});return;}catch(e){if(e&&e.name==='AbortError')return;}
