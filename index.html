@@ -1690,16 +1690,16 @@ function renderResult(code,stay){
   const medals=['🥇','🥈','🥉'];
   const RANK_LOCK={ja:'🔒 レポートで確認',en:'🔒 See in Report',ko:'🔒 리포트에서 확인',zh:'🔒 在报告中查看',tw:'🔒 在報告中查看'};
   const RANK_BUY={ja:'プレミアムレポートで全相性を見る →',en:'See all 16 in the Premium Report →',ko:'프리미엄 리포트에서 전 16타입 보기 →',zh:'在深度报告中查看全16类型契合 →',tw:'在深度報告中查看全16類型契合 →'};
-  const RANK_NOTE={ja:'📖 全16タイプとの詳細な相性スコア＋コメントは <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">プレミアムレポート</a> で確認できます',
-    en:'📖 Full compatibility scores + notes for all 16 types in the <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">Premium Report</a>',
-    ko:'📖 전 16타입과의 상세 궁합 점수와 코멘트는 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">프리미엄 리포트</a>에서 확인',
-    zh:'📖 与全16类型的详细契合度及点评，请在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">深度报告</a> 中查看',
-    tw:'📖 與全16類型的詳細契合度及點評，請在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">深度報告</a> 中查看'};
+  const RANK_NOTE={ja:'📖 全16タイプとの詳細な相性スコア＋コメントは <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">プレミアムレポート</a> で確認できます',
+    en:'📖 Full compatibility scores + notes for all 16 types in the <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">Premium Report</a>',
+    ko:'📖 전 16타입과의 상세 궁합 점수와 코멘트는 <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">프리미엄 리포트</a>에서 확인',
+    zh:'📖 与全16类型的详细契合度及点评，请在 <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">深度报告</a> 中查看',
+    tw:'📖 與全16類型的詳細契合度及點評，請在 <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">深度報告</a> 中查看'};
   const shownRow=(m,idx)=>'<div class="rankrow" onclick="pickRank(\''+m.c+'\')"><span class="medal">'+medals[idx]+'</span>'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+LOC[L][m.c].name+'</div><div class="rankbreed">'+LOC[L][m.c].breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div>';
   const blurRow=(m,idx)=>'<div class="rankrow rank-locked"><span class="medal">'+medals[idx]+'</span><div class="rank-blur-content">'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+LOC[L][m.c].name+'</div><div class="rankbreed">'+LOC[L][m.c].breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div></div>';
   /* 上位2件はブラー行をひとまとめにし、解除ボタンは1つだけ（重複解消） */
   const lockedGroup='<div class="rank-locked-group">'+blurRow(top[0],0)+blurRow(top[1],1)
-    +'<div class="rank-overlay rank-group-overlay"><a class="rank-buybtn" href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">'+RANK_BUY[L]+'</a></div></div>';
+    +'<div class="rank-overlay rank-group-overlay"><a class="rank-buybtn" href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_group\')">'+RANK_BUY[L]+'</a></div></div>';
   document.getElementById('ranking').innerHTML='<div class="sec mt"><h3><span class="dot">💘</span>'+i.rank_head+'</h3><div class="rank">'
     +lockedGroup+shownRow(top[2],2)
     +'</div>'
@@ -2108,6 +2108,27 @@ function trackCheckout(code,lang,loc){
     lang:lang, location:loc||'index_guide'
   }); }catch(e){}
 }
+/* 購入導線の入口（全言語共通）。
+   ja: Payment LinksはAdaptive Pricing強制ONでPayPay非対応のため、
+       サーバー(/api/checkout)でCheckout Sessionを都度作成して遷移する。
+   ja以外: 既存どおりStripe Payment Linksへ直接遷移（変更なし）。 */
+async function goBuy(code,lang,loc){
+  trackCheckout(code,lang,loc);
+  if(lang!=='ja'){
+    const u=guideBuyUrl(code,lang);
+    if(u&&u!=='#') location.href=u;
+    return;
+  }
+  const fallback=guideBuyUrl(code,'ja');
+  try{
+    const gid=gaClientId();
+    const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:code,cid:gid?gid.replace('.','-'):''})});
+    const data=await res.json();
+    if(data&&data.ok&&data.url){ location.href=data.url; return; }
+  }catch(e){}
+  if(fallback&&fallback!=='#') location.href=fallback; /* API失敗時は従来のPayment Linkへフォールバック */
+}
 
 /* ===== 結果直後の有料ティーザー＋追従ボタン =====
    view_item到達が診断完了者の24%に留まっていたため、感情ピーク（結果直後）に
@@ -2143,7 +2164,7 @@ function renderPayTeaser(code){
     +'<div class="tz-lead">'+t.lead+'</div>'
     +'<div class="tz-list">'+t.items.map(it=>'<div class="li"><span class="lk">🔒</span><span>'+it+'</span></div>').join('')+'</div>'
     +'<div class="lg-price">'+tzPriceHTML(cfg,L)+'</div>'
-    +'<a class="lg-buy" href="'+guideBuyUrl(code,L)+'" onclick="trackCheckout(\''+code+'\',\''+L+'\',\'teaser\')">'+t.buy+'<span class="s">'+t.sub+'</span></a>'
+    +'<a class="lg-buy" href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'teaser\')">'+t.buy+'<span class="s">'+t.sub+'</span></a>'
     +'<div class="tz-note">'+t.note+'</div>'
     +'</div>';
 }
@@ -2593,8 +2614,8 @@ function renderLoveGuide(code){
           <div class="lg-tax">${g.tax}</div>
         </div>
       </div>
-      <a class="lg-buy${buyOk?'':' disabled'}" id="lgBuy" href="${buyOk?guideBuyUrl(code,L):'javascript:void(0)'}" ${buyOk?`onclick="trackCheckout('${code}','${L}')"`:'aria-disabled="true"'}>${BUY_NOW[L]||BUY_NOW.ja} →<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
-      <div class="lg-pay"><span class="pl">${PAY_I18N[L]?.pl||PAY_I18N.ja.pl}</span><span class="chip">💳 ${PAY_I18N[L]?.card||PAY_I18N.ja.card}</span><span class="chip pp soon"><img class="pp-logo" src="/paypay-logo.png" alt="PayPay" width="18" height="18" decoding="async">PayPay<span class="soon-tag">${PAY_I18N[L]?.soon||PAY_I18N.ja.soon}</span></span></div>
+      <a class="lg-buy${buyOk?'':' disabled'}" id="lgBuy" href="javascript:void(0)" ${buyOk?`onclick="goBuy('${code}','${L}','lg_cta')"`:'aria-disabled="true"'}>${BUY_NOW[L]||BUY_NOW.ja} →<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
+      <div class="lg-pay"><span class="pl">${PAY_I18N[L]?.pl||PAY_I18N.ja.pl}</span><span class="chip">💳 ${PAY_I18N[L]?.card||PAY_I18N.ja.card}</span>${L==='ja'?`<span class="chip pp"><img class="pp-logo" src="/paypay-logo.png" alt="PayPay" width="18" height="18" decoding="async">PayPay</span>`:''}</div>
       ${g.refund?`<div class="lg-guarantee"><span class="gbadge">✓</span><span>${g.refund}</span></div>`:''}
       ${g.coupon?`<div class="lg-coupon">🎟 ${g.coupon}</div>`:''}
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}</div>
@@ -2634,7 +2655,7 @@ function scrollToTrap(){
   const t=document.getElementById('trapPeek');
   if(t){t.scrollIntoView({behavior:'smooth',block:'center'});}else{guideToCta();}
 }
-function guideLang(lang){ if(current){ location.href=guideBuyUrl(current,lang); } }
+function guideLang(lang){ if(current){ goBuy(current,lang,'lang_switch'); } }
 
 function daySeed(){const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000);}
 function curSeason(){const m=new Date().getMonth()+1;return m<=2?'winter':m<=5?'spring':m<=8?'summer':m<=11?'autumn':'winter';}

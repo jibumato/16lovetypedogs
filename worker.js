@@ -17,6 +17,7 @@
  *   - 公開フィード(GET /api/feedback)はこの1キーだけを読む（高速・低コスト）
  */
 const KEY = "diagnoses_total";
+const JA_TYPES = new Set(["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"]);
 const PUB = "pub:comments";   // 承認済みコメントの公開フィード（JSON配列・1キー）
 const PUB_MAX = 120;          // 公開フィードに保持する最大件数
 const RL_TTL = 45;            // 同一IPの連投制限（秒）
@@ -317,6 +318,51 @@ ${tagLine}
         } while (cursor);
       } catch (e) {}
       return page(m.ok, m.okb);
+    }
+
+    // ───────── Checkout Session作成（日本語版・PayPay対応のためPayment Linksを使わずAPIで生成） ─────────
+    // Payment LinksはAdaptive Pricingが常時強制ONでPayPayと非互換なため、コード経由でCheckout Sessionを都度作成する。
+    if (url.pathname === "/api/checkout") {
+      if (request.method !== "POST") return j({ ok: false }, 405);
+      if (!env.STRIPE_SECRET_KEY) return j({ ok: false, error: "no-key" }, 500);
+      try {
+        const b = await request.json();
+        const type = String(b.type || "").toUpperCase().slice(0, 8);
+        const cid = String(b.cid || "").replace(/[^a-zA-Z0-9.\-]/g, "").slice(0, 60);
+        if (!JA_TYPES.has(type)) return j({ ok: false, error: "bad-type" }, 400);
+
+        const siteUrl = "https://16lovetypedogs.com";
+        const successUrl = `${siteUrl}/thanks.html?type=${type.toLowerCase()}&session_id={CHECKOUT_SESSION_ID}`;
+        const cancelUrl = `${siteUrl}/?type=${type}&lang=ja`;
+        const clientReferenceId = cid ? `${type}_${cid}` : type;
+
+        const form = new URLSearchParams();
+        form.set("mode", "payment");
+        form.set("success_url", successUrl);
+        form.set("cancel_url", cancelUrl);
+        form.set("client_reference_id", clientReferenceId);
+        form.set("submit_type", "pay");
+        form.set("line_items[0][quantity]", "1");
+        form.set("line_items[0][price_data][currency]", "jpy");
+        form.set("line_items[0][price_data][unit_amount]", "1180");
+        form.set("line_items[0][price_data][product_data][name]", `${type}_love_guide_JP`);
+        form.set("payment_method_types[0]", "card");
+        form.set("payment_method_types[1]", "paypay");
+
+        const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + env.STRIPE_SECRET_KEY,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: form.toString(),
+        });
+        const session = await res.json();
+        if (!res.ok) return j({ ok: false, error: (session && session.error && session.error.message) || "stripe-error" }, 400);
+        return j({ ok: true, url: session.url });
+      } catch (e) {
+        return j({ ok: false, error: "exception" }, 400);
+      }
     }
 
     // ───────── Stripe Webhook → GA4 購入計測（サーバー側・取りこぼし防止） ─────────
