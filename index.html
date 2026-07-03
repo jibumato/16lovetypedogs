@@ -293,8 +293,12 @@ body{
 .ura-face.omote .f-lbl{color:#6a8fcf}
 .ura-face.ura{background:linear-gradient(135deg,rgba(247,168,196,.16),rgba(252,232,245,.5));border:1px solid rgba(210,98,143,.24)}
 .ura-face.ura .f-lbl{color:var(--pink-deep)}
-.ura-turn{display:flex;align-items:center;justify-content:center;color:var(--pink-deep);font-size:11.5px;font-weight:800;margin:12px 0;gap:9px}
-.ura-turn::before,.ura-turn::after{content:'';flex:1;height:1px;background:rgba(210,98,143,.28)}
+.ura-fold-h{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;background:none;border:0;font-family:inherit;color:var(--pink-deep);font-size:11.5px;font-weight:800;margin:12px 0;padding:2px 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ura-fold-h::before,.ura-fold-h::after{content:'';flex:1;height:1px;background:rgba(210,98,143,.28)}
+.ura-fold-h .fh-ar{font-size:9px;transition:transform .3s}
+.ura-fold.open .ura-fold-h .fh-ar{transform:rotate(180deg)}
+.ura-fold-body{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.ura-fold.open .ura-fold-body{max-height:640px}
 .ura-scorehead{font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--pink-deep);text-align:center;margin-bottom:11px}
 .ura-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
 .ura-card{background:rgba(255,255,255,.7);border:1px solid rgba(210,98,143,.14);border-radius:14px;padding:11px 8px 9px;text-align:center}
@@ -2418,9 +2422,13 @@ function renderUraChara(code){
       +'<div class="ura-face omote"><span class="f-lbl">'+I18.omoteLbl+'</span><div class="f-body">'+u.omote+'</div></div>'
       +'<div class="ura-face ura"><span class="f-lbl">'+I18.uraLbl+'</span><div class="f-body">'+u.ura+'</div></div>'
     +'</div>'
-    +'<div class="ura-turn">'+I18.turn+'</div>'
-    +'<div class="ura-scorehead">'+I18.scorehead+'</div>'
-    +'<div class="ura-grid">'+cards+'</div>'
+    +'<div class="ura-fold">'
+      +'<button type="button" class="ura-fold-h" onclick="toggleUraFold(this)"><span class="fh-t">'+I18.turn+'</span><span class="fh-ar">▼</span></button>'
+      +'<div class="ura-fold-body">'
+        +'<div class="ura-scorehead">'+I18.scorehead+'</div>'
+        +'<div class="ura-grid">'+cards+'</div>'
+      +'</div>'
+    +'</div>'
     +'<div class="ura-strat">'
       +'<div class="s-head">'+I18.strathead+'</div>'
       +'<div class="s-body">'+u.strat+'</div>'
@@ -2648,6 +2656,8 @@ function toggleClamp(btn){
   const t=CLAMP_T[L]||CLAMP_T.ja,tx=btn.querySelector('.tx');
   if(tx)tx.textContent=open?t.less:t.more;
 }
+/* 裏の顔スコアの折りたたみ（「恋が深まると顔が変わる」を開閉ヘッダーに） */
+function toggleUraFold(btn){const f=btn.closest('.ura-fold');if(f)f.classList.toggle('open');}
 /* 攻略のヒントは全文ロック→有料ガイド誘導 */
 const LOCK_T={
   ja:{lbl:'攻略のヒントの続きは、あなた専用のプレミアムレポート（全30ページ）で読めます',btn:'レポートを見る →'},
