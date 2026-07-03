@@ -1381,6 +1381,8 @@ const NAV_SHARE_TEXT={
   zh:'用狗狗品种诊断你的恋爱 🐾 #16恋爱犬测验',
   tw:'用狗狗品種診斷你的戀愛 🐾 #16戀愛犬測驗'
 };
+/* シェア画像・文言の「巻き込み」CTA：見た側への問いかけ（IGストーリー経由はここが唯一の入口） */
+const SHARE_CTA_Q={ja:'あなたの恋は、何わんこ？',en:"What's YOUR love-dog?",ko:'당신의 연애견은 어떤 강아지?',zh:'你的恋爱犬是哪只？',tw:'你的戀愛犬是哪隻？'};
 function updateTabbar(id){
   document.querySelectorAll('.tab').forEach(t=>{
     const k=t.dataset.tab;
@@ -1697,7 +1699,7 @@ function renderResult(code,stay){
   renderFeedback();
   const SHARE_CAP={ja:'📸 この血統書カードを保存して、ストーリーやXでシェア🐾',en:'📸 Save this pedigree card and share it to your story or X 🐾',ko:'📸 이 혈통서 카드를 저장해서 스토리·X에 공유해요 🐾',zh:'📸 保存这张血统书卡片，分享到限时动态或X 🐾',tw:'📸 儲存這張血統書卡片，分享到限時動態或X 🐾'};
   setText('t-sharecap',SHARE_CAP[L]||SHARE_CAP.ja);
-  const SHARE_NUDGE={ja:'🐾 結果をシェアして友だちにも教えよう！',en:'🐾 Share your result with friends!',ko:'🐾 결과를 친구에게도 공유해요!',zh:'🐾 把结果分享给朋友吧！',tw:'🐾 把結果分享給朋友吧！'};
+  const SHARE_NUDGE={ja:'🐾 この結果を送って「あなたは何わんこ？」って聞いてみて',en:'🐾 Send this and ask: "What\'s your love-dog?"',ko:'🐾 결과를 보내고 "너는 무슨 연애견?" 하고 물어봐요',zh:'🐾 把结果发给朋友，问问「你是哪只恋爱犬？」',tw:'🐾 把結果發給朋友，問問「你是哪隻戀愛犬？」'};
   setText('t-snudge',SHARE_NUDGE[L]||SHARE_NUDGE.ja);
   if(!stay)show('result');
 }
@@ -2839,7 +2841,8 @@ function drawCompatCard(cb){
     x.strokeStyle='#f7a8c4';x.lineCap='round';x.beginPath();x.arc(W/2,cy,rad,-Math.PI/2,-Math.PI/2+Math.PI*2*s/100);x.stroke();x.lineCap='butt';
     x.fillStyle='#d2628f';x.font='800 92px '+FF;x.fillText(s+'%',W/2,cy+32);
     x.font='500 33px '+FF;wrapLines(x,msg,W/2,cy+rad+76,W-240,46,'#6b5648');
-    x.fillStyle='#9c8676';x.font='400 28px '+FF;x.fillText('#'+i.hashtag+'  ·  16lovetypedogs.com',W/2,H-104);
+    x.fillStyle='#d2628f';x.font='800 40px '+FF;x.fillText(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja,W/2,H-156);
+    x.fillStyle='#b88a3a';x.font='800 38px '+FF;x.fillText('16lovetypedogs.com',W/2,H-102);
     cb(c);
   }
   [a,b].forEach(code=>{const im=new Image();im.onload=()=>{imgs[code]=im;if(++loaded===2)done();};im.onerror=()=>{if(++loaded===2)done();};im.src=imgPath(code);});
@@ -2867,11 +2870,11 @@ function saveCompatImg(){
 function shareX(){
   const d=LOC[L][current],i=I(),hook=d.hook||d.tag;
   const T={
-    ja:'私の恋愛わんこは【'+d.breed+'】('+current+') 🐾\n\n「'+hook+'」\n\n…当たってて笑った😳\nあなたの恋は何わんこ？',
-    en:'My love-dog is '+d.breed+' ('+current+') 🐾\n\n"'+hook+'"\n\n…scarily accurate 😳\nWhat\'s your love-dog?',
-    ko:'내 연애견은 【'+d.breed+'】('+current+') 🐾\n\n"'+hook+'"\n\n…너무 정확해서 웃었다 😳\n당신의 연애견은?',
-    zh:'我的恋爱犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…准到笑出来😳\n你的恋爱犬是哪只？',
-    tw:'我的戀愛犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…準到笑出來😳\n你的戀愛犬是哪隻？'
+    ja:'私の恋愛わんこは【'+d.breed+'】('+current+') 🐾\n\n「'+hook+'」\n\n…当たってて笑った😳\nあなたは何わんこ？診断したら教えて🐶',
+    en:'My love-dog is '+d.breed+' ('+current+') 🐾\n\n"'+hook+'"\n\n…scarily accurate 😳\nWhat\'s YOUR love-dog? Take it and tell me 🐶',
+    ko:'내 연애견은 【'+d.breed+'】('+current+') 🐾\n\n"'+hook+'"\n\n…너무 정확해서 웃었다 😳\n너는 무슨 연애견? 진단하고 알려줘 🐶',
+    zh:'我的恋爱犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…准到笑出来😳\n你是哪只恋爱犬？测完告诉我🐶',
+    tw:'我的戀愛犬是【'+d.breed+'】('+current+'）🐾\n\n「'+hook+'」\n\n…準到笑出來😳\n你是哪隻戀愛犬？測完告訴我🐶'
   };
   const text=T[L]||T.ja;
   const url=shareUrl(current);
@@ -2880,11 +2883,11 @@ function shareX(){
 }
 function shareLine(){
   const d=LOC[L][current];let text;
-  if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\nあなたの恋は何わんこ？\n'+shareUrl(current);
-  else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\nWhat is your love-dog?\n'+shareUrl(current);
-  else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n당신의 연애견은?\n'+shareUrl(current);
-  else if(L==='tw')text='我的戀愛犬是【'+d.breed+'】('+current+'）！🐾\n你的戀愛犬是哪隻？\n'+shareUrl(current);
-  else text='我的恋爱犬是【'+d.breed+'】('+current+'）！🐾\n你的恋爱犬是哪只？\n'+shareUrl(current);
+  if(L==='ja')text='私の恋愛わんこは【'+d.breed+'】('+current+')だった！🐾\nあなたも診断して何わんこか教えて！2人の相性も見れるよ💞\n'+shareUrl(current);
+  else if(L==='en')text='My love-dog is '+d.breed+' ('+current+')! 🐾\nTake it and tell me yours — we can even check our compatibility 💞\n'+shareUrl(current);
+  else if(L==='ko')text='내 연애견은 【'+d.breed+'】('+current+')! 🐾\n너도 진단하고 알려줘! 둘의 궁합도 볼 수 있어 💞\n'+shareUrl(current);
+  else if(L==='tw')text='我的戀愛犬是【'+d.breed+'】('+current+'）！🐾\n你也測測告訴我吧！還能看我們倆的契合度💞\n'+shareUrl(current);
+  else text='我的恋爱犬是【'+d.breed+'】('+current+'）！🐾\n你也测测告诉我吧！还能看我们俩的契合度💞\n'+shareUrl(current);
   gtag('event','share',{method:'line',content_type:'result',item_id:current});
   window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl(current))+'&text='+encodeURIComponent(text),'_blank');
 }
@@ -2980,9 +2983,10 @@ function drawShareCard(code,cb){
         ry+=50;
       }
     }
+    /* 見た人を診断に誘うCTA：画像単体で拡散されても入口が伝わるように大きく */
     x.textAlign='center';
-    x.fillStyle='#b88a3a';x.font='700 34px '+FF;x.fillText(i.title,W/2,H-156);
-    x.fillStyle='#9c8676';x.font='400 26px '+FF;x.fillText('#'+i.hashtag+'  ·  16lovetypedogs.com',W/2,H-110);
+    x.fillStyle='#d2628f';x.font='800 46px '+FF;x.fillText(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja,W/2,H-212);
+    x.fillStyle=gg(H-190,H-130);x.font='800 44px '+FF;x.fillText('16lovetypedogs.com',W/2,H-148);
     cb&&cb();
   }
   const dog=new Image();dog.onload=()=>render(dog);dog.onerror=()=>render(null);dog.src=imgPath(code);
@@ -2996,7 +3000,7 @@ function saveShareImg(){
         if(!blob)return;
         const file=new File([blob],'16lovedog_'+current+'.png',{type:'image/png'});
         const d=LOC[L][current],i=I();
-        const text=d.name+' / '+d.breed+' ('+current+')  #'+i.hashtag+'\n'+shareUrl(current);
+        const text=d.name+' / '+d.breed+' ('+current+')  #'+i.hashtag+'\n'+(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja)+'\n'+shareUrl(current);
         gtag('event','share',{method:'native_or_download',content_type:'result_image',item_id:current});
         if(navigator.canShare&&navigator.canShare({files:[file]})){
           try{await navigator.share({files:[file],text:text,url:shareUrl(current)});return;}catch(e){if(e&&e.name==='AbortError')return;}
