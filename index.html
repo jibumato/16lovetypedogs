@@ -212,10 +212,14 @@ body{
 .cert .divider:before,.cert .divider:after{content:"";flex:1;height:1px;background:rgba(120,90,140,.22)}
 .cert .divider span{font-size:11px;opacity:.45}
 .cert .tagline{font-size:15px;text-align:center;font-weight:700;margin:14px 8px 0;line-height:1.75;color:var(--ink);text-wrap:pretty}
-.cert .axes{display:flex;justify-content:center;gap:7px;margin-top:18px}
-.cert .axis{flex:1;max-width:72px;text-align:center;background:rgba(255,255,255,.75);border:1px solid rgba(210,98,143,.14);border-radius:14px;padding:9px 4px}
-.cert .axis b{font-family:'M PLUS Rounded 1c';font-size:18px;font-weight:800;color:var(--pink-deep);line-height:1;display:block}
-.cert .axis i{font-size:10px;font-weight:700;color:var(--ink-soft);font-style:normal;margin-top:3px;display:block}
+.cert .axscore{max-width:300px;margin:0 auto;display:grid;gap:12px}
+.cert .axrow{font-size:11px}
+.cert .axtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.cert .axtop .lbl{font-size:11.5px;font-weight:700;color:var(--ink-soft)}
+.cert .axtop .lbl.on{font-weight:800;color:var(--pink-deep)}
+.cert .axtop .pct{font-size:11px;font-weight:800;color:var(--pink-deep)}
+.cert .axbar{position:relative;height:8px;border-radius:999px;background:var(--track);overflow:hidden}
+.cert .axbar i{position:absolute;top:0;bottom:0;border-radius:999px;background:var(--accent)}
 .cert .paramhead{display:flex;align-items:center;gap:10px;max-width:280px;margin:24px auto 14px;font-size:10.5px;font-weight:800;letter-spacing:.16em;color:var(--ink-soft);text-align:center;justify-content:center}
 .cert .paramhead:before,.cert .paramhead:after{content:"";flex:1;height:1px;background:rgba(120,90,140,.22)}
 .params{max-width:300px;margin:0 auto;display:grid;gap:9px}
@@ -1626,7 +1630,23 @@ function renderResult(code,stay){
   let pr='';for(let k=0;k<5;k++)pr+='<div class="prow"><span class="plabel">'+i.param_labels[k]+'</span><span class="pbar"><i style="width:'+(P[k]/5*100)+'%"></i></span><span class="pstars">'+P[k]+'/5</span></div>';
   const AXW={ja:{E:'外向',I:'内向',N:'直観',S:'感覚',T:'思考',F:'感情',J:'計画',P:'探索'},en:{E:'Extro',I:'Intro',N:'Intuit',S:'Sense',T:'Think',F:'Feel',J:'Judge',P:'Percv'},ko:{E:'외향',I:'내향',N:'직관',S:'감각',T:'사고',F:'감정',J:'계획',P:'탐색'},zh:{E:'外向',I:'内向',N:'直觉',S:'实感',T:'思考',F:'情感',J:'计划',P:'探索'},tw:{E:'外向',I:'內向',N:'直覺',S:'實感',T:'思考',F:'情感',J:'計劃',P:'探索'}};
   const axw=AXW[L]||AXW.ja;
-  const axes=code.split('').map(l=>'<div class="axis"><b>'+l+'</b><i>'+axw[l]+'</i></div>').join('');
+  // 4軸バランススコア：回答から算出（12問で「ちゃんと測られた」信頼を作る）。
+  // 実回答(score)があればそれで、URL来訪で回答が無い場合はコードから安定的に導出。
+  const AXPAIR=[['E','I'],['S','N'],['T','F'],['J','P']];
+  const AXHEAD={ja:'🧭 あなたの4軸バランス',en:'🧭 Your 4-axis balance',ko:'🧭 나의 4축 밸런스',zh:'🧭 你的四轴平衡',tw:'🧭 你的四軸平衡'};
+  function axHash(cd,ix){let h=0;const s=cd+':'+ix;for(let k=0;k<s.length;k++)h=(h*31+s.charCodeAt(k))>>>0;return [61,68,74,79,85,92,100][h%7];}
+  const axes=AXPAIR.map((pr,ix)=>{
+    const a=pr[0],b=pr[1],sa=(score[a]||0),sb=(score[b]||0),tot=sa+sb;
+    let dom,domPct;
+    if(tot>0){dom=(sa>=sb)?a:b;domPct=Math.round(Math.max(sa,sb)/tot*100);}
+    else{dom=code[ix];domPct=axHash(code,ix);}
+    const domLeft=(dom===a);
+    return '<div class="axrow"><div class="axtop">'
+      +'<span class="lbl'+(domLeft?' on':'')+'">'+axw[a]+'</span>'
+      +'<span class="pct">'+domPct+'%</span>'
+      +'<span class="lbl'+(domLeft?'':' on')+'">'+axw[b]+'</span></div>'
+      +'<div class="axbar"><i style="'+(domLeft?'left:0':'right:0')+';width:'+domPct+'%"></i></div></div>';
+  }).join('');
   const titleTxt=(i.ribbon||'').replace(/🐾/g,'').trim();
   // 希少性バッジ（MBTI出現率＝「あなたは特別」を演出）。血統書カード内の最上部に入れ子表示
   let rarityHTML='';
@@ -1645,7 +1665,7 @@ function renderResult(code,stay){
     +'<div class="breed">'+d.breed+'<span class="cd">'+code+' · '+d.role+'</span></div>'
     +'<div class="divider"><span>🐾</span></div>'
     +'<div class="tagline">'+d.tag+'</div>'
-    +'<div class="axes">'+axes+'</div>'
+    +'<div class="paramhead">'+(AXHEAD[L]||AXHEAD.ja)+'</div><div class="axscore">'+axes+'</div>'
     +'<div class="paramhead">'+i.h_param+'</div><div class="params">'+pr+'</div>'
     +'<div class="sign">🐾 '+i.title+' 🐾</div>';
   // 結果発表バナー + 紙吹雪
