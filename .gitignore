@@ -1,3 +1,6 @@
 # 生成物（個別素材は個々にコミット済みのため、まとめzipは追跡しない）
 sns-ad-kit.zip
 *.zip
+
+# wrangler devのローカルキャッシュ（Workers開発用の一時ファイル）
+.wrangler/

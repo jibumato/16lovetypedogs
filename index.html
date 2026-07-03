@@ -821,7 +821,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
   <!-- ========== TOP ========== -->
   <section id="top" class="screen active">
     <div class="hero">
-      <div class="eyebrow">🐾 16タイプ × 🐶</div>
+      <div class="eyebrow">🐾 16タイプ性格診断 × 🐶</div>
       <div class="sns-buzz" id="t-snsbuzz">♡ SNSで話題</div>
       <picture class="hero-logo logo-ja"><source srcset="logo-hero.webp" type="image/webp"><img src="logo-hero.jpg" width="960" height="640" alt="16わんこ恋愛診断｜あなたの恋愛タイプを16のわんこが診断" fetchpriority="high"></picture>
       <picture class="hero-logo logo-en"><source srcset="logo-hero-en.webp" type="image/webp"><img src="logo-hero-en.jpg" width="960" height="640" alt="16 Love Type Dogs｜Find Your Love Dog Type" fetchpriority="high"></picture>
@@ -1690,16 +1690,16 @@ function renderResult(code,stay){
   const medals=['🥇','🥈','🥉'];
   const RANK_LOCK={ja:'🔒 レポートで確認',en:'🔒 See in Report',ko:'🔒 리포트에서 확인',zh:'🔒 在报告中查看',tw:'🔒 在報告中查看'};
   const RANK_BUY={ja:'プレミアムレポートで全相性を見る →',en:'See all 16 in the Premium Report →',ko:'프리미엄 리포트에서 전 16타입 보기 →',zh:'在深度报告中查看全16类型契合 →',tw:'在深度報告中查看全16類型契合 →'};
-  const RANK_NOTE={ja:'📖 全16タイプとの詳細な相性スコア＋コメントは <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">プレミアムレポート</a> で確認できます',
-    en:'📖 Full compatibility scores + notes for all 16 types in the <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">Premium Report</a>',
-    ko:'📖 전 16타입과의 상세 궁합 점수와 코멘트는 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">프리미엄 리포트</a>에서 확인',
-    zh:'📖 与全16类型的详细契合度及点评，请在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">深度报告</a> 中查看',
-    tw:'📖 與全16類型的詳細契合度及點評，請在 <a href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">深度報告</a> 中查看'};
+  const RANK_NOTE={ja:'📖 全16タイプとの詳細な相性スコア＋コメントは <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">プレミアムレポート</a> で確認できます',
+    en:'📖 Full compatibility scores + notes for all 16 types in the <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">Premium Report</a>',
+    ko:'📖 전 16타입과의 상세 궁합 점수와 코멘트는 <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">프리미엄 리포트</a>에서 확인',
+    zh:'📖 与全16类型的详细契合度及点评，请在 <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">深度报告</a> 中查看',
+    tw:'📖 與全16類型的詳細契合度及點評，請在 <a href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_note\')">深度報告</a> 中查看'};
   const shownRow=(m,idx)=>'<div class="rankrow" onclick="pickRank(\''+m.c+'\')"><span class="medal">'+medals[idx]+'</span>'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+LOC[L][m.c].name+'</div><div class="rankbreed">'+LOC[L][m.c].breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div>';
   const blurRow=(m,idx)=>'<div class="rankrow rank-locked"><span class="medal">'+medals[idx]+'</span><div class="rank-blur-content">'+dogImg(m.c)+'<div class="rankinfo"><div class="rankname">'+LOC[L][m.c].name+'</div><div class="rankbreed">'+LOC[L][m.c].breed+' ('+m.c+')</div></div><div class="rankscore">'+m.s+'%</div></div></div>';
   /* 上位2件はブラー行をひとまとめにし、解除ボタンは1つだけ（重複解消） */
   const lockedGroup='<div class="rank-locked-group">'+blurRow(top[0],0)+blurRow(top[1],1)
-    +'<div class="rank-overlay rank-group-overlay"><a class="rank-buybtn" href="'+guideBuyUrl(code,L)+'" target="_blank" rel="noopener">'+RANK_BUY[L]+'</a></div></div>';
+    +'<div class="rank-overlay rank-group-overlay"><a class="rank-buybtn" href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'rank_group\')">'+RANK_BUY[L]+'</a></div></div>';
   document.getElementById('ranking').innerHTML='<div class="sec mt"><h3><span class="dot">💘</span>'+i.rank_head+'</h3><div class="rank">'
     +lockedGroup+shownRow(top[2],2)
     +'</div>'
@@ -2108,6 +2108,27 @@ function trackCheckout(code,lang,loc){
     lang:lang, location:loc||'index_guide'
   }); }catch(e){}
 }
+/* 購入導線の入口（全言語共通）。
+   ja: Payment LinksはAdaptive Pricing強制ONでPayPay非対応のため、
+       サーバー(/api/checkout)でCheckout Sessionを都度作成して遷移する。
+   ja以外: 既存どおりStripe Payment Linksへ直接遷移（変更なし）。 */
+async function goBuy(code,lang,loc){
+  trackCheckout(code,lang,loc);
+  if(lang!=='ja'){
+    const u=guideBuyUrl(code,lang);
+    if(u&&u!=='#') location.href=u;
+    return;
+  }
+  const fallback=guideBuyUrl(code,'ja');
+  try{
+    const gid=gaClientId();
+    const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:code,cid:gid?gid.replace('.','-'):''})});
+    const data=await res.json();
+    if(data&&data.ok&&data.url){ location.href=data.url; return; }
+  }catch(e){}
+  if(fallback&&fallback!=='#') location.href=fallback; /* API失敗時は従来のPayment Linkへフォールバック */
+}
 
 /* ===== 結果直後の有料ティーザー＋追従ボタン =====
    view_item到達が診断完了者の24%に留まっていたため、感情ピーク（結果直後）に
@@ -2143,7 +2164,7 @@ function renderPayTeaser(code){
     +'<div class="tz-lead">'+t.lead+'</div>'
     +'<div class="tz-list">'+t.items.map(it=>'<div class="li"><span class="lk">🔒</span><span>'+it+'</span></div>').join('')+'</div>'
     +'<div class="lg-price">'+tzPriceHTML(cfg,L)+'</div>'
-    +'<a class="lg-buy" href="'+guideBuyUrl(code,L)+'" onclick="trackCheckout(\''+code+'\',\''+L+'\',\'teaser\')">'+t.buy+'<span class="s">'+t.sub+'</span></a>'
+    +'<a class="lg-buy" href="javascript:void(0)" onclick="goBuy(\''+code+'\',\''+L+'\',\'teaser\')">'+t.buy+'<span class="s">'+t.sub+'</span></a>'
     +'<div class="tz-note">'+t.note+'</div>'
     +'</div>';
 }
@@ -2214,7 +2235,7 @@ const GUIDE_I18N={
     sub:"無料で見えているのは、あなたの恋愛分析の全体像のわずか10%。残りはプレミアムレポートだけに。",
     tagBest:"ベスト相性 1位", bestQ:"あなたと最高に幸せになれるのは…",
     bestHint:"▶ 相性1位の正体と、上位5タイプの攻略コメントをレポートで公開",
-    tagTrap:"あなたが繰り返す3つの恋愛の罠", open:"公開中",
+    tagTrap:"😱 あなたが繰り返す3つの恋愛の罠", open:"公開中",
     trapHint:"▶ 残り2つの罠と「抜け道（SOLUTION）」をレポートで解説",
     tagSign:"ケンカ・倦怠期の乗り越え方", signQ:"すれ違いを、こじらせない。",
     signLine:"3ステップ<span class=\"lg-blur\">仲直り法</span>で、こじれを最短で修復",
@@ -2236,7 +2257,7 @@ const GUIDE_I18N={
     sub:"The free version shows only 10% of the full picture. The rest is in your type-only Premium Report.",
     tagBest:"Best Match #1", bestQ:"The one you'll be happiest with is…",
     bestHint:"▶ Reveal your #1 match and tips for your top 5 in the Premium Report",
-    tagTrap:"3 love traps you repeat", open:"shown",
+    tagTrap:"😱 3 love traps you repeat", open:"shown",
     trapHint:"▶ The other 2 traps and their SOLUTIONS, explained in the Premium Report",
     tagSign:"Surviving fights & slumps", signQ:"Don't let friction snowball.",
     signLine:"A 3-step <span class=\"lg-blur\">make-up method</span> to recover fast",
@@ -2258,7 +2279,7 @@ const GUIDE_I18N={
     sub:"무료로 볼 수 있는 건 전체 연애 분석의 10%에 불과해요. 나머지는 프리미엄 리포트에만.",
     tagBest:"베스트 궁합 1위", bestQ:"당신이 가장 행복해질 상대는…",
     bestHint:"▶ 1위의 정체와 상위 5타입 공략 코멘트를 프리미엄 리포트에서 공개",
-    tagTrap:"당신이 반복하는 3가지 연애의 함정", open:"공개중",
+    tagTrap:"😱 당신이 반복하는 3가지 연애의 함정", open:"공개중",
     trapHint:"▶ 남은 2가지 함정과 '빠져나오는 법(SOLUTION)'을 프리미엄 리포트에서 해설",
     tagSign:"싸움·권태기 극복법", signQ:"엇갈림, 키우지 않기.",
     signLine:"3단계 <span class=\"lg-blur\">화해법</span>으로 꼬인 마음을 최단 회복",
@@ -2280,7 +2301,7 @@ const GUIDE_I18N={
     sub:"免费版仅覆盖全貌的10%。其余内容，尽在你专属类型的深度报告中。",
     tagBest:"最佳契合 第1名", bestQ:"最能让你幸福的人是…",
     bestHint:"▶ 第1名的真身与前5名的攻略点评，尽在深度报告",
-    tagTrap:"你会反复掉入的3个恋爱陷阱", open:"已公开",
+    tagTrap:"😱 你会反复掉入的3个恋爱陷阱", open:"已公开",
     trapHint:"▶ 其余2个陷阱与「破解之道（SOLUTION）」，深度报告详解",
     tagSign:"吵架·倦怠期的化解", signQ:"别让小摩擦越闹越大。",
     signLine:"用3步<span class=\"lg-blur\">和好法</span>，最快修复闹别扭",
@@ -2593,8 +2614,8 @@ function renderLoveGuide(code){
           <div class="lg-tax">${g.tax}</div>
         </div>
       </div>
-      <a class="lg-buy${buyOk?'':' disabled'}" id="lgBuy" href="${buyOk?guideBuyUrl(code,L):'javascript:void(0)'}" ${buyOk?`onclick="trackCheckout('${code}','${L}')"`:'aria-disabled="true"'}>${BUY_NOW[L]||BUY_NOW.ja} →<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
-      <div class="lg-pay"><span class="pl">${PAY_I18N[L]?.pl||PAY_I18N.ja.pl}</span><span class="chip">💳 ${PAY_I18N[L]?.card||PAY_I18N.ja.card}</span><span class="chip pp soon"><img class="pp-logo" src="/paypay-logo.png" alt="PayPay" width="18" height="18" decoding="async">PayPay<span class="soon-tag">${PAY_I18N[L]?.soon||PAY_I18N.ja.soon}</span></span></div>
+      <a class="lg-buy${buyOk?'':' disabled'}" id="lgBuy" href="javascript:void(0)" ${buyOk?`onclick="goBuy('${code}','${L}','lg_cta')"`:'aria-disabled="true"'}>${BUY_NOW[L]||BUY_NOW.ja} →<span class="s">${d.breed}（${code}）${g.buySub}</span></a>
+      <div class="lg-pay"><span class="pl">${PAY_I18N[L]?.pl||PAY_I18N.ja.pl}</span><span class="chip">💳 ${PAY_I18N[L]?.card||PAY_I18N.ja.card}</span>${L==='ja'?`<span class="chip pp"><img class="pp-logo" src="/paypay-logo.png" alt="PayPay" width="18" height="18" decoding="async">PayPay</span>`:''}</div>
       ${g.refund?`<div class="lg-guarantee"><span class="gbadge">✓</span><span>${g.refund}</span></div>`:''}
       ${g.coupon?`<div class="lg-coupon">🎟 ${g.coupon}</div>`:''}
       <div class="lg-re">${g.re.map(r=>`<span>${r}</span>`).join('')}</div>
@@ -2634,7 +2655,7 @@ function scrollToTrap(){
   const t=document.getElementById('trapPeek');
   if(t){t.scrollIntoView({behavior:'smooth',block:'center'});}else{guideToCta();}
 }
-function guideLang(lang){ if(current){ location.href=guideBuyUrl(current,lang); } }
+function guideLang(lang){ if(current){ goBuy(current,lang,'lang_switch'); } }
 
 function daySeed(){const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000);}
 function curSeason(){const m=new Date().getMonth()+1;return m<=2?'winter':m<=5?'spring':m<=8?'summer':m<=11?'autumn':'winter';}
