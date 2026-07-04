@@ -2808,13 +2808,29 @@ function buildSelects(){
   document.getElementById('cpA').innerHTML=opt;
   document.getElementById('cpB').innerHTML=opt;
 }
-function goCompat(){if(current)document.getElementById('cpA').value=current;show('compat');}
-function pickRank(c){buildSelects();document.getElementById('cpA').value=current;document.getElementById('cpB').value=c;show('compat');runCompat();}
+/* 相性チェックの利用計測：入口(compat_open)と実行(compat_run)を分けて記録 */
+function goCompat(src){
+  try{ if(window.gtag) gtag('event','compat_open',{source:src||'result_cta',language:L}); }catch(e){}
+  if(current)document.getElementById('cpA').value=current;show('compat');
+}
+function pickRank(c){
+  try{ if(window.gtag) gtag('event','compat_open',{source:'rank_row',language:L}); }catch(e){}
+  buildSelects();document.getElementById('cpA').value=current;document.getElementById('cpB').value=c;show('compat');runCompat();
+}
 function runCompat(){
   const a=document.getElementById('cpA').value,b=document.getElementById('cpB').value;
   const r=compatScore(a,b),s=r[0],msg=r[1];
   const cs={ja:{line:'LINEで送る',x:'Xでシェア',img:'画像で保存・シェア'},en:{line:'Send on LINE',x:'Share on X',img:'Save / share image'},ko:{line:'LINE로 보내기',x:'X에 공유',img:'이미지 저장·공유'},zh:{line:'用LINE发送',x:'分享到X',img:'保存·分享图片'},tw:{line:'用LINE發送',x:'分享到X',img:'保存·分享圖片'}}[L]||{line:'LINEで送る',x:'Xでシェア',img:'画像で保存・シェア'};
   compatState={a:a,b:b,s:s,msg:msg};
+  /* 実行計測。画面再表示による同一ペアの再実行は数えない（重複防止）。
+     self_first=1 は「自分のタイプ×誰か」の組み合わせ＝“あの人”利用の指標 */
+  try{
+    const ck=a+'_'+b;
+    if(window.gtag&&ck!==lastCompatTracked){
+      lastCompatTracked=ck;
+      gtag('event','compat_run',{pair:ck,score:s,self_first:(current&&a===current)?1:0,language:L});
+    }
+  }catch(e){}
   const d=compatDetail(a,b);
   const cdL={ja:{g:'いいところ',w:'気をつけたいこと',t:'うまくいくコツ'},en:{g:'What works',w:'Watch out for',t:'How to make it work'},ko:{g:'좋은 점',w:'주의할 점',t:'잘 지내는 법'},zh:{g:'契合亮点',w:'要注意的',t:'相处秘诀'},tw:{g:'契合亮點',w:'要注意的',t:'相處祕訣'}}[L]||{g:'いいところ',w:'気をつけたいこと',t:'うまくいくコツ'};
   const cx=CXL[L]||CXL.ja, axisHtml=axisBreakdown(a,b), et=extraTips(a,b);
@@ -2837,7 +2853,7 @@ function runCompat(){
    +'<button class="btn x-btn" onclick="shareCompat('+"'x'"+')">'+cs.x+'</button>'
    +'<button class="btn sub" onclick="saveCompatImg()">'+cs.img+'</button></div></div>';
 }
-let compatState=null;
+let compatState=null,lastCompatTracked='';
 function compatShareText(a,b,s){
   const ba=LOC[L][a].breed,bb=LOC[L][b].breed;
   if(L==='en')return 'Our compatibility is '+s+'%! 🐾\n'+ba+' × '+bb+'\nWhat are you two?';
@@ -2849,6 +2865,7 @@ function compatShareText(a,b,s){
 function shareCompat(platform){
   if(!compatState)return;
   const {a,b,s}=compatState,i=I(),text=compatShareText(a,b,s),url=SITE_URL+(L?'?lang='+L:'');
+  try{ if(window.gtag) gtag('event','share',{method:platform==='line'?'line':'twitter',content_type:'compat',item_id:a+'_'+b}); }catch(e){}
   if(platform==='line'){
     window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text+'\n'+url),'_blank');
   }else{
@@ -2891,6 +2908,7 @@ function drawCompatCard(cb){
 }
 function saveCompatImg(){
   if(!compatState)return;
+  try{ if(window.gtag) gtag('event','share',{method:'native_or_download',content_type:'compat',item_id:compatState.a+'_'+compatState.b}); }catch(e){}
   drawCompatCard((c)=>{
     if(!c)return;
     try{
