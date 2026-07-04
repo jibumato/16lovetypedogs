@@ -597,6 +597,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .result-next .sns .btn{margin:0}
 .result-next>.btn{margin-top:14px}
 .result-next .note{font-size:12.5px;color:var(--ink-soft);margin-top:12px}
+.invite-note{font-size:11.5px;color:var(--ink-soft);font-weight:700;margin-top:9px;line-height:1.6}
 .omk-daily{margin-top:16px;background:linear-gradient(135deg,rgba(247,168,196,.20),rgba(201,166,240,.20));border:1.5px solid var(--pink);border-radius:16px;padding:13px 16px;cursor:pointer;text-align:center;transition:transform .12s ease}
 .omk-daily:active{transform:scale(.98)}
 .omk-daily .od-t{display:block;font-size:14px;font-weight:800;color:var(--pink-deep)}
@@ -906,11 +907,13 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <!-- 4. 相性ランキング TOP3 -->
     <div id="ranking"></div>
 
-    <!-- 4. 気になるあの人との相性は？（相性チェック・単一CTA） -->
+    <!-- 4. 気になるあの人との相性は？（相性チェック＋あの人に送る招待） -->
     <div class="sec mt">
       <h3><span class="dot">💞</span><span id="t-ctah"></span></h3>
       <p id="t-ctap"></p>
       <button class="btn mt" id="t-ctab" onclick="goCompat()"></button>
+      <button class="btn sub mt invite-btn" id="t-invite" onclick="inviteCrush()"></button>
+      <p class="invite-note" id="t-invitenote"></p>
     </div>
 
     <!-- 5. 裏性格診断（表↔裏・本音スコア → 戦略チラ見せで有料導線へ） -->
@@ -1320,6 +1323,9 @@ function applyStatic(){
   setText('t-reshead',i.res_head);
   setText('t-bonush',i.bonus_h);setText('t-bonusp',i.bonus_p);setText('t-bonusb',i.bonus_b);
   setText('t-ctah',i.cta_h);setText('t-ctap',i.cta_p);setText('t-ctab',i.cta_b);
+  (function(){const iv=INVITE_I18N[L]||INVITE_I18N.ja;setText('t-invite',iv.btn);
+    const NOTE={ja:'相手のタイプがわからなくても、送れば診断してもらえるよ🐾',en:"Don't know their type? Send it and let them find out 🐾",ko:'상대 타입을 몰라도, 보내면 진단받을 수 있어요 🐾',zh:'不知道对方类型也没关系，发过去让TA测就行🐾',tw:'不知道對方類型也沒關係，發過去讓TA測就行🐾'};
+    setText('t-invitenote',NOTE[L]||NOTE.ja);})();
   setText('t-again',i.again);
   setText('t-compathead',i.compat_head);setText('t-youlbl',i.you);setText('t-partnerlbl',i.partner);
   setText('t-compatbtn',i.compat_btn);setText('t-backres',i.back_res);
@@ -1390,6 +1396,24 @@ const NAV_SHARE_TEXT={
 };
 /* シェア画像・文言の「巻き込み」CTA：見た側への問いかけ（IGストーリー経由はここが唯一の入口） */
 const SHARE_CTA_Q={ja:'あなたの恋は、何わんこ？',en:"What's YOUR love-dog?",ko:'당신의 연애견은 어떤 강아지?',zh:'你的恋爱犬是哪只？',tw:'你的戀愛犬是哪隻？'};
+/* 相性カード用の巻き込みCTA（見た人に“自分とあの人”を考えさせる） */
+const COMPAT_CTA_Q={ja:'あなたとあの人の相性は？',en:"You two — what's your match?",ko:'당신과 그 사람의 궁합은?',zh:'你和TA的契合度是？',tw:'你和TA的契合度是？'};
+/* 「あの人に送って診断してもらう」招待（シェア＋新規獲得＋相性体験を同時に生む） */
+const INVITE_I18N={
+  ja:{btn:'💌 あの人に送って診断してもらう',msg:'これやってみて🐶 あなたのタイプ教えて、2人の相性チェックしよ🐾',copied:'招待メッセージをコピーしました📋 あの人に送ってね'},
+  en:{btn:'💌 Send it to your crush',msg:'Try this 🐶 Tell me your type so we can check our compatibility 🐾',copied:'Invite copied 📋 Send it to them!'},
+  ko:{btn:'💌 그 사람에게 보내서 진단받기',msg:'이거 해봐 🐶 너 타입 알려줘, 우리 궁합 보자 🐾',copied:'초대 메시지를 복사했어요 📋 그 사람에게 보내요'},
+  zh:{btn:'💌 发给TA让TA也来测',msg:'来测测这个🐶 告诉我你的类型，看看我们的契合度🐾',copied:'已复制邀请消息📋 发给TA吧'},
+  tw:{btn:'💌 發給TA讓TA也來測',msg:'來測測這個🐶 告訴我你的類型，看看我們的契合度🐾',copied:'已複製邀請訊息📋 發給TA吧'}
+};
+function inviteCrush(){
+  const t=INVITE_I18N[L]||INVITE_I18N.ja, url=SITE_URL+(L?'?lang='+L:'');
+  try{ if(window.gtag) gtag('event','share',{method:'invite',content_type:'invite_crush',language:L}); }catch(e){}
+  if(navigator.share){ navigator.share({text:t.msg,url:url}).catch(function(){}); return; }
+  const full=t.msg+'\n'+url;
+  try{ navigator.clipboard.writeText(full).then(function(){ try{alert(t.copied);}catch(e){} }).catch(function(){ try{prompt('',full);}catch(e){} }); }
+  catch(e){ try{prompt('',full);}catch(e2){} }
+}
 function updateTabbar(id){
   document.querySelectorAll('.tab').forEach(t=>{
     const k=t.dataset.tab;
@@ -2920,7 +2944,7 @@ function drawCompatCard(cb){
     x.strokeStyle='#f7a8c4';x.lineCap='round';x.beginPath();x.arc(W/2,cy,rad,-Math.PI/2,-Math.PI/2+Math.PI*2*s/100);x.stroke();x.lineCap='butt';
     x.fillStyle='#d2628f';x.font='800 92px '+FF;x.fillText(s+'%',W/2,cy+32);
     x.font='500 33px '+FF;wrapLines(x,msg,W/2,cy+rad+76,W-240,46,'#6b5648');
-    x.fillStyle='#d2628f';x.font='800 40px '+FF;x.fillText(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja,W/2,H-156);
+    x.fillStyle='#d2628f';x.font='800 40px '+FF;x.fillText(COMPAT_CTA_Q[L]||COMPAT_CTA_Q.ja,W/2,H-156);
     x.fillStyle='#b88a3a';x.font='800 38px '+FF;x.fillText('16lovetypedogs.com',W/2,H-102);
     cb(c);
   }
