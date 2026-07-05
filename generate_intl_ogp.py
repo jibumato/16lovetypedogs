@@ -11,6 +11,7 @@ ROOT=os.path.dirname(os.path.abspath(__file__))
 D=json.load(open("/tmp/OGP_DATA.json",encoding="utf-8"))
 LOC=D["LOC"];BEST=D.get("best",{});ORDER=D["ORDER"]
 MREG="/tmp/MPLUSRounded1c-Regular.ttf";MBOLD="/tmp/MPLUSRounded1c-ExtraBold.ttf";JUA="/tmp/Jua.ttf"
+ZCOOL="/tmp/ZCOOL.ttf";IANSUI="/tmp/Iansui.ttf"  # zh=站酷快乐体(丸ポップ簡体), tw=芫荽Iansui(丸繁体)
 PINK=(242,145,182);PURPLE=(185,138,232);WHITE=(255,255,255)
 INK=(87,79,99);PINK_DEEP=(210,98,143);BOX=(255,253,248)
 # 言語別: フォント・箱見出し・ベスト相性ピル・CTA
@@ -27,6 +28,16 @@ CFG={
        "role_sep":"   ",
        "pill":lambda b:f"베스트 궁합: {b} 등",
        "cta_q":"당신은 어떤 강아지?","site":"16lovetypedogs.com"},
+ "zh":{"reg":ZCOOL,"bold":ZCOOL,"sym":"draw",
+       "head":"汪汪博士的一句话",
+       "role_sep":"   ",
+       "pill":lambda b:f"最佳配对：{b} 等",
+       "cta_q":"你是哪种恋爱犬？","site":"16lovetypedogs.com"},
+ "tw":{"reg":IANSUI,"bold":IANSUI,"sym":"draw",
+       "head":"汪汪博士的一句話",
+       "role_sep":"   ",
+       "pill":lambda b:f"最佳速配：{b} 等",
+       "cta_q":"你是哪種戀愛犬？","site":"16lovetypedogs.com"},
 }
 def make(code,lang):
     cf=CFG[lang]
@@ -142,7 +153,7 @@ def gen(lang,codes):
     for c in codes: make(c,lang).save(os.path.join(outdir,c.lower()+".png"));print("saved",lang,c)
 
 a=sys.argv[1:]
-langs=[a[0]] if a and a[0] in CFG else ["en","ko"]
+langs=[a[0]] if a and a[0] in CFG else ["en","ko","zh","tw"]
 codes=[x for x in a if x.upper() in ORDER] or ORDER
 codes=[c.upper() for c in codes]
 for lg in langs: gen(lg,codes)
