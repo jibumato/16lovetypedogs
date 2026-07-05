@@ -3067,6 +3067,26 @@ function wrapLines(x,text,cx,y,maxW,lh,fill){
   lines.push(line);x.fillStyle=fill;lines.forEach((l,k)=>x.fillText(l,cx,y+k*lh));
   return y+(lines.length-1)*lh;
 }
+/* わんこ博士のひとこと（ja専用・ちょい辛口で図星を突く→「当たってる笑」を誘発）。
+   未定義言語はhookにフォールバック。 */
+const DOC_LINE={
+  INTJ:'好きな子の前でだけツンとする——バレバレじゃぞ。素直になった方が、恋は早いのにのう。',
+  INTP:'「これは恋か？」と分析しとる間に、とっくに沼っておる。考える前に沼、じゃな。',
+  ENTJ:'引っ張るのは得意でも、弱音だけは見せられん。たまには頼ってごらん、可愛いぞ。',
+  ENTP:'ドキドキが消えた途端に冷める癖、直しなさい。本命にだけは一途なくせしてのう。',
+  INFJ:'相手の気持ちは読めるのに、自分の本音だけ言えん。一番わかってほしい人にこそ、じゃぞ。',
+  INFP:'理想を夢見ては、現実とのギャップにこっそり凹む。そのまっすぐさ、悪くないんじゃがな。',
+  ENFJ:'尽くしすぎて、気づけば自分が後回し。その優しさ、ちゃんと返してもらうのじゃぞ。',
+  ENFP:'明るく見えて、実はさみしがり。連絡が欲しいなら、素直にそう言うのじゃ。',
+  ISTJ:'口下手で不器用。じゃが一度決めた人は一生大事にする——そこがモテるんじゃよ。',
+  ISFJ:'さりげなく尽くして、でも気づいてほしい。……欲張りさんじゃのう、そこが可愛いが。',
+  ESTJ:'あいまいな関係は大の苦手。将来まで見すえる真面目さ、実は一級品じゃぞ。',
+  ESFJ:'愛はたっぷり、じゃが連絡が途切れると即不安。かまってちゃん、認めなさい。',
+  ISTP:'ベタベタは苦手。でも本命の一大事にはちゃんと動く。ギャップで落とすタイプじゃな。',
+  ISFP:'急かされると逃げたくなるくせに、安心できる人にはとことん甘える。素直でよろしい。',
+  ESTP:'気になったら即行動、考えるのは後回し。その勢い、たまには止めてごらん。',
+  ESFP:'一番可愛い自分でいたくて、ちょっとヤキモチ屋。かまってほしいだけなんじゃろ？'
+};
 function drawShareCard(code,cb){
   const d=LOC[L][code],g=BASE[code].g,i=I(),W=1080,H=1920;
   const c=document.getElementById('shareCanvas'),x=c.getContext('2d');
@@ -3113,7 +3133,8 @@ function drawShareCard(code,cb){
     const bx=70,bw=W-140,by=1320,bh=250;
     x.fillStyle='#fffdf8';rr(x,bx,by,bw,bh,28);x.fill();
     x.fillStyle='#d2628f';x.font='800 34px '+FF;x.fillText(SHC.doc,W/2,by+52);
-    x.font='700 38px '+FF;wrapLines(x,'「'+(d.hook||d.tag)+'」',W/2,by+112,bw-80,50,'#574f63');
+    const docLine=(L==='ja'&&DOC_LINE[code])?DOC_LINE[code]:('「'+(d.hook||d.tag)+'」');
+    x.font='700 36px '+FF;wrapLines(x,docLine,W/2,by+108,bw-80,48,'#574f63');
     /* ベスト相性ティーザー（好奇心→相性訴求へ接続） */
     const py2=1616;
     x.fillStyle='#e84d80';rr(x,140,py2,W-280,72,999);x.fill();
