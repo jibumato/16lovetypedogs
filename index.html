@@ -2943,32 +2943,35 @@ function drawCompatCard(cb){
   if(!compatState){cb(null);return;}
   const {a,b,s,msg}=compatState,i=I(),W=1080,H=1350;
   const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
-  const bg=x.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#fffdf8');bg.addColorStop(1,'#ffeef2');
-  x.fillStyle=bg;x.fillRect(0,0,W,H);
-  x.fillStyle='rgba(214,98,143,.08)';for(let k=0;k<60;k++){x.beginPath();x.arc((k*149%W),(k*223%H),2.4,0,7);x.fill();}
-  x.fillStyle='#fffdfa';rr(x,56,80,W-112,H-160,40);x.fill();
-  x.lineWidth=4;x.strokeStyle='#f2b8cc';rr(x,56,80,W-112,H-160,40);x.stroke();
+  function shd(on,dy){ if(on){x.shadowColor='rgba(120,55,95,.5)';x.shadowBlur=10;x.shadowOffsetX=0;x.shadowOffsetY=dy||2;} else {x.shadowColor='transparent';x.shadowBlur=0;x.shadowOffsetX=0;x.shadowOffsetY=0;} }
+  /* 対角2色背景（案Aと統一） */
+  x.fillStyle='#f291b6';x.fillRect(0,0,W,H);
+  x.fillStyle='#b98ae8';x.beginPath();x.moveTo(W,0);x.lineTo(W,H);x.lineTo(0,H);x.closePath();x.fill();
+  x.fillStyle='rgba(255,255,255,.15)';for(let k=0;k<22;k++){x.beginPath();x.arc((k*197%W),(k*271%H),7,0,7);x.fill();}
   x.textAlign='center';
-  x.fillStyle='#d2628f';x.font='800 52px '+FF;x.fillText((i.compat_head||'').replace(/🐾/g,'').trim(),W/2,178);
+  shd(true);x.fillStyle='#fff';x.font='800 54px '+FF;x.fillText((i.compat_head||'').replace(/🐾/g,'').trim(),W/2,140);shd(false);
   const imgs={};let loaded=0;
   function done(){
-    const DS=300,gap=120,startX=(W-(DS*2+gap))/2,dy=250;
+    const DS=320,gap=110,startX=(W-(DS*2+gap))/2,dy=210;
     [a,b].forEach((code,idx)=>{
-      const im=imgs[code],dx=startX+idx*(DS+gap);
-      x.save();rr(x,dx,dy,DS,DS,30);x.clip();x.fillStyle='#fff';x.fillRect(dx,dy,DS,DS);
-      if(im){const sc=Math.max(DS/im.width,DS/im.height),w=im.width*sc,h=im.height*sc;x.drawImage(im,dx+(DS-w)/2,dy+(DS-h)/2,w,h);}
-      x.restore();
-      x.lineWidth=4;x.strokeStyle='#f2b8cc';rr(x,dx,dy,DS,DS,30);x.stroke();
-      x.font='700 30px '+FF;wrapLines(x,LOC[L][code].breed,dx+DS/2,dy+DS+46,DS+50,36,'#6b5648');
+      const im=imgs[code],ccx=startX+idx*(DS+gap)+DS/2,ccy=dy+DS/2,r=DS/2;
+      shd(true,12);x.fillStyle='#fff';x.beginPath();x.arc(ccx,ccy,r,0,7);x.fill();shd(false);
+      if(im){x.save();x.beginPath();x.arc(ccx,ccy,r-5,0,7);x.clip();const sc=Math.max(DS/im.width,DS/im.height),w=im.width*sc,h=im.height*sc;x.drawImage(im,ccx-w/2,ccy-h/2,w,h);x.restore();}
+      shd(true);x.fillStyle='#fff';x.font='800 30px '+FF;x.fillText(LOC[L][code].breed,ccx,dy+DS+54,DS+70);shd(false);
     });
-    x.font='84px sans-serif';x.fillText('💞',W/2,dy+DS/2+30);
-    const cy=dy+DS+200,rad=118;
-    x.lineWidth=22;x.strokeStyle='#f3e0e8';x.beginPath();x.arc(W/2,cy,rad,0,7);x.stroke();
-    x.strokeStyle='#f7a8c4';x.lineCap='round';x.beginPath();x.arc(W/2,cy,rad,-Math.PI/2,-Math.PI/2+Math.PI*2*s/100);x.stroke();x.lineCap='butt';
-    x.fillStyle='#d2628f';x.font='800 92px '+FF;x.fillText(s+'%',W/2,cy+32);
-    x.font='500 33px '+FF;wrapLines(x,msg,W/2,cy+rad+76,W-240,46,'#6b5648');
-    x.fillStyle='#d2628f';x.font='800 40px '+FF;x.fillText(COMPAT_CTA_Q[L]||COMPAT_CTA_Q.ja,W/2,H-156);
-    x.fillStyle='#b88a3a';x.font='800 38px '+FF;x.fillText('16lovetypedogs.com',W/2,H-102);
+    x.font='96px sans-serif';x.fillText('💞',W/2,dy+DS/2+34);
+    /* 相性%リング（白基調で映えるように） */
+    const cy=dy+DS+238,rad=120;
+    x.lineWidth=24;x.strokeStyle='rgba(255,255,255,.35)';x.beginPath();x.arc(W/2,cy,rad,0,7);x.stroke();
+    x.strokeStyle='#fff';x.lineCap='round';x.beginPath();x.arc(W/2,cy,rad,-Math.PI/2,-Math.PI/2+Math.PI*2*s/100);x.stroke();x.lineCap='butt';
+    shd(true);x.fillStyle='#fff';x.font='900 96px '+FF;x.fillText(s+'%',W/2,cy+34);shd(false);
+    /* メッセージ（白箱） */
+    const by=cy+rad+38,bw=W-160,bx=80,bh=168;
+    x.fillStyle='#fffdf8';rr(x,bx,by,bw,bh,26);x.fill();
+    x.font='500 33px '+FF;wrapLines(x,msg,W/2,by+64,bw-70,46,'#6b5648');
+    /* 巻き込みCTA */
+    shd(true);x.fillStyle='#fff';x.font='800 42px '+FF;x.fillText(COMPAT_CTA_Q[L]||COMPAT_CTA_Q.ja,W/2,H-96);
+    x.font='900 40px '+FF;x.fillText('▶ 16lovetypedogs.com',W/2,H-42);shd(false);
     cb(c);
   }
   [a,b].forEach(code=>{const im=new Image();im.onload=()=>{imgs[code]=im;if(++loaded===2)done();};im.onerror=()=>{if(++loaded===2)done();};im.src=imgPath(code);});
@@ -3067,6 +3070,26 @@ function wrapLines(x,text,cx,y,maxW,lh,fill){
   lines.push(line);x.fillStyle=fill;lines.forEach((l,k)=>x.fillText(l,cx,y+k*lh));
   return y+(lines.length-1)*lh;
 }
+/* わんこ博士のひとこと（ja専用・ちょい辛口で図星を突く→「当たってる笑」を誘発）。
+   未定義言語はhookにフォールバック。 */
+const DOC_LINE={
+  INTJ:'好きな子の前でだけツンとする——バレバレじゃぞ。素直になった方が、恋は早いのにのう。',
+  INTP:'「これは恋か？」と分析しとる間に、とっくに沼っておる。考える前に沼、じゃな。',
+  ENTJ:'引っ張るのは得意でも、弱音だけは見せられん。たまには頼ってごらん、可愛いぞ。',
+  ENTP:'ドキドキが消えた途端に冷める癖、直しなさい。本命にだけは一途なくせしてのう。',
+  INFJ:'相手の気持ちは読めるのに、自分の本音だけ言えん。一番わかってほしい人にこそ、じゃぞ。',
+  INFP:'理想を夢見ては、現実とのギャップにこっそり凹む。そのまっすぐさ、悪くないんじゃがな。',
+  ENFJ:'尽くしすぎて、気づけば自分が後回し。その優しさ、ちゃんと返してもらうのじゃぞ。',
+  ENFP:'明るく見えて、実はさみしがり。連絡が欲しいなら、素直にそう言うのじゃ。',
+  ISTJ:'口下手で不器用。じゃが一度決めた人は一生大事にする——そこがモテるんじゃよ。',
+  ISFJ:'さりげなく尽くして、でも気づいてほしい。……欲張りさんじゃのう、そこが可愛いが。',
+  ESTJ:'あいまいな関係は大の苦手。将来まで見すえる真面目さ、実は一級品じゃぞ。',
+  ESFJ:'愛はたっぷり、じゃが連絡が途切れると即不安。かまってちゃん、認めなさい。',
+  ISTP:'ベタベタは苦手。でも本命の一大事にはちゃんと動く。ギャップで落とすタイプじゃな。',
+  ISFP:'急かされると逃げたくなるくせに、安心できる人にはとことん甘える。素直でよろしい。',
+  ESTP:'気になったら即行動、考えるのは後回し。その勢い、たまには止めてごらん。',
+  ESFP:'一番可愛い自分でいたくて、ちょっとヤキモチ屋。かまってほしいだけなんじゃろ？'
+};
 function drawShareCard(code,cb){
   const d=LOC[L][code],g=BASE[code].g,i=I(),W=1080,H=1920;
   const c=document.getElementById('shareCanvas'),x=c.getContext('2d');
@@ -3113,7 +3136,8 @@ function drawShareCard(code,cb){
     const bx=70,bw=W-140,by=1320,bh=250;
     x.fillStyle='#fffdf8';rr(x,bx,by,bw,bh,28);x.fill();
     x.fillStyle='#d2628f';x.font='800 34px '+FF;x.fillText(SHC.doc,W/2,by+52);
-    x.font='700 38px '+FF;wrapLines(x,'「'+(d.hook||d.tag)+'」',W/2,by+112,bw-80,50,'#574f63');
+    const docLine=(L==='ja'&&DOC_LINE[code])?DOC_LINE[code]:('「'+(d.hook||d.tag)+'」');
+    x.font='700 36px '+FF;wrapLines(x,docLine,W/2,by+108,bw-80,48,'#574f63');
     /* ベスト相性ティーザー（好奇心→相性訴求へ接続） */
     const py2=1616;
     x.fillStyle='#e84d80';rr(x,140,py2,W-280,72,999);x.fill();
