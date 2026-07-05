@@ -945,6 +945,9 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <!-- 7. 今日の恋愛おみくじ（毎日引けるリピート導線） -->
     <div class="sec mt omk-sec" id="omkSection" style="text-align:center"></div>
 
+    <!-- 7.5 受注生産グッズ導線（GOODS_SHOP未設定時は非表示） -->
+    <div id="goodsBlock" style="display:none"></div>
+
     <div class="bonus" style="display:none">
       <h3 id="t-bonush"></h3>
       <p id="t-bonusp"></p>
@@ -1753,6 +1756,7 @@ function renderResult(code,stay){
   renderUraChara(code);
   renderLoveGuide(code);
   renderResultOmikuji();
+  renderGoods(code);
   renderSaveResult(code);
   renderPayTeaser(code);
   setupPayFab(code);
@@ -2713,6 +2717,31 @@ function daySeed(){const d=new Date();return Math.floor(Date.UTC(d.getFullYear()
 function curSeason(){const m=new Date().getMonth()+1;return m<=2?'winter':m<=5?'spring':m<=8?'summer':m<=11?'autumn':'winter';}
 function codeNum(code){let n=0;for(const ch of code)n+=ch.charCodeAt(0);return n;}
 function affUrl(kw){return 'https://www.amazon.co.jp/s?k='+encodeURIComponent(kw)+'&tag=jbmt-22';}
+/* ===== 受注生産グッズ導線（POD：SUZURI等） =====
+   GOODS_SHOP … ショップのトップURL（空なら導線は完全非表示）
+   GOODS_ITEM … 犬種ごとの商品URL（任意。無い犬種は GOODS_SHOP へ）
+   ショップ開設後、この2つを埋めるだけで結果画面に導線が出る（他は変更不要） */
+const GOODS_SHOP='';
+const GOODS_ITEM={/* 例: INTJ:'https://suzuri.jp/あなた/items/xxxx' */};
+const GOODS_I18N={
+  ja:{head:'🛍 あなたは何わんこ？ グッズにする',text:'診断で出た{breed}を、ステッカー・アクスタ・スマホケースに。受注生産だから1個から作れるよ🐾',btn:'{breed}のグッズを見る →'},
+  en:{head:'🛍 Wear your love-dog',text:'Turn your {breed} into stickers, acrylic stands or phone cases — made to order, from just one 🐾',btn:'See {breed} goods →'},
+  ko:{head:'🛍 내 연애견을 굿즈로',text:'진단으로 나온 {breed}를 스티커·아크릴 스탠드·폰케이스로. 주문 제작이라 1개부터 OK 🐾',btn:'{breed} 굿즈 보기 →'},
+  zh:{head:'🛍 把你的恋爱犬做成周边',text:'把测出的{breed}做成贴纸・亚克力立牌・手机壳。接单生产，1个也能做🐾',btn:'查看{breed}周边 →'},
+  tw:{head:'🛍 把你的戀愛犬做成周邊',text:'把測出的{breed}做成貼紙・壓克力立牌・手機殼。接單生產，1個也能做🐾',btn:'查看{breed}周邊 →'}
+};
+function goodsUrl(code){return GOODS_ITEM[code]||GOODS_SHOP||'';}
+function renderGoods(code){
+  const el=document.getElementById('goodsBlock');if(!el)return;
+  const url=goodsUrl(code);
+  if(!url){el.innerHTML='';el.style.display='none';return;}
+  el.style.display='';el.className='result-next mt';
+  const g=GOODS_I18N[L]||GOODS_I18N.ja,d=LOC[L][code];
+  el.innerHTML='<h3>'+g.head+'</h3><p>'+g.text.replace('{breed}',d.breed)+'</p>'
+    +'<a class="btn mt" target="_blank" rel="noopener sponsored" href="'+url+'" '
+    +'onclick="gtag(\'event\',\'goods_click\',{mbti_type:\''+code+'\',language:L})">'
+    +g.btn.replace('{breed}',d.breed)+'</a>';
+}
 function block(ic,title,body){return '<div class="sec"><h3><span class="dot">'+ic+'</span>'+title+'</h3><p>'+body+'</p></div>';}
 /* 性格・恋愛傾向など長文セクションを折りたたみ表示（有料ガイドへの到達率を高めるため） */
 const CLAMP_T={ja:{more:'続きを読む',less:'閉じる'},en:{more:'Read more',less:'Show less'},ko:{more:'더 보기',less:'접기'},zh:{more:'阅读更多',less:'收起'},tw:{more:'閱讀更多',less:'收起'}};
