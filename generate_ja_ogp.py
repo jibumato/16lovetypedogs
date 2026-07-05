@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-# JA OGPカード(ogp/ja/*.png)生成。長い犬種名は左カラム幅に縮小フィットさせ右カードへの被りを防ぐ。
-# 依存: M PLUS Rounded 1c (/tmp/MPLUSRounded1c-{Regular,ExtraBold}.ttf) と /tmp/LOC.json /tmp/I18N.json
-#   フォント: https://github.com/google/fonts/raw/main/ofl/mplusrounded1c/MPLUSRounded1c-{Regular,ExtraBold}.ttf
-#   データ: index.html の LOC / I18N を JSON ダンプしたもの
+# JA OGPカード(ogp/ja/*.png)生成。ポップステッカー調（シェアカード案Aと世界観統一）。
+# 依存: M PLUS Rounded 1c (/tmp/MPLUSRounded1c-{Regular,ExtraBold}.ttf) と /tmp/OGP_DATA.json
+#   データ: index.html の LOC/I18N/RARITY/DOC_LINE と各タイプのベスト相性(best)を JSON ダンプしたもの
 # 使い方: python3 generate_ja_ogp.py [CODE ...]   (引数なしは ogp/ja/ 全16生成)
 import json, os, sys
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 ROOT=os.path.dirname(os.path.abspath(__file__))
-LOC=json.load(open("/tmp/LOC.json",encoding="utf-8"));I18N=json.load(open("/tmp/I18N.json",encoding="utf-8"))
-RARITY=json.load(open("/tmp/RARITY.json",encoding="utf-8"))
+D=json.load(open("/tmp/OGP_DATA.json",encoding="utf-8"))
+LOC=D["LOC"];I18N=D["I18N"];RARITY=D["RARITY"];DOC=D.get("DOC_LINE",{});BEST=D.get("best",{});ORDER=D["ORDER"]
 REG="/tmp/MPLUSRounded1c-Regular.ttf";BOLD="/tmp/MPLUSRounded1c-ExtraBold.ttf"
-CREAM=(252,244,239);BLOB=(247,224,233);PINK=(210,98,143);PINK_BD=(242,184,204)
-PILL_BG=(247,217,228);INK=(87,79,99);INK_SOFT=(147,138,163);WHITE=(255,255,255)
+PINK=(242,145,182);PURPLE=(185,138,232);WHITE=(255,255,255)
+INK=(87,79,99);PINK_DEEP=(210,98,143);BOX=(255,253,248);GOLD=(184,138,58)
 def fb(s):return ImageFont.truetype(BOLD,s)
 def fr(s):return ImageFont.truetype(REG,s)
 def wrap(dr,t,f,mw):
@@ -21,59 +20,72 @@ def wrap(dr,t,f,mw):
         else:ln+=ch
     if ln:o.append(ln)
     return o
-def rmask(sz,r):
-    m=Image.new("L",sz,0);ImageDraw.Draw(m).rounded_rectangle([0,0,sz[0]-1,sz[1]-1],r,fill=255);return m
+def fit(dr,t,mk,mw,mn=24):
+    s=mk
+    while s>mn and dr.textlength(t,font=fb(s))>mw:s-=2
+    return fb(s)
+def circle_mask(sz):
+    m=Image.new("L",(sz,sz),0);ImageDraw.Draw(m).ellipse([0,0,sz-1,sz-1],fill=255);return m
+def shadow_text(base,xy,text,font,fill=WHITE,anchor="lm",mw=None):
+    """白文字＋淡い影（パステル背景でも読める）"""
+    lay=Image.new("RGBA",base.size,(0,0,0,0));ld=ImageDraw.Draw(lay)
+    ld.text((xy[0],xy[1]+3),text,font=font,fill=(120,55,95,150),anchor=anchor)
+    lay=lay.filter(ImageFilter.GaussianBlur(4));base.alpha_composite(lay)
+    ImageDraw.Draw(base).text(xy,text,font=font,fill=fill+(255,),anchor=anchor)
+
 def make(code,lang="ja"):
     d=LOC[lang][code];W,H=1200,630
-    img=Image.new("RGB",(W,H),CREAM)
-    blob=Image.new("RGBA",(W,H),(0,0,0,0));bd=ImageDraw.Draw(blob)
-    bd.ellipse([-140,-180,220,180],fill=BLOB+(120,));bd.ellipse([W-260,H-220,W+120,H+160],fill=BLOB+(110,))
-    img=Image.alpha_composite(img.convert("RGBA"),blob).convert("RGB");dr=ImageDraw.Draw(img)
-    LX=60;LW=540
-    ef=fb(26);et="16タイプ  ×  恋愛  ×  犬種";ew=dr.textlength(et,font=ef)
-    dr.rounded_rectangle([LX,44,LX+ew+48,96],26,fill=PILL_BG);dr.text((LX+24,70),et,font=ef,fill=PINK,anchor="lm")
-    y=124;dr.text((LX,y),"私の恋愛わんこは",font=fr(34),fill=INK_SOFT,anchor="lm");y+=54
-    bs=84
-    while bs>40 and dr.textlength(d["breed"],font=fb(bs))>LW:bs-=4
-    dr.text((LX,y),d["breed"],font=fb(bs),fill=PINK,anchor="lm");y+=bs//2+34
-    dr.text((LX,y),f"({code})",font=fb(34),fill=INK_SOFT,anchor="lm");y+=54
-    for ln in wrap(dr,d["name"],fb(38),LW)[:2]:dr.text((LX,y),ln,font=fb(38),fill=INK,anchor="lm");y+=48
-    y+=6
-    for ln in wrap(dr,d["tag"],fr(28),LW)[:3]:dr.text((LX,y),ln,font=fr(28),fill=INK_SOFT,anchor="lm");y+=38
-    dr.line([LX,H-92,LX+LW,H-92],fill=PINK_BD,width=2)
-    dr.text((LX,H-58),f"16lovetypedogs.com    #{I18N[lang]['hashtag']}",font=fr(26),fill=INK_SOFT,anchor="lm")
-    CW,CH=410,478;CX,CY=W-CW-70,(H-CH)//2
-    img.paste(Image.new("RGB",(CW,CH),WHITE),(CX,CY),rmask((CW,CH),34))
-    dr.rounded_rectangle([CX,CY,CX+CW,CY+CH],34,outline=PINK_BD,width=4)
-    dp=os.path.join(ROOT,f"{code.lower()}.png");DS=288
+    img=Image.new("RGBA",(W,H),PINK+(255,))
+    dr=ImageDraw.Draw(img)
+    # 対角パープル
+    dr.polygon([(W,0),(W,H),(0,H)],fill=PURPLE+(255,))
+    # 散りドット
+    for k in range(20):
+        dr.ellipse([(k*197)%W,(k*271)%H,(k*197)%W+9,(k*271)%H+9],fill=(255,255,255,38))
+    # 左：円形ステッカー＋犬
+    ccx,ccy,r=300,290,214
+    circ=Image.new("RGBA",(2*r,2*r),(0,0,0,0));cd=ImageDraw.Draw(circ)
+    sh=Image.new("RGBA",(W,H),(0,0,0,0));ImageDraw.Draw(sh).ellipse([ccx-r,ccy-r+10,ccx+r,ccy+r+10],fill=(120,70,110,70))
+    img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(14)))
+    dr.ellipse([ccx-r,ccy-r,ccx+r,ccy+r],fill=WHITE+(255,))
+    dp=os.path.join(ROOT,f"{code.lower()}.png");DS=2*(r-8)
     if os.path.exists(dp):
-        dog=Image.open(dp).convert("RGBA");s=max(DS/dog.width,DS/dog.height)
-        dog=dog.resize((int(dog.width*s),int(dog.height*s)))
+        dog=Image.open(dp).convert("RGBA");sc=max(DS/dog.width,DS/dog.height)
+        dog=dog.resize((int(dog.width*sc),int(dog.height*sc)))
         l=(dog.width-DS)//2;t=(dog.height-DS)//2;dog=dog.crop((l,t,l+DS,t+DS))
-        bg=Image.new("RGBA",(DS,DS),WHITE+(255,));bg.alpha_composite(dog)
-        img.paste(bg.convert("RGB"),(CX+(CW-DS)//2,CY+30),rmask((DS,DS),26))
-    tcx=CX+CW//2
-    dr.text((tcx,CY+348),code,font=fb(30),fill=INK_SOFT,anchor="mm")
-    bsz=40
-    while bsz>22 and dr.textlength(d["breed"],font=fb(bsz))>CW-56:bsz-=2
-    dr.text((tcx,CY+388),d["breed"],font=fb(bsz),fill=PINK,anchor="mm")
-    dr.text((tcx,CY+422),d.get("role",""),font=fr(24),fill=INK_SOFT,anchor="mm")
-    dr.line([CX+40,CY+444,CX+CW-40,CY+444],fill=PINK_BD,width=2)
-    dr.text((tcx,CY+462),"16わんこ恋愛診断  結果",font=fr(22),fill=INK_SOFT,anchor="mm")
-    # 希少性バッジ（結果カード上端のタブ）
-    p=RARITY.get(code)
-    if p is not None:
-        rare=p<=5
-        rbg=(142,84,184) if rare else (200,140,40)
-        rt=("希少タイプ" if rare else "人気タイプ")+f"  約{p}%"
-        rf=fb(23);rw=dr.textlength(rt,font=rf);ph=40;pw=int(rw)+36
-        bx1=tcx-pw//2;by1=CY-ph//2;bx2=tcx+pw//2;by2=by1+ph
-        dr.rounded_rectangle([bx1,by1,bx2,by2],ph//2,fill=rbg)
-        dr.text((tcx,by1+ph//2),rt,font=rf,fill=WHITE,anchor="mm")
-    return img
+        base=Image.new("RGBA",(DS,DS),WHITE+(255,));base.alpha_composite(dog)
+        img.paste(base,(ccx-DS//2,ccy-DS//2),circle_mask(DS))
+    # 犬種（円の下・白）
+    bf=fit(dr,d["breed"],52,500,30)
+    shadow_text(img,(ccx,ccy+r+50),d["breed"],bf,anchor="mm")
+    shadow_text(img,(ccx,ccy+r+96),f"{code} ・ {d.get('role','')}",fr(26),anchor="mm")
+    # 右：コード＋肩書き
+    RX=600
+    shadow_text(img,(RX,86),code,fb(76),anchor="lm")
+    ny=150
+    for ln in wrap(dr,d["name"],fb(38),W-RX-40)[:2]:
+        shadow_text(img,(RX,ny),ln,fb(38),anchor="lm");ny+=52
+    # わんこ博士のひとこと（白箱）
+    doc=(DOC.get(code) if lang=="ja" else None) or ("「"+(d.get("hook") or d.get("tag",""))+"」")
+    bx1,by1,bx2=RX,ny+16,W-46
+    lines=wrap(dr,doc,fr(25),bx2-bx1-40)[:3]
+    by2=by1+54+len(lines)*37+16
+    dr.rounded_rectangle([bx1,by1,bx2,by2],24,fill=BOX+(255,))
+    dr.text(((bx1+bx2)//2,by1+30),"― わんこ博士のひとこと ―",font=fb(24),fill=PINK_DEEP,anchor="mm")
+    ty=by1+66
+    for ln in lines:dr.text(((bx1+bx2)//2,ty),ln,font=fr(25),fill=INK,anchor="mm");ty+=37
+    # ベスト相性ティーザー（ピンクピル）
+    bc=BEST.get(code);best_breed=LOC[lang].get(bc,{}).get("breed","") if bc else ""
+    if best_breed:
+        pt=f"ベスト相性は、、、{best_breed} etc"
+        pf=fit(dr,pt,26,W-RX-60,18);pw=int(dr.textlength(pt,font=pf))+44
+        py1=by2+18;ph=54
+        dr.rounded_rectangle([RX,py1,RX+pw,py1+ph],ph//2,fill=(232,77,128,255))
+        dr.text((RX+pw//2,py1+ph//2),pt,font=pf,fill=WHITE,anchor="mm")
+    # 巻き込みCTA（下部・白）
+    shadow_text(img,(RX,H-58),"あなたは何わんこ？ ▶ 16lovetypedogs.com",fb(28),anchor="lm")
+    return img.convert("RGB")
 
-ORDER=["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"]
-import sys as _sys
-codes=_sys.argv[1:] or ORDER
+codes=sys.argv[1:] or ORDER
 outdir=os.path.join(ROOT,"ogp","ja");os.makedirs(outdir,exist_ok=True)
 for c in codes: make(c).save(os.path.join(outdir,c.lower()+".png"));print("saved",c)
