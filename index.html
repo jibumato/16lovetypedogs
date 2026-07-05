@@ -3059,7 +3059,7 @@ function openOfferwall(){
 
 /* ===== image share card (portrait 1080x1920) ===== */
 const FF="'Zen Maru Gothic','M PLUS Rounded 1c',sans-serif";
-function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();}
+function rr(x,a,b,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();}
 function wrapLines(x,text,cx,y,maxW,lh,fill){
   let tk,jn;if(text.indexOf(' ')>=0){tk=text.split(' ');jn=' ';}else{tk=text.split('');jn='';}
   let line='',lines=[];
@@ -3070,50 +3070,59 @@ function wrapLines(x,text,cx,y,maxW,lh,fill){
 function drawShareCard(code,cb){
   const d=LOC[L][code],g=BASE[code].g,i=I(),W=1080,H=1920;
   const c=document.getElementById('shareCanvas'),x=c.getContext('2d');
-  const tint={NT:'#f3edfb',NF:'#ffeef2',SJ:'#eaf7f0',SP:'#fff4e3'}[g];
-  function gg(y0,y1){const g2=x.createLinearGradient(0,y0,0,y1);g2.addColorStop(0,'#caa44e');g2.addColorStop(.55,'#a87a2f');g2.addColorStop(1,'#caa44e');return g2;}
+  /* 案A：ポップステッカー風（ラブタイプ診断参考）。識別フレーズ・大きな犬・博士のひとこと・
+     ベスト相性ティーザー・巻き込みCTAで、TLで映えてシェアされやすい1枚に。 */
+  const SHC={ja:{doc:'🐶 わんこ博士のひとこと',best:'👑 ベスト相性は、、、'},
+    en:{doc:'🐶 The Dog Professor says',best:'👑 Best match:'},
+    ko:{doc:'🐶 멍멍 박사의 한마디',best:'👑 베스트 궁합은…'},
+    zh:{doc:'🐶 汪汪博士的一句话',best:'👑 最佳契合是…'},
+    tw:{doc:'🐶 汪汪博士的一句話',best:'👑 最佳契合是…'}}[L]||{doc:'🐶 わんこ博士のひとこと',best:'👑 ベスト相性は、、、'};
+  let bestC=null,bestS=-1;
+  for(const oc of ORDER){ if(oc===code)continue; const sc=compatScore(code,oc)[0]; if(sc>bestS){bestS=sc;bestC=oc;} }
+  const bestBreed=bestC?LOC[L][bestC].breed:'';
+  function shd(on,dy){ if(on){x.shadowColor='rgba(120,55,95,.5)';x.shadowBlur=10;x.shadowOffsetX=0;x.shadowOffsetY=dy||2;} else {x.shadowColor='transparent';x.shadowBlur=0;x.shadowOffsetX=0;x.shadowOffsetY=0;} }
   function render(dog){
-    const bg=x.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#fffdf8');bg.addColorStop(1,tint);
-    x.fillStyle=bg;x.fillRect(0,0,W,H);
-    x.fillStyle='rgba(184,137,58,.09)';for(let k=0;k<70;k++){x.beginPath();x.arc((k*149%W),(k*223%H),2.2,0,7);x.fill();}
-    x.fillStyle='#fffdfa';rr(x,60,96,W-120,H-192,46);x.fill();
-    x.lineWidth=5;x.strokeStyle='#e1c489';rr(x,60,96,W-120,H-192,46);x.stroke();
-    x.lineWidth=2;x.strokeStyle='#dcbd84';rr(x,88,124,W-176,H-248,34);x.stroke();
+    /* 直前描画のclip/transform等の状態を完全リセット（clip残存によるはみ出し防止） */
+    if(x.reset){x.reset();}else{c.width=0;c.width=W;c.height=H;}
+    /* 対角2色背景（ピンク上・パープル下） */
+    x.fillStyle='#f291b6';x.fillRect(0,0,W,H);
+    x.fillStyle='#b98ae8';x.beginPath();x.moveTo(W,0);x.lineTo(W,H);x.lineTo(0,H);x.closePath();x.fill();
+    x.fillStyle='rgba(255,255,255,.15)';for(let k=0;k<26;k++){x.beginPath();x.arc((k*197%W),(k*271%H),7,0,7);x.fill();}
     x.textAlign='center';
-    x.fillStyle='#b88a3a';x.font='600 30px '+FF;x.fillText(i.ribbon+'  No.'+(codeNum(code)*37%9000+1000),W/2,206);
-    x.font='800 '+(d.name.length>22?44:54)+'px '+FF;
-    const py=wrapLines(x,d.name,W/2,280,W-230,60,gg(250,360));
-    let yy=py+34;
-    if(dog){const dw=440,dh=dw*dog.height/dog.width;x.drawImage(dog,(W-dw)/2,yy,dw,dh);yy+=dh+24;}
-    else{x.font='230px sans-serif';x.fillText(BASE[code].em,W/2,yy+210);yy+=330;}
-    x.fillStyle='#6b5648';x.font='800 56px '+FF;x.fillText(d.breed,W/2,yy+30);
-    x.fillStyle='#9c8676';x.font='500 30px '+FF;x.fillText(code+' · '+d.role,W/2,yy+78);
-    x.font='500 30px '+FF;const ty=wrapLines(x,d.tag,W/2,yy+138,W-240,44,'#6b5648');
-    const P=PARAM[code];let ry=ty+58;x.font='700 31px '+FF;
-    for(let k=0;k<5;k++){
-      x.textAlign='left';x.fillStyle='#6b5648';x.fillText(i.param_labels[k],190,ry);
-      x.textAlign='right';x.fillStyle='#c79a3f';x.fillText('★★★★★'.slice(0,P[k])+'☆☆☆☆☆'.slice(0,5-P[k]),W-190,ry);
-      ry+=52;
-    }
-    /* 裏の顔スコア（バイラル誘発・ピンクで差別化） */
-    const ut=URA_I18N[L],us=URA_SCORES[code];
-    if(ut&&us){
-      ry+=18;
-      x.strokeStyle='rgba(210,98,143,.32)';x.lineWidth=2;x.beginPath();x.moveTo(200,ry);x.lineTo(W-200,ry);x.stroke();
-      ry+=52;
-      x.textAlign='center';x.fillStyle='#d2628f';x.font='800 35px '+FF;
-      x.fillText('🎭 '+(ut.scorehead||'').replace(/—/g,'').trim(),W/2,ry);
-      ry+=56;x.font='700 30px '+FF;
-      for(let k=0;k<4;k++){
-        x.textAlign='left';x.fillStyle='#6b5648';x.fillText(ut.labels[k],200,ry);
-        x.textAlign='right';x.fillStyle='#e58aa0';x.fillText('●●●●●'.slice(0,us[k])+'○○○○○'.slice(0,5-us[k]),W-200,ry);
-        ry+=50;
-      }
-    }
-    /* 見た人を診断に誘うCTA：画像単体で拡散されても入口が伝わるように大きく */
-    x.textAlign='center';
-    x.fillStyle='#d2628f';x.font='800 46px '+FF;x.fillText(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja,W/2,H-212);
-    x.fillStyle=gg(H-190,H-130);x.font='800 44px '+FF;x.fillText('16lovetypedogs.com',W/2,H-148);
+    /* コード＋識別フレーズ（肩書き） */
+    shd(true);
+    x.fillStyle='#fff';x.font='900 92px '+FF;x.fillText(code,W/2,146);
+    x.font='800 '+(d.name.length>16?46:54)+'px '+FF;
+    wrapLines(x,d.name,W/2,228,W-160,60,'#fff');
+    shd(false);
+    /* ステッカー（白丸＋大きな犬） */
+    const cx=W/2,cy=700,r=380;
+    shd(true,16);x.shadowColor='rgba(120,70,110,.30)';
+    x.fillStyle='#fff';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();
+    shd(false);
+    if(dog){ x.save();x.beginPath();x.arc(cx,cy,r-6,0,7);x.clip();
+      const dw=700,dh=dw*dog.height/dog.width;x.drawImage(dog,cx-dw/2,cy-dh/2,dw,dh);x.restore(); }
+    else{x.font='300px sans-serif';x.fillText(BASE[code].em,cx,cy+100);}
+    x.textAlign='center';  /* clip/restore後に確実にcenterへ戻す */
+    /* 犬種（主役）＋コード・役割。fillTextのmaxWidthで自動圧縮しはみ出し防止 */
+    shd(true);
+    x.fillStyle='#fff';x.font='900 64px '+FF;x.fillText(d.breed,W/2,1208);
+    x.font='700 38px '+FF;x.fillText(code+' ・ '+d.role,W/2,1266);
+    shd(false);
+    /* わんこ博士のひとこと（白箱） */
+    const bx=70,bw=W-140,by=1320,bh=250;
+    x.fillStyle='#fffdf8';rr(x,bx,by,bw,bh,28);x.fill();
+    x.fillStyle='#d2628f';x.font='800 34px '+FF;x.fillText(SHC.doc,W/2,by+52);
+    x.font='700 38px '+FF;wrapLines(x,'「'+(d.hook||d.tag)+'」',W/2,by+112,bw-80,50,'#574f63');
+    /* ベスト相性ティーザー（好奇心→相性訴求へ接続） */
+    const py2=1616;
+    x.fillStyle='#e84d80';rr(x,140,py2,W-280,72,999);x.fill();
+    x.fillStyle='#fff';x.font='800 30px '+FF;x.fillText(SHC.best+' '+bestBreed+' etc',W/2,py2+49);
+    /* 巻き込みCTA */
+    shd(true);
+    x.fillStyle='#fff';x.font='800 44px '+FF;x.fillText(SHARE_CTA_Q[L]||SHARE_CTA_Q.ja,W/2,1802);
+    x.font='900 44px '+FF;x.fillText('▶ 16lovetypedogs.com',W/2,1866);
+    shd(false);
     cb&&cb();
   }
   const dog=new Image();dog.onload=()=>render(dog);dog.onerror=()=>render(null);dog.src=imgPath(code);
