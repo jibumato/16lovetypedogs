@@ -33,6 +33,11 @@
   .fb-send:disabled{opacity:.5}
   .fb-consent{font-size:10.5px;color:var(--ink-soft);margin:10px 0 0;line-height:1.6}
   .fb-done{margin-top:22px;padding-top:20px;border-top:1px dashed var(--pink);font-size:14px;font-weight:700;color:var(--pink-deep)}
+  .goods{margin-top:18px;padding:16px 14px 14px;background:linear-gradient(135deg,#fdf0f4,#fff9f6);border:1px solid var(--pink);border-radius:16px;text-align:center}
+  .goods .g-eye{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--pink-deep);border:1px solid var(--pink);border-radius:99px;padding:3px 12px;margin-bottom:9px}
+  .goods .g-head{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px}
+  .goods .g-sub{font-size:11px;color:var(--ink-soft);margin-bottom:12px}
+  .goods .g-btn{display:inline-block;width:100%;padding:11px 0;border-radius:99px;font-size:13px;font-weight:700;letter-spacing:.03em;text-decoration:none;color:var(--pink-deep);background:#fff;border:1.5px solid var(--pink-deep);font-family:inherit}
 </style>
 </head>
 <body>
@@ -44,6 +49,12 @@
     <div class="note" id="t-note">
       ご登録のメールアドレスに、Stripeからの決済確認メールをお送りしています。
       プレミアムレポート（PDF）のご案内もあわせてご確認ください。
+    </div>
+    <div class="goods" id="goodsBox" hidden>
+      <span class="g-eye" id="t-g-eye"></span>
+      <div class="g-head" id="t-g-head"></div>
+      <div class="g-sub" id="t-g-sub"></div>
+      <a class="g-btn" id="goodsBtn" href="https://suzuri.jp/suisei1115/products" target="_blank" rel="noopener sponsored"></a>
     </div>
     <a class="btn" id="t-home" href="/">🐶 診断トップにもどる</a>
     <span class="sub"><a href="/ranking-index.html" id="t-more">恋愛ランキングまとめを見る →</a></span>
@@ -93,13 +104,19 @@ const T = {
     note:'ご登録のメールアドレスに、Stripeからの決済確認メールをお送りしています。プレミアムレポート（PDF）のご案内もあわせてご確認ください。',
     dl:'📄 PDFをダウンロード', home:'🐶 診断トップにもどる', more:'恋愛ランキングまとめを見る →',
     fbq:'よかったら、ひとこと感想を聞かせてください 🙏', consent:'※いただいた感想は、ニックネームとともにサイトでご紹介する場合があります。',
-    ph_c:'使ってみた感想（任意）', ph_n:'ニックネーム（任意）', send:'感想を送る', thanks:'感想をありがとうございました！🐾' },
+    ph_c:'使ってみた感想（任意）', ph_n:'ニックネーム（任意）', send:'感想を送る', thanks:'感想をありがとうございました！🐾',
+    gEye:'受注生産グッズ', gHead:b=>b+'のグッズ、あります🐾', gSub:'ステッカー・アクキー・スマホケースなど｜1個から受注生産 SUZURI', gBtn:'🛍 グッズをSHOPで見る →' },
   en: { h1:'Thank you for your purchase!', lead:'Your type-only Premium Report is ready.',
     note:"We've sent a payment confirmation email from Stripe to your registered address.",
     dl:'📄 Download your PDF', home:'🐶 Back to the quiz', more:'See all love rankings →',
     fbq:"We'd love a quick word about your experience 🙏", consent:'Your comment may be shown on the site along with your nickname.',
-    ph_c:'How was it? (optional)', ph_n:'Nickname (optional)', send:'Send feedback', thanks:'Thanks for your feedback! 🐾' }
+    ph_c:'How was it? (optional)', ph_n:'Nickname (optional)', send:'Send feedback', thanks:'Thanks for your feedback! 🐾',
+    gEye:'Made to order', gHead:b=>b+' goods are here 🐾', gSub:'Stickers, keychains, phone cases & more · made to order from 1 pc · SUZURI', gBtn:'🛍 Shop the goods →' }
 };
+const EN_BREED = { INTJ:'Chihuahua', INTP:'Miniature Schnauzer', ENTJ:'Corgi', ENTP:'Jack Russell Terrier',
+  INFJ:'Cavalier', INFP:'Maltese', ENFJ:'Golden Retriever', ENFP:'Toy Poodle', ISTJ:'Shiba Inu', ISFJ:'Shih Tzu',
+  ESTJ:'Boston Terrier', ESFJ:'Labrador Retriever', ISTP:'Miniature Dachshund', ISFP:'French Bulldog',
+  ESTP:'Beagle', ESFP:'Pomeranian' };
 (function(){
   try{
     var p = new URLSearchParams(location.search);
@@ -122,6 +139,20 @@ const T = {
     if (pdfUrl) {
       var box = document.getElementById('dlBox');
       box.innerHTML = '<a class="btn dl" href="'+pdfUrl+'" target="_blank" rel="noopener">'+t.dl+'</a><br>';
+    }
+
+    // 購入直後（PDF未競合）のグッズ導線
+    if (type && t.gHead) {
+      var breed = EN_BREED[type] || type;
+      document.getElementById('t-g-eye').textContent = t.gEye;
+      document.getElementById('t-g-head').textContent = t.gHead(breed);
+      document.getElementById('t-g-sub').textContent = t.gSub;
+      var gBtn = document.getElementById('goodsBtn');
+      gBtn.textContent = t.gBtn;
+      gBtn.addEventListener('click', function(){
+        if (window.gtag) gtag('event', 'goods_click', { mbti_type: type, language: lang, placement: 'thanks' });
+      });
+      document.getElementById('goodsBox').hidden = false;
     }
 
     var value = Number(p.get('value')) || (lang==='en' ? 7.99 : 1180);
