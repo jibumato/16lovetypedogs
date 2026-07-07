@@ -620,6 +620,16 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .goods-btn:active{transform:translateY(2px)}
 .goods-note{display:block;margin-top:9px;font-size:11px;color:#938aa3}
 @media (max-width:340px){.goods-body{flex-direction:column;text-align:center;gap:8px}.goods-chips{justify-content:center}}
+/* グッズ軽量バナー（シェア直後・控えめ配置。主役の有料オファーとは食い合わない場所のみに使う） */
+.goods-banner{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;
+  background:#fff;border:1.5px solid #f0d8e2;border-radius:14px;text-decoration:none}
+.goods-banner .gb-thumb{flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;background:#faf6fb}
+.goods-banner .gb-thumb .dog{width:100%;height:100%;object-fit:cover;display:block}
+.goods-banner .gb-thumb .em{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:20px}
+.goods-banner .gb-txt{flex:1;min-width:0}
+.goods-banner .gb-txt b{display:block;font-size:12.5px;font-weight:800;color:var(--pink-deep);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.goods-banner .gb-txt span{display:block;font-size:10.5px;color:var(--ink-soft);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.goods-banner .gb-arrow{flex:none;font-size:13px;font-weight:800;color:var(--pink-deep)}
 .omk-daily{margin-top:16px;background:linear-gradient(135deg,rgba(247,168,196,.20),rgba(201,166,240,.20));border:1.5px solid var(--pink);border-radius:16px;padding:13px 16px;cursor:pointer;text-align:center;transition:transform .12s ease}
 .omk-daily:active{transform:scale(.98)}
 .omk-daily .od-t{display:block;font-size:14px;font-weight:800;color:var(--pink-deep)}
@@ -956,6 +966,9 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
         <button class="ic-btn save" aria-label="Save image" onclick="saveShareImg()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg></button>
       </div>
     </div>
+
+    <!-- 6.2 受注生産グッズ（軽量バナー・主要オファーの後なので競合しない） -->
+    <div id="goodsBanner"></div>
 
     <!-- 6.3 結果をメールで保存 -->
     <div class="sec mt" id="saveResultSection"></div>
@@ -1778,6 +1791,7 @@ function renderResult(code,stay){
   renderLoveGuide(code);
   renderResultOmikuji();
   renderGoods(code);
+  renderGoodsBanner(code);
   renderSaveResult(code);
   renderPayTeaser(code);
   setupPayFab(code);
@@ -2745,13 +2759,19 @@ function affUrl(kw){return 'https://www.amazon.co.jp/s?k='+encodeURIComponent(kw
 const GOODS_SHOP='https://suzuri.jp/suisei1115/products';
 const GOODS_ITEM={/* 例: INTJ:'https://suzuri.jp/あなた/items/xxxx' */};
 const GOODS_I18N={
-  ja:{eye:'🛍 受注生産グッズ',head:'{breed}が、グッズになったよ🐾',chips:['ステッカー','アクキー','スマホケース'],btn:'SHOPで見る →',note:'1個から受注生産｜SUZURI'},
-  en:{eye:'🛍 Made-to-order goods',head:'{breed}, now as goods 🐾',chips:['Stickers','Keychains','Phone cases'],btn:'Visit the shop →',note:'From 1 pc · made to order · SUZURI'},
-  ko:{eye:'🛍 주문제작 굿즈',head:'{breed}가 굿즈가 됐어요 🐾',chips:['스티커','키링','폰케이스'],btn:'샵에서 보기 →',note:'1개부터 주문제작 · SUZURI'},
-  zh:{eye:'🛍 接单制作周边',head:'{breed}变成周边啦🐾',chips:['贴纸','亚克力挂件','手机壳'],btn:'去商店看看 →',note:'1个起接单制作 · SUZURI'},
-  tw:{eye:'🛍 接單製作周邊',head:'{breed}變成周邊啦🐾',chips:['貼紙','壓克力吊飾','手機殼'],btn:'去商店看看 →',note:'1個起接單製作 · SUZURI'}
+  ja:{eye:'🛍 受注生産グッズ',head:'{breed}が、グッズになったよ🐾',chips:['ステッカー','アクキー','スマホケース'],btn:'SHOPで見る →',note:'1個から受注生産｜SUZURI',
+      bannerHead:'{breed}グッズ🐾',bannerSub:'ステッカー・アクキーなど｜SUZURI'},
+  en:{eye:'🛍 Made-to-order goods',head:'{breed}, now as goods 🐾',chips:['Stickers','Keychains','Phone cases'],btn:'Visit the shop →',note:'From 1 pc · made to order · SUZURI',
+      bannerHead:'{breed} goods 🐾',bannerSub:'Stickers, keychains & more · SUZURI'},
+  ko:{eye:'🛍 주문제작 굿즈',head:'{breed}가 굿즈가 됐어요 🐾',chips:['스티커','키링','폰케이스'],btn:'샵에서 보기 →',note:'1개부터 주문제작 · SUZURI',
+      bannerHead:'{breed} 굿즈 🐾',bannerSub:'스티커・키링 등 · SUZURI'},
+  zh:{eye:'🛍 接单制作周边',head:'{breed}变成周边啦🐾',chips:['贴纸','亚克力挂件','手机壳'],btn:'去商店看看 →',note:'1个起接单制作 · SUZURI',
+      bannerHead:'{breed}周边🐾',bannerSub:'贴纸・亚克力挂件等 · SUZURI'},
+  tw:{eye:'🛍 接單製作周邊',head:'{breed}變成周邊啦🐾',chips:['貼紙','壓克力吊飾','手機殼'],btn:'去商店看看 →',note:'1個起接單製作 · SUZURI',
+      bannerHead:'{breed}周邊🐾',bannerSub:'貼紙・壓克力吊飾等 · SUZURI'}
 };
 function goodsUrl(code){return GOODS_ITEM[code]||GOODS_SHOP||'';}
+function goodsClick(code,placement){try{if(window.gtag)gtag('event','goods_click',{mbti_type:code,language:L,placement:placement});}catch(e){}}
 function renderGoods(code){
   const el=document.getElementById('goodsBlock');if(!el)return;
   const url=goodsUrl(code);
@@ -2763,8 +2783,19 @@ function renderGoods(code){
     +'<div class="goods-txt"><b class="goods-head">'+g.head.replace('{breed}',d.breed)+'</b>'
     +'<div class="goods-chips">'+g.chips.map(function(c){return '<span>'+c+'</span>';}).join('')+'</div></div></div>'
     +'<a class="goods-btn" target="_blank" rel="noopener sponsored" href="'+url+'" '
-    +'onclick="gtag(\'event\',\'goods_click\',{mbti_type:\''+code+'\',language:L})">'+g.btn+'</a>'
+    +'onclick="goodsClick(\''+code+'\',\'bottom\')">'+g.btn+'</a>'
     +'<small class="goods-note">'+g.note+'</small>';
+}
+/* シェア直後の軽量バナー（有料オファーの後段のみに置き、本オファーとは競合させない） */
+function renderGoodsBanner(code){
+  const el=document.getElementById('goodsBanner');if(!el)return;
+  const url=goodsUrl(code);
+  if(!url){el.innerHTML='';return;}
+  const g=GOODS_I18N[L]||GOODS_I18N.ja,d=LOC[L][code];
+  el.innerHTML='<a class="goods-banner" target="_blank" rel="noopener sponsored" href="'+url+'" onclick="goodsClick(\''+code+'\',\'share_banner\')">'
+    +'<span class="gb-thumb">'+dogImg(code)+'</span>'
+    +'<span class="gb-txt"><b>'+g.bannerHead.replace('{breed}',d.breed)+'</b><span>'+g.bannerSub+'</span></span>'
+    +'<span class="gb-arrow">›</span></a>';
 }
 function block(ic,title,body){return '<div class="sec"><h3><span class="dot">'+ic+'</span>'+title+'</h3><p>'+body+'</p></div>';}
 /* 性格・恋愛傾向など長文セクションを折りたたみ表示（有料ガイドへの到達率を高めるため） */

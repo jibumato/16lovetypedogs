@@ -94,6 +94,23 @@
   .errbox{padding:20px 0;}
   .errbox h1{margin-bottom:14px;}
   .errbox p{font-size:13px;line-height:1.9;color:#6b5648;}
+  .goods{
+    margin-top:22px;padding:18px 16px 16px;
+    background:linear-gradient(135deg,#fdf3e9,#fff9f0);
+    border:1px solid #e7cf9f;border-radius:16px;text-align:center;
+  }
+  .goods .g-eye{
+    display:inline-block;font-size:10px;font-weight:700;letter-spacing:.15em;
+    color:#a87a2f;border:1px solid #c79a3f;border-radius:99px;padding:3px 12px;margin-bottom:10px;
+  }
+  .goods .g-head{font-size:14px;font-weight:900;color:#3a2e28;margin-bottom:4px;}
+  .goods .g-sub{font-size:11.5px;color:#9c8676;margin-bottom:13px;}
+  .goods .g-btn{
+    display:inline-block;width:100%;padding:12px 0;border-radius:99px;
+    font-size:13.5px;font-weight:800;letter-spacing:.06em;text-decoration:none;
+    color:#a87a2f;background:#fff;border:1.5px solid #c79a3f;
+    box-shadow:0 4px 12px rgba(184,137,58,.12);
+  }
 </style>
 </head>
 <body>
@@ -106,6 +123,12 @@
     <div class="tagline" id="tagline"></div>
     <a class="dlbtn" id="dlbtn" href="#" download>📖 プレミアムレポートをダウンロード</a>
     <p class="note">ボタンが反応しない場合は、リンクを長押し（スマホ）または右クリック（PC）し、「リンク先を保存」をお試しください。<br>ダウンロードしたPDFは端末に保存しておくことをおすすめします。</p>
+    <div class="goods" id="goodsBox" hidden>
+      <span class="g-eye">受注生産グッズ</span>
+      <div class="g-head" id="goodsHead"></div>
+      <div class="g-sub">ステッカー・アクキー・スマホケースなど｜1個から受注生産 SUZURI</div>
+      <a class="g-btn" id="goodsBtn" href="https://suzuri.jp/suisei1115/products" target="_blank" rel="noopener sponsored">🛍 グッズをSHOPで見る →</a>
+    </div>
     <a class="back" href="https://16lovetypedogs.com/">← 診断トップへ戻る</a>
   </div>
 
@@ -156,6 +179,14 @@
     } else {
       document.getElementById('dogimg').remove();
     }
+
+    // 購入直後（PDF未競合）のグッズ導線。SHOP側に犬種別ページができたらURLを差し替え。
+    var goodsBox = document.getElementById('goodsBox');
+    document.getElementById('goodsHead').textContent = data.breed + 'のグッズ、あります🐾';
+    document.getElementById('goodsBtn').addEventListener('click', function(){
+      if (window.gtag) gtag('event', 'goods_click', { mbti_type: type.toUpperCase(), language: 'ja', placement: 'thanks' });
+    });
+    goodsBox.hidden = false;
   } else {
     document.getElementById('card').innerHTML =
       '<div class="errbox">' +
