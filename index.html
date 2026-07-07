@@ -599,6 +599,27 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .result-next>.btn{margin-top:14px}
 .result-next .note{font-size:12.5px;color:var(--ink-soft);margin-top:12px}
 .invite-note{font-size:11.5px;color:var(--ink-soft);font-weight:700;margin-top:9px;line-height:1.6}
+/* 受注生産グッズ導線（ポップな商品カード） */
+.goods-card{margin-top:16px;padding:18px 16px 15px;border-radius:22px;text-align:center;
+  background:linear-gradient(135deg,#fde3ed 0%,#efe6fb 100%);border:1.5px solid #f6b8cd;
+  box-shadow:0 8px 22px rgba(210,98,143,.15)}
+.goods-eyebrow{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;color:#fff;
+  background:#e8517f;padding:4px 13px;border-radius:999px;box-shadow:0 3px 8px rgba(232,81,128,.3)}
+.goods-body{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:13px;text-align:left}
+.goods-thumb{flex:none;width:78px;height:78px;border-radius:50%;overflow:hidden;background:#fff;
+  border:3px solid #fff;box-shadow:0 4px 12px rgba(185,138,232,.3)}
+.goods-thumb .dog{width:100%;height:100%;object-fit:cover;display:block}
+.goods-thumb .em{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:38px}
+.goods-head{display:block;font-size:16px;font-weight:800;color:#b8437a;line-height:1.4}
+.goods-chips{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
+.goods-chips span{font-size:11px;font-weight:700;color:#d2628f;background:#fff;border:1px solid #f6b8cd;
+  border-radius:999px;padding:3px 10px}
+.goods-btn{display:block;margin-top:15px;padding:13px;border-radius:999px;font-size:15px;font-weight:800;
+  letter-spacing:.02em;color:#fff;text-decoration:none;background:linear-gradient(135deg,#f291b6,#b98ae8);
+  box-shadow:0 6px 16px rgba(185,138,232,.4);transition:transform .15s ease}
+.goods-btn:active{transform:translateY(2px)}
+.goods-note{display:block;margin-top:9px;font-size:11px;color:#938aa3}
+@media (max-width:340px){.goods-body{flex-direction:column;text-align:center;gap:8px}.goods-chips{justify-content:center}}
 .omk-daily{margin-top:16px;background:linear-gradient(135deg,rgba(247,168,196,.20),rgba(201,166,240,.20));border:1.5px solid var(--pink);border-radius:16px;padding:13px 16px;cursor:pointer;text-align:center;transition:transform .12s ease}
 .omk-daily:active{transform:scale(.98)}
 .omk-daily .od-t{display:block;font-size:14px;font-weight:800;color:var(--pink-deep)}
@@ -2724,23 +2745,26 @@ function affUrl(kw){return 'https://www.amazon.co.jp/s?k='+encodeURIComponent(kw
 const GOODS_SHOP='https://suzuri.jp/suisei1115/products';
 const GOODS_ITEM={/* 例: INTJ:'https://suzuri.jp/あなた/items/xxxx' */};
 const GOODS_I18N={
-  ja:{head:'🛍 あなたは何わんこ？ グッズにする',text:'診断で出た{breed}を、ステッカー・アクスタ・スマホケースに。受注生産だから1個から作れるよ🐾',btn:'{breed}のグッズを見る →'},
-  en:{head:'🛍 Wear your love-dog',text:'Turn your {breed} into stickers, acrylic stands or phone cases — made to order, from just one 🐾',btn:'See {breed} goods →'},
-  ko:{head:'🛍 내 연애견을 굿즈로',text:'진단으로 나온 {breed}를 스티커·아크릴 스탠드·폰케이스로. 주문 제작이라 1개부터 OK 🐾',btn:'{breed} 굿즈 보기 →'},
-  zh:{head:'🛍 把你的恋爱犬做成周边',text:'把测出的{breed}做成贴纸・亚克力立牌・手机壳。接单生产，1个也能做🐾',btn:'查看{breed}周边 →'},
-  tw:{head:'🛍 把你的戀愛犬做成周邊',text:'把測出的{breed}做成貼紙・壓克力立牌・手機殼。接單生產，1個也能做🐾',btn:'查看{breed}周邊 →'}
+  ja:{eye:'🛍 受注生産グッズ',head:'{breed}が、グッズになったよ🐾',chips:['ステッカー','アクキー','スマホケース'],btn:'SHOPで見る →',note:'1個から受注生産｜SUZURI'},
+  en:{eye:'🛍 Made-to-order goods',head:'{breed}, now as goods 🐾',chips:['Stickers','Keychains','Phone cases'],btn:'Visit the shop →',note:'From 1 pc · made to order · SUZURI'},
+  ko:{eye:'🛍 주문제작 굿즈',head:'{breed}가 굿즈가 됐어요 🐾',chips:['스티커','키링','폰케이스'],btn:'샵에서 보기 →',note:'1개부터 주문제작 · SUZURI'},
+  zh:{eye:'🛍 接单制作周边',head:'{breed}变成周边啦🐾',chips:['贴纸','亚克力挂件','手机壳'],btn:'去商店看看 →',note:'1个起接单制作 · SUZURI'},
+  tw:{eye:'🛍 接單製作周邊',head:'{breed}變成周邊啦🐾',chips:['貼紙','壓克力吊飾','手機殼'],btn:'去商店看看 →',note:'1個起接單製作 · SUZURI'}
 };
 function goodsUrl(code){return GOODS_ITEM[code]||GOODS_SHOP||'';}
 function renderGoods(code){
   const el=document.getElementById('goodsBlock');if(!el)return;
   const url=goodsUrl(code);
   if(!url){el.innerHTML='';el.style.display='none';return;}
-  el.style.display='';el.className='result-next mt';
+  el.style.display='';el.className='goods-card';
   const g=GOODS_I18N[L]||GOODS_I18N.ja,d=LOC[L][code];
-  el.innerHTML='<h3>'+g.head+'</h3><p>'+g.text.replace('{breed}',d.breed)+'</p>'
-    +'<a class="btn mt" target="_blank" rel="noopener sponsored" href="'+url+'" '
-    +'onclick="gtag(\'event\',\'goods_click\',{mbti_type:\''+code+'\',language:L})">'
-    +g.btn.replace('{breed}',d.breed)+'</a>';
+  el.innerHTML='<span class="goods-eyebrow">'+g.eye+'</span>'
+    +'<div class="goods-body"><div class="goods-thumb">'+dogImg(code)+'</div>'
+    +'<div class="goods-txt"><b class="goods-head">'+g.head.replace('{breed}',d.breed)+'</b>'
+    +'<div class="goods-chips">'+g.chips.map(function(c){return '<span>'+c+'</span>';}).join('')+'</div></div></div>'
+    +'<a class="goods-btn" target="_blank" rel="noopener sponsored" href="'+url+'" '
+    +'onclick="gtag(\'event\',\'goods_click\',{mbti_type:\''+code+'\',language:L})">'+g.btn+'</a>'
+    +'<small class="goods-note">'+g.note+'</small>';
 }
 function block(ic,title,body){return '<div class="sec"><h3><span class="dot">'+ic+'</span>'+title+'</h3><p>'+body+'</p></div>';}
 /* 性格・恋愛傾向など長文セクションを折りたたみ表示（有料ガイドへの到達率を高めるため） */
