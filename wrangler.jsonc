@@ -7,6 +7,8 @@
     "binding": "ASSETS",
     "not_found_handling": "404-page"
   },
-  // 診断数カウンタ・感想コメント・メールリード保存に使うKV
-  "kv_namespaces": [{ "binding": "COUNTER", "id": "bc0214b4bef04bf081931cef357e168b" }]
+  // 診断数カウンタ・感想コメント・メールリード保存・X投稿キューに使うKV
+  "kv_namespaces": [{ "binding": "COUNTER", "id": "bc0214b4bef04bf081931cef357e168b" }],
+  // X自動投稿: 毎日12:00 UTC (=21:00 JST) に1タイプ投稿
+  "triggers": { "crons": ["0 12 * * *"] }
 }
