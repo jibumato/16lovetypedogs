@@ -16,6 +16,8 @@
  *   - 管理者が /admin.html で承認すると、公開フィード `pub:comments` に移動
  *   - 公開フィード(GET /api/feedback)はこの1キーだけを読む（高速・低コスト）
  */
+import { runXPost } from "./x_client.js";
+
 const KEY = "diagnoses_total";
 const JA_TYPES = new Set(["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"]);
 const PUB = "pub:comments";   // 承認済みコメントの公開フィード（JSON配列・1キー）
@@ -38,8 +40,26 @@ async function hmacHex(secret, msg) {
 const unsubSecret = (env) => env.UNSUB_SECRET || env.ADMIN_TOKEN || "16ltd-unsub-v1";
 
 export default {
+  // 毎日21:00 JST(=12:00 UTC)に1タイプ自動投稿（wrangler.jsonc の crons で発火）
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(runXPost(env).then((r) => console.log("x-post", JSON.stringify(r))).catch((e) => console.log("x-post error", String(e))));
+  },
+
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // ───────── X自動投稿の手動トリガ（本番前の動作確認用） ─────────
+    //   ?token=<ADMIN_TOKEN> 必須。 &dry=1 で投稿せず内容だけ確認。
+    if (url.pathname === "/api/x-post") {
+      const token = url.searchParams.get("token") || "";
+      if (!env.ADMIN_TOKEN || token !== env.ADMIN_TOKEN) return j({ ok: false, error: "auth" }, 401);
+      try {
+        const r = await runXPost(env, { dry: url.searchParams.get("dry") === "1" });
+        return j(r);
+      } catch (e) {
+        return j({ ok: false, error: String(e).slice(0, 300) }, 500);
+      }
+    }
 
     // ───────── 診断数カウンタ ─────────
     if (url.pathname === "/api/diagnoses") {
