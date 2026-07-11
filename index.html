@@ -125,9 +125,21 @@ body{
 .btn.ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid var(--glass-bd);box-shadow:none;font-size:15px;padding:15px;font-weight:800}
 .hint{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:2px}
 .sns-buzz{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(90deg,#1d9bf0,#c9a6f0);padding:5px 14px;border-radius:999px;margin:8px auto 0;letter-spacing:.03em}
-.diag-count{display:inline-block;margin:10px auto 2px;padding:6px 14px;border-radius:999px;background:#fff0f5;border:1px solid var(--pink);color:var(--pink-deep);font-size:12.5px;font-weight:800;text-align:center}
+/* もこもこの雲フレーム＋ふわふわ漂う演出（社会的証明） */
+.diag-count{position:relative;display:inline-block;margin:16px auto 16px;padding:12px 30px;
+  color:var(--pink-deep);font-size:13px;font-weight:800;text-align:center;line-height:1.2;
+  background:#fff;border-radius:40px;
+  filter:drop-shadow(0 7px 16px rgba(210,98,143,.20));
+  animation:cloudFloat 4s ease-in-out infinite}
+.diag-count b{font-weight:900;font-size:15px;color:#e0518a;margin:0 1px}
+/* 上下フチのもこもこ（丸い凹凸を並べる） */
+.diag-count::before,.diag-count::after{content:"";position:absolute;left:16px;right:16px;height:20px;
+  background:radial-gradient(circle at 11px 11px,#fff 10px,transparent 11px) top left/22px 20px repeat-x}
+.diag-count::before{top:-9px}
+.diag-count::after{bottom:-9px;transform:scaleY(-1)}
+@keyframes cloudFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(2px,-8px)}}
+@media (prefers-reduced-motion:reduce){.diag-count{animation:none}}
 [hidden]{display:none!important}
-.diag-count b{font-weight:800}
 /* ---- reviews ticker ---- */
 .reviews-head{display:flex;align-items:center;justify-content:center;gap:10px;margin:24px 0 2px;font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--ink-soft)}
 .reviews-head::before,.reviews-head::after{content:"";height:1.5px;width:34px;background:linear-gradient(90deg,transparent,var(--pink),transparent)}
