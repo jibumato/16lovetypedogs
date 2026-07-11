@@ -125,19 +125,9 @@ body{
 .btn.ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid var(--glass-bd);box-shadow:none;font-size:15px;padding:15px;font-weight:800}
 .hint{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:2px}
 .sns-buzz{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(90deg,#1d9bf0,#c9a6f0);padding:5px 14px;border-radius:999px;margin:8px auto 0;letter-spacing:.03em}
-/* もこもこ吹き出し風（💭）— ボタンと見分けやすいふわふわ雲デザイン */
-.diag-count{position:relative;display:inline-flex;align-items:center;gap:6px;margin:16px auto 18px;padding:11px 22px;
-  background:#fff;color:var(--pink-deep);font-size:13.5px;font-weight:800;text-align:center;
-  border:2px solid #f6bcd4;border-radius:44px 44px 40px 40px/34px 34px 30px 30px;
-  box-shadow:0 8px 22px rgba(210,98,143,.15);animation:diagFloat 3.2s ease-in-out infinite}
-.diag-count b{font-weight:900;font-size:17px;color:#e0518a;margin:0 1px}
-/* 下にたなびく吹き出しのしっぽ（小さな雲の玉2つ） */
-.diag-count::before,.diag-count::after{content:"";position:absolute;background:#fff;border:2px solid #f6bcd4;border-radius:50%}
-.diag-count::before{width:13px;height:13px;left:26px;bottom:-8px}
-.diag-count::after{width:7px;height:7px;left:20px;bottom:-18px}
-@keyframes diagFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@media (prefers-reduced-motion:reduce){.diag-count{animation:none}}
+.diag-count{display:inline-block;margin:10px auto 2px;padding:6px 14px;border-radius:999px;background:#fff0f5;border:1px solid var(--pink);color:var(--pink-deep);font-size:12.5px;font-weight:800;text-align:center}
 [hidden]{display:none!important}
+.diag-count b{font-weight:800}
 /* ---- reviews ticker ---- */
 .reviews-head{display:flex;align-items:center;justify-content:center;gap:10px;margin:24px 0 2px;font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--ink-soft)}
 .reviews-head::before,.reviews-head::after{content:"";height:1.5px;width:34px;background:linear-gradient(90deg,transparent,var(--pink),transparent)}
@@ -1618,7 +1608,7 @@ function renderDiagCount(n){
     ko:'지금까지 <b>'+n.toLocaleString()+'</b>명이 진단했어요',
     zh:'已有 <b>'+n.toLocaleString()+'</b> 人完成测验',
     tw:'已有 <b>'+n.toLocaleString()+'</b> 人完成測驗'}[L]||('🐾 '+n.toLocaleString());
-  el.innerHTML='💭 '+label; el.hidden=false;
+  el.innerHTML='🐾 '+label; el.hidden=false;
 }
 function loadDiagCount(){
   try{ fetch('/api/diagnoses').then(r=>r.json()).then(d=>{
