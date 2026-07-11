@@ -5,7 +5,10 @@
   "assets": {
     "directory": "./",
     "binding": "ASSETS",
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    // /api/* はブラウザのナビゲーション要求でも必ずWorkerを先に実行する。
+    // （compat_date>=2025-04-01 では既定でナビ要求はWorkerを呼ばず404ページを返すため）
+    "run_worker_first": ["/api/*"]
   },
   // 診断数カウンタ・感想コメント・メールリード保存・X投稿キューに使うKV
   "kv_namespaces": [{ "binding": "COUNTER", "id": "bc0214b4bef04bf081931cef357e168b" }],
