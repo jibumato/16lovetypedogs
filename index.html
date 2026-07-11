@@ -125,9 +125,16 @@ body{
 .btn.ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid var(--glass-bd);box-shadow:none;font-size:15px;padding:15px;font-weight:800}
 .hint{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:2px}
 .sns-buzz{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(90deg,#1d9bf0,#c9a6f0);padding:5px 14px;border-radius:999px;margin:8px auto 0;letter-spacing:.03em}
-.diag-count{display:inline-block;margin:10px auto 2px;padding:6px 14px;border-radius:999px;background:#fff0f5;border:1px solid var(--pink);color:var(--pink-deep);font-size:12.5px;font-weight:800;text-align:center}
+.diag-count{display:inline-flex;align-items:center;gap:7px;margin:14px auto 4px;padding:9px 20px;border-radius:999px;
+  background:linear-gradient(135deg,#fff0f6 0%,#f4ecfb 100%);border:1.5px solid var(--pink);color:var(--pink-deep);
+  font-size:13.5px;font-weight:800;text-align:center;box-shadow:0 7px 20px rgba(210,98,143,.20);
+  animation:diagFloat 3s ease-in-out infinite}
+.diag-count::before{content:"";width:8px;height:8px;border-radius:50%;background:#5fd08a;box-shadow:0 0 0 0 rgba(95,208,138,.6);animation:diagPulse 1.8s ease-out infinite;flex:none}
+.diag-count b{font-weight:900;font-size:17px;color:#e0518a;margin:0 1px}
+@keyframes diagFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes diagPulse{0%{box-shadow:0 0 0 0 rgba(95,208,138,.55)}70%{box-shadow:0 0 0 7px rgba(95,208,138,0)}100%{box-shadow:0 0 0 0 rgba(95,208,138,0)}}
+@media (prefers-reduced-motion:reduce){.diag-count{animation:none}.diag-count::before{animation:none}}
 [hidden]{display:none!important}
-.diag-count b{font-weight:800}
 /* ---- reviews ticker ---- */
 .reviews-head{display:flex;align-items:center;justify-content:center;gap:10px;margin:24px 0 2px;font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--ink-soft)}
 .reviews-head::before,.reviews-head::after{content:"";height:1.5px;width:34px;background:linear-gradient(90deg,transparent,var(--pink),transparent)}
