@@ -1,5 +1,5 @@
 /**
- * 16lovetypedogs — Cloudflare Worker (Static Assets + 診断数カウンタ + 感想コメント)
+ * 16lovetypedogs — Cloudflare Worker (Static Assets + 診断数カウンタ + 感想コメント + X自動投稿)
  *
  * 静的アセットは従来どおり自動配信され、Workerは /api/* のルートだけを処理します。
  *
