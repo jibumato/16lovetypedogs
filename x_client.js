@@ -61,6 +61,21 @@ async function createTweet(env, text, mediaIds) {
   return JSON.parse(txt);
 }
 
+// 投稿に使われるアカウントを確認（トークン先頭のユーザーID＋/2/users/me）
+export async function whoAmI(env) {
+  const out = { tokenUserId: (env.X_ACCESS_TOKEN || "").split("-")[0] || null };
+  try {
+    const url = "https://api.twitter.com/2/users/me";
+    const auth = await oauthHeader(env, "GET", url);
+    const res = await fetch(url, { headers: { Authorization: auth } });
+    const txt = await res.text();
+    if (!res.ok) { out.meError = "users/me " + res.status + ": " + txt.slice(0, 200); return out; }
+    const d = JSON.parse(txt).data || {};
+    out.id = d.id; out.name = d.name; out.username = d.username ? "@" + d.username : null;
+  } catch (e) { out.meError = String(e).slice(0, 200); }
+  return out;
+}
+
 // ASSETS から画像を取得してバイナリ化（social/*.png はサイトに同梱）
 async function assetBytes(env, path) {
   const res = await env.ASSETS.fetch(new Request("https://x.local/" + path));

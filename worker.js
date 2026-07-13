@@ -16,7 +16,7 @@
  *   - 管理者が /admin.html で承認すると、公開フィード `pub:comments` に移動
  *   - 公開フィード(GET /api/feedback)はこの1キーだけを読む（高速・低コスト）
  */
-import { runXPost } from "./x_client.js";
+import { runXPost, whoAmI } from "./x_client.js";
 
 const KEY = "diagnoses_total";
 const JA_TYPES = new Set(["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"]);
@@ -54,6 +54,9 @@ export default {
     if (url.pathname === "/api/x-post") {
       const token = url.searchParams.get("token") || "";
       if (!env.ADMIN_TOKEN || token !== env.ADMIN_TOKEN) return j({ ok: false, error: "auth" }, 401);
+      if (url.searchParams.get("whoami") === "1") {
+        return j(await whoAmI(env));
+      }
       const setidx = url.searchParams.get("setidx");
       if (setidx !== null) {
         const n = Math.max(0, parseInt(setidx, 10) || 0);
