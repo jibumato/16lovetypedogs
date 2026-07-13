@@ -52,18 +52,9 @@ export default {
     //   ?token=<ADMIN_TOKEN> 必須。 &dry=1 で投稿せず内容だけ確認。
     //   &setidx=N でキュー位置(x_post_idx)をNに設定（消えた分の投稿し直し用）。
     if (url.pathname === "/api/x-post") {
-      const token = url.searchParams.get("token") || "";
-      // 認証診断（値は出さず、長さ・先頭末尾だけ比較して不一致箇所を特定）
-      if (url.searchParams.get("authcheck") === "1") {
-        const a = env.ADMIN_TOKEN || "";
-        return j({
-          adminSet: !!env.ADMIN_TOKEN, adminLen: a.length, gotLen: token.length,
-          match: token === a, trimMatch: token.trim() === a.trim(),
-          adminHead: a.slice(0, 3), adminTail: a.slice(-3),
-          gotHead: token.slice(0, 3), gotTail: token.slice(-3),
-        });
-      }
-      if (!env.ADMIN_TOKEN || token !== env.ADMIN_TOKEN) return j({ ok: false, error: "auth" }, 401);
+      // 前後の空白/改行はコピペで混入しやすいので無視して照合（値自体が一致すればOK）
+      const token = (url.searchParams.get("token") || "").trim();
+      if (!env.ADMIN_TOKEN || token !== env.ADMIN_TOKEN.trim()) return j({ ok: false, error: "auth" }, 401);
       if (url.searchParams.get("whoami") === "1") {
         return j(await whoAmI(env));
       }
