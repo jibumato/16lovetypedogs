@@ -50,9 +50,16 @@ export default {
 
     // ───────── X自動投稿の手動トリガ（本番前の動作確認用） ─────────
     //   ?token=<ADMIN_TOKEN> 必須。 &dry=1 で投稿せず内容だけ確認。
+    //   &setidx=N でキュー位置(x_post_idx)をNに設定（消えた分の投稿し直し用）。
     if (url.pathname === "/api/x-post") {
       const token = url.searchParams.get("token") || "";
       if (!env.ADMIN_TOKEN || token !== env.ADMIN_TOKEN) return j({ ok: false, error: "auth" }, 401);
+      const setidx = url.searchParams.get("setidx");
+      if (setidx !== null) {
+        const n = Math.max(0, parseInt(setidx, 10) || 0);
+        await env.COUNTER?.put("x_post_idx", String(n));
+        return j({ ok: true, setidx: n });
+      }
       try {
         const r = await runXPost(env, { dry: url.searchParams.get("dry") === "1" });
         return j(r);
