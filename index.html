@@ -135,6 +135,17 @@ body{
 @keyframes cloudFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(2px,-8px)}}
 @media (prefers-reduced-motion:reduce){.diag-count{animation:none}}
 [hidden]{display:none!important}
+/* 診断の中断復帰バナー */
+.resume-box{margin:14px auto 4px;max-width:340px;padding:14px 16px;background:#fff8fb;border:1.5px solid var(--pink);
+  border-radius:16px;text-align:center;font-size:13px;color:var(--ink);line-height:1.6}
+.resume-actions{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.resume-actions .btn.sm{width:auto;flex:1;margin:0;padding:10px 14px;font-size:13px;box-shadow:none}
+.resume-actions .btn.sm.ghost{background:#fff;color:var(--pink-deep);border:1.5px solid var(--pink)}
+/* 決済ページへの遷移待ちオーバーレイ（二度押し防止・無反応感の解消） */
+.buy-loading{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;background:rgba(255,250,252,.92);backdrop-filter:blur(2px);font-size:14px;font-weight:800;color:var(--pink-deep)}
+.bl-spin{width:38px;height:38px;border-radius:50%;border:4px solid var(--pink);border-top-color:var(--pink-deep);animation:blSpin .8s linear infinite}
+@keyframes blSpin{to{transform:rotate(360deg)}}
 /* ---- reviews ticker ---- */
 .reviews-head{display:flex;align-items:center;justify-content:center;gap:10px;margin:24px 0 2px;font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--ink-soft)}
 .reviews-head::before,.reviews-head::after{content:"";height:1.5px;width:34px;background:linear-gradient(90deg,transparent,var(--pink),transparent)}
@@ -339,6 +350,16 @@ body{
 /* compatibility */
 .compat-pick{background:var(--paper);border:1px solid var(--glass-bd);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 20px;margin-top:16px}
 .compat-pick label{font-size:12.5px;font-weight:800;color:var(--ink-soft);display:block;margin:12px 0 7px}
+/* 犬アイコンで選ぶ相性ピッカー（セレクトの代替。selectは状態保持用に隠して残す） */
+.cp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:2px 0 6px}
+.cp-dog{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px 5px;border:2px solid var(--hair);
+  border-radius:14px;background:rgba(255,255,255,.7);cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;
+  transition:border-color .12s,background .12s,transform .12s}
+.cp-dog img{width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;background:#fff}
+.cp-dog .em{font-size:30px;line-height:44px}
+.cp-dog small{font-size:9.5px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em}
+.cp-dog.sel{border-color:var(--pink-deep);background:#fff0f6;transform:scale(1.05)}
+.cp-dog.sel small{color:var(--pink-deep)}
 .compat-pick select{
   width:100%;font-family:inherit;font-size:15px;font-weight:700;color:var(--ink);
   padding:14px;border-radius:14px;border:2px solid var(--hair);background:rgba(255,255,255,.7);appearance:none;
@@ -877,6 +898,13 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
       <p class="lead" id="t-lead">16タイプ性格診断であなたの恋愛タイプを16種類の犬種にたとえて無料診断。気になるあの人との相性チェックもできます。</p>
       <p class="hint" id="t-hint">⏱ 約1分・全12問 ／ 🆓 無料・登録不要 ／ 🔓 結果ですぐ相性チェック</p>
       <div class="diag-count" id="diagCount" hidden></div>
+      <div class="resume-box" id="resumeBox" hidden>
+        <span id="t-resumetxt"></span>
+        <div class="resume-actions">
+          <button class="btn sm" id="t-resumego" onclick="resumeQuiz()"></button>
+          <button class="btn sm ghost" id="t-resumenew" onclick="dismissResume()"></button>
+        </div>
+      </div>
       <button class="btn" id="t-start" onclick="startQuiz()">診断をはじめる 🐾</button>
       <button class="btn sub" id="t-shortcut" onclick="show('shortcut')">タイプがわかる人はこちら</button>
       <div class="reviews-head" id="t-reviewshead">🐾 みんなの診断レポート</div>
@@ -962,17 +990,8 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div id="loveGuide"></div>
 
     <!-- 6. もう一度シェア（読み終えた満足のピークで再拡散） -->
-    <div class="shareblock">
-      <p class="share-cap" id="t-sharecap"></p>
-      <canvas id="shareCanvas" width="1080" height="1920"></canvas>
-      <div class="share-icons">
-        <button class="ic-btn line" aria-label="LINE" onclick="shareLine()"><img class="ic-img" src="/line-icon.png" alt="LINE" width="48" height="48" decoding="async"></button>
-        <button class="ic-btn x" aria-label="X" onclick="shareX()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
-        <button class="ic-btn ig" aria-label="Instagram" onclick="shareInstagram()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07c-1.28.06-2.15.26-2.91.56-.79.31-1.46.72-2.12 1.38C1.35 2.67.94 3.34.63 4.13c-.3.76-.5 1.63-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.15.56 2.91.31.79.72 1.46 1.38 2.12.66.66 1.33 1.07 2.12 1.38.76.3 1.63.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.28-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.12-1.38.66-.66 1.07-1.33 1.38-2.12.3-.76.5-1.63.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.12-.66-.66-1.33-1.07-2.12-1.38-.76-.3-1.63-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.41-10.4a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z"/></svg></button>
-        <button class="ic-btn kakao" aria-label="KakaoTalk" onclick="shareKakao()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.48 3 2 6.52 2 10.86c0 2.78 1.85 5.22 4.63 6.6-.2.71-.74 2.65-.85 3.06-.13.5.18.5.39.36.16-.11 2.57-1.75 3.62-2.46.72.1 1.46.16 2.21.16 5.52 0 10-3.52 10-7.86S17.52 3 12 3z"/></svg></button>
-        <button class="ic-btn save" aria-label="Save image" onclick="saveShareImg()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg></button>
-      </div>
-    </div>
+    <!-- シェア画像生成用canvas（表示はしない。シェア導線は血統書直下の1箇所に集約） -->
+    <canvas id="shareCanvas" width="1080" height="1920"></canvas>
 
     <!-- 6.2 受注生産グッズ（軽量バナー・主要オファーの後なので競合しない） -->
     <div id="goodsBanner"></div>
@@ -1003,9 +1022,11 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
     <div class="qhead"><h2 id="t-compathead" style="font-size:22px;color:var(--pink-deep)"></h2></div>
     <div class="compat-pick">
       <label id="t-youlbl"></label>
-      <select id="cpA"></select>
+      <select id="cpA" hidden></select>
+      <div class="cp-grid" id="cpGridA"></div>
       <label id="t-partnerlbl"></label>
-      <select id="cpB"></select>
+      <select id="cpB" hidden></select>
+      <div class="cp-grid" id="cpGridB"></div>
       <button class="btn mt" id="t-compatbtn" onclick="runCompat()"></button>
     </div>
     <div id="compatResult"></div>
@@ -1407,6 +1428,7 @@ function applyStatic(){
   document.getElementById('t-footer').innerHTML=i.footer.replace(/\n/g,'<br>')+'<br>'+i.aff_disclosure
     +'<br><span style="opacity:.8">'+(TM_NOTE[L]||TM_NOTE.ja)+'</span>'
     +'<br><a href="/types.html" style="color:inherit">タイプ一覧</a> ｜ <a href="/about.html" style="color:inherit">運営者情報</a> ｜ <a href="/privacy.html" style="color:inherit">プライバシーポリシー</a> ｜ <a href="/privacy.html#tokushoho" style="color:inherit">特定商取引法に基づく表記</a> ｜ <a href="/contact.html" style="color:inherit">お問い合わせ</a>'
+  checkResumeQuiz();
     +'<br>© 2026 '+i.title+' / Type&amp;Co';
   document.querySelectorAll('.lang-dd-menu button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));
   setText('t-langcur',LANG_NAMES[L]||LANG_NAMES.ja);
@@ -1541,7 +1563,7 @@ async function navShare(){
 }
 
 /* ---- quiz ---- */
-function startQuiz(){qi=0;score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};hist=[];quizActive=true;show('quiz');renderQ();gtag('event','quiz_start',{language:L});}
+function startQuiz(){qi=0;score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};hist=[];quizActive=true;dismissResume();show('quiz');renderQ();saveQuizState();gtag('event','quiz_start',{language:L});}
 function renderQ(dir){
   const Q=QUIZ[L],q=Q[qi];
   document.getElementById('qtext').textContent=q.t;
@@ -1559,18 +1581,57 @@ function renderQ(dir){
 function pick(delta){
   for(const k in delta)score[k]+=delta[k];
   hist.push(delta);
-  if(qi<QUIZ[L].length-1){qi++;renderQ();}else finish();
+  if(qi<QUIZ[L].length-1){qi++;renderQ();saveQuizState();}else finish();
 }
 function quizBack(){
-  if(qi===0){quizActive=false;show('top');return;}
+  if(qi===0){quizActive=false;clearQuizState();show('top');return;}
   qi--;const last=hist.pop();
   if(last)for(const k in last)score[k]-=last[k];
-  renderQ('back');
+  renderQ('back');saveQuizState();
 }
 function finish(){
-  quizActive=false;
+  quizActive=false;clearQuizState();
   const code=(score.E>=score.I?'E':'I')+(score.S>=score.N?'S':'N')+(score.T>=score.F?'T':'F')+(score.J>=score.P?'J':'P');
   current=code;revealResult(code);
+}
+/* ---- 診断の中断復帰（途中離脱→再訪で続きから） ---- */
+const QUIZ_SAVE_KEY='16ltd_quiz_progress';
+function saveQuizState(){
+  try{ sessionStorage.setItem(QUIZ_SAVE_KEY,JSON.stringify({qi:qi,score:score,hist:hist,lang:L,ts:Date.now()})); }catch(e){}
+}
+function clearQuizState(){
+  try{ sessionStorage.removeItem(QUIZ_SAVE_KEY); }catch(e){}
+}
+function loadQuizState(){
+  try{ const raw=sessionStorage.getItem(QUIZ_SAVE_KEY); return raw?JSON.parse(raw):null; }catch(e){ return null; }
+}
+const RESUME_I18N={
+  ja:{txt:n=>'前回、Q'+n+'まで回答していました。続きから再開しますか？',go:'続きから再開する',neu:'最初からやり直す'},
+  en:{txt:n=>"You'd answered up to Q"+n+' last time. Continue where you left off?',go:'Resume',neu:'Start over'},
+  ko:{txt:n=>'지난번 Q'+n+'까지 답변했어요. 이어서 진행할까요?',go:'이어서 진행',neu:'처음부터 다시'},
+  zh:{txt:n=>'上次答到第'+n+'题。要接着做吗？',go:'继续上次的',neu:'重新开始'},
+  tw:{txt:n=>'上次答到第'+n+'題。要接著做嗎？',go:'繼續上次的',neu:'重新開始'}
+};
+function checkResumeQuiz(){
+  const saved=loadQuizState();
+  const box=document.getElementById('resumeBox');if(!box)return;
+  if(!saved||typeof saved.qi!=='number'||saved.qi<1){box.hidden=true;return;}
+  const t=RESUME_I18N[L]||RESUME_I18N.ja;
+  document.getElementById('t-resumetxt').textContent=t.txt(saved.qi+1);
+  document.getElementById('t-resumego').textContent=t.go;
+  document.getElementById('t-resumenew').textContent=t.neu;
+  box.hidden=false;
+}
+function resumeQuiz(){
+  const saved=loadQuizState();
+  if(!saved){dismissResume();return;}
+  qi=saved.qi;score=saved.score||{};hist=saved.hist||[];quizActive=true;
+  dismissResume();show('quiz');renderQ();
+  try{if(window.gtag)gtag('event','quiz_resume',{question_num:qi+1,language:L});}catch(e){}
+}
+function dismissResume(){
+  clearQuizState();
+  const box=document.getElementById('resumeBox');if(box)box.hidden=true;
 }
 
 /* ---- quiz abandon tracking ---- */
@@ -1775,8 +1836,7 @@ function renderResult(code,stay){
   renderUraChara(code);
   renderLoveGuide(code);
   renderResultOmikuji();
-  renderGoods(code);
-  renderGoodsBanner(code);
+  renderGoodsBanner(code); /* グッズ導線はバナー1箇所＋購入サンクスページに集約（CTA渋滞対策） */
   renderSaveResult(code);
   renderPayTeaser(code);
   setupPayFab(code);
@@ -2188,14 +2248,26 @@ function trackCheckout(code,lang,loc){
    ja: Payment LinksはAdaptive Pricing強制ONでPayPay非対応のため、
        サーバー(/api/checkout)でCheckout Sessionを都度作成して遷移する。
    ja以外: 既存どおりStripe Payment Linksへ直接遷移（変更なし）。 */
+const BUY_LOADING_I18N={ja:'決済ページへ移動中…',en:'Taking you to checkout…',ko:'결제 페이지로 이동 중…',zh:'正在跳转到结账页面…',tw:'正在跳轉到結帳頁面…'};
+function showBuyLoading(lang){
+  const el=document.getElementById('buyLoading');if(!el)return;
+  setText('t-buyloading',BUY_LOADING_I18N[lang]||BUY_LOADING_I18N.ja);
+  el.hidden=false;
+}
+function hideBuyLoading(){
+  const el=document.getElementById('buyLoading');if(el)el.hidden=true;
+}
+let buyInFlight=false;
 async function goBuy(code,lang,loc){
+  if(buyInFlight)return; /* 二度押し防止 */
   trackCheckout(code,lang,loc);
   if(lang!=='ja'){
     const u=guideBuyUrl(code,lang);
-    if(u&&u!=='#') location.href=u;
+    if(u&&u!=='#'){ buyInFlight=true; showBuyLoading(lang); location.href=u; }
     return;
   }
   const fallback=guideBuyUrl(code,'ja');
+  buyInFlight=true; showBuyLoading('ja');
   try{
     const gid=gaClientId();
     const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},
@@ -2203,7 +2275,8 @@ async function goBuy(code,lang,loc){
     const data=await res.json();
     if(data&&data.ok&&data.url){ location.href=data.url; return; }
   }catch(e){}
-  if(fallback&&fallback!=='#') location.href=fallback; /* API失敗時は従来のPayment Linkへフォールバック */
+  if(fallback&&fallback!=='#'){ location.href=fallback; return; } /* API失敗時は従来のPayment Linkへフォールバック */
+  buyInFlight=false; hideBuyLoading(); /* 遷移先が無い場合のみ復帰させる */
 }
 
 /* ===== 結果直後の有料ティーザー＋追従ボタン =====
@@ -2928,15 +3001,40 @@ function buildSelects(){
   const opt=ORDER.map(c=>'<option value="'+c+'">'+BASE[c].em+' '+LOC[L][c].breed+' ('+c+')</option>').join('');
   document.getElementById('cpA').innerHTML=opt;
   document.getElementById('cpB').innerHTML=opt;
+  buildCompatGrids();
+}
+/* 犬アイコングリッド（タップで選択）。隠しselectを状態源として同期する */
+function buildCompatGrids(){
+  [['cpGridA','cpA'],['cpGridB','cpB']].forEach(function(pair){
+    const grid=document.getElementById(pair[0]);if(!grid)return;
+    grid.innerHTML=ORDER.map(function(c){
+      return '<button type="button" class="cp-dog" data-code="'+c+'" onclick="cpPick(\''+pair[1]+'\',\''+c+'\')">'
+        +'<img loading="lazy" decoding="async" src="'+imgPath(c)+'" alt="'+LOC[L][c].breed+'" onerror="this.outerHTML=\'<span class=em>'+BASE[c].em+'</span>\'">'
+        +'<small>'+c+'</small></button>';
+    }).join('');
+  });
+  syncCompatGrids();
+}
+function cpPick(selId,code){
+  const s=document.getElementById(selId);if(s)s.value=code;
+  syncCompatGrids();
+}
+function syncCompatGrids(){
+  [['cpGridA','cpA'],['cpGridB','cpB']].forEach(function(pair){
+    const grid=document.getElementById(pair[0]),sel=document.getElementById(pair[1]);
+    if(!grid||!sel)return;
+    const v=sel.value;
+    grid.querySelectorAll('.cp-dog').forEach(function(b){b.classList.toggle('sel',b.dataset.code===v);});
+  });
 }
 /* 相性チェックの利用計測：入口(compat_open)と実行(compat_run)を分けて記録 */
 function goCompat(src){
   try{ if(window.gtag) gtag('event','compat_open',{source:src||'result_cta',language:L}); }catch(e){}
-  if(current)document.getElementById('cpA').value=current;show('compat');
+  if(current)document.getElementById('cpA').value=current;syncCompatGrids();show('compat');
 }
 function pickRank(c){
   try{ if(window.gtag) gtag('event','compat_open',{source:'rank_row',language:L}); }catch(e){}
-  buildSelects();document.getElementById('cpA').value=current;document.getElementById('cpB').value=c;show('compat');runCompat();
+  buildSelects();document.getElementById('cpA').value=current;document.getElementById('cpB').value=c;syncCompatGrids();show('compat');runCompat();
 }
 /* 相性結果→有料レポートの導線（“あの人”の攻略はレポートに、で感情ピークを課金へ） */
 const COMPAT_CTA={
@@ -3273,6 +3371,7 @@ function shareInstagram(){
   updateTabbar((document.querySelector('.screen.active')||{}).id||'top');
 })();
 </script>
+<div class="buy-loading" id="buyLoading" hidden><div class="bl-spin"></div><span id="t-buyloading"></span></div>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>
