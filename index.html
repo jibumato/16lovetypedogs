@@ -146,6 +146,14 @@ body{
   gap:14px;background:rgba(255,250,252,.92);backdrop-filter:blur(2px);font-size:14px;font-weight:800;color:var(--pink-deep)}
 .bl-spin{width:38px;height:38px;border-radius:50%;border:4px solid var(--pink);border-top-color:var(--pink-deep);animation:blSpin .8s linear infinite}
 @keyframes blSpin{to{transform:rotate(360deg)}}
+/* 決済ページを開けなかった時の案内（無言でエラー画面に飛ばさない） */
+.buy-error{position:fixed;inset:0;z-index:401;display:flex;align-items:center;justify-content:center;padding:22px;
+  background:rgba(60,45,60,.42);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.buy-error .be-card{width:100%;max-width:330px;background:#fff;border-radius:20px;padding:24px 20px 18px;text-align:center;
+  box-shadow:0 18px 50px -12px rgba(120,80,110,.5)}
+.buy-error .be-card p{font-size:13.5px;line-height:1.8;color:var(--ink);margin-bottom:6px}
+.buy-error .be-card .btn{margin:10px 0 0}
+.buy-error .be-card .btn.sub{margin-top:8px}
 /* ---- reviews ticker ---- */
 .reviews-head{display:flex;align-items:center;justify-content:center;gap:10px;margin:24px 0 2px;font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--ink-soft)}
 .reviews-head::before,.reviews-head::after{content:"";height:1.5px;width:34px;background:linear-gradient(90deg,transparent,var(--pink),transparent)}
@@ -2051,24 +2059,8 @@ function submitFeedback(){
 /* 言語別Stripe決済リンク。en/ko/zh/tw はPDF準備が整い次第、各16タイプ分を追加する。
    未設定の言語はjaにフォールバックせず、guideBuyUrlがjpOnly表示のままボタンを無効化する。 */
 const STRIPE_LINKS_BY_LANG={
-  ja:{
-    INTJ:'https://buy.stripe.com/dRm7sKeF382n0P78LW8Ra0S',
-    INTP:'https://buy.stripe.com/3cI00icwVbezcxPgeo8Ra0T',
-    ENTJ:'https://buy.stripe.com/5kQeVcdAZ1DZ7dvaU48Ra0U',
-    ENTP:'https://buy.stripe.com/00w7sKaoN5Uf1Tb3rC8Ra0V',
-    INFJ:'https://buy.stripe.com/fZu00i2Wl5UfbtL9Q08Ra0O',
-    INFP:'https://buy.stripe.com/4gM7sKgNbaav1TbaU48Ra0N',
-    ENFJ:'https://buy.stripe.com/eVqcN4eF31DZcxP0fq8Ra0Q',
-    ENFP:'https://buy.stripe.com/00waEW54tdmHeFX7HS8Ra0R',
-    ISTJ:'https://buy.stripe.com/3cIaEWfJ74QbapH2ny8Ra10',
-    ISFJ:'https://buy.stripe.com/fZufZg9kJfuP2Xfe6g8Ra0W',
-    ESTJ:'https://buy.stripe.com/bJefZg54tdmH55n5zK8Ra12',
-    ESFJ:'https://buy.stripe.com/cNi5kC40p3M7dBTe6g8Ra0Y',
-    ISTP:'https://buy.stripe.com/8x214maoNfuPcxPd2c8Ra11',
-    ISFP:'https://buy.stripe.com/fZu4gy54t1DZ69r0fq8Ra0X',
-    ESTP:'https://buy.stripe.com/9B614m0Od82n41j4vG8Ra13',
-    ESFP:'https://buy.stripe.com/28E00igNbfuP7dv3rC8Ra0Z'
-  },
+  /* ja は /api/checkout でCheckout Sessionを都度生成するためPayment Linkを持たない
+     （Payment LinksはAdaptive Pricing強制ONでPayPay非対応のため） */
   en:{
     INTJ:'https://buy.stripe.com/aFa6oG7cB1DZbtL4vG8Ra1e',
     INTP:'https://buy.stripe.com/3cI28q40pbez41j6DO8Ra1f',
@@ -2090,7 +2082,7 @@ const STRIPE_LINKS_BY_LANG={
 };
 /* 通貨・割引はja(JPY・表示価格のみ、プロモコードなし)とen(USD・DISCOUNT20を自動適用)で構成が異なるため言語別に保持 */
 const GUIDE_CFG_BY_LANG={
-  ja:{ price:"1180", orig:"1475", off:"20%OFF", currency:"JPY", promo:null },
+  ja:{ price:"680", orig:"850", off:"20%OFF", currency:"JPY", promo:null },
   en:{ price:"7.99", orig:"9.99", off:"20%OFF", currency:"USD", promo:"DISCOUNT20" }
 };
 function guideCfg(lang){ return GUIDE_CFG_BY_LANG[lang]||GUIDE_CFG_BY_LANG.ja; }
@@ -2227,7 +2219,12 @@ const GUIDE_EXTRA={
 function gaClientId(){
   try{ var m=document.cookie.match(/_ga=GA\d\.\d\.(\d+\.\d+)/); return m?m[1]:''; }catch(e){ return ''; }
 }
-function hasGuideLink(code,lang){ return !!((STRIPE_LINKS_BY_LANG[lang]||{})[code]); }
+/* ja は Payment Link を使わず /api/checkout で都度Checkout Sessionを作るため、
+   リンクの有無ではなく「正規の16タイプかどうか」で購入UIの表示可否を判定する。 */
+function hasGuideLink(code,lang){
+  if(lang==='ja') return ORDER.indexOf(code)>=0;
+  return !!((STRIPE_LINKS_BY_LANG[lang]||{})[code]);
+}
 function guideBuyUrl(code,lang){
   var links=STRIPE_LINKS_BY_LANG[lang]||{};
   var u=links[code]; if(!u) return '#';
@@ -2269,7 +2266,8 @@ async function goBuy(code,lang,loc){
     if(u&&u!=='#'){ buyInFlight=true; showBuyLoading(lang); location.href=u; }
     return;
   }
-  const fallback=guideBuyUrl(code,'ja');
+  /* jaは /api/checkout に一本化（Payment LinksはPayPay非対応のためフォールバックしない）。
+     失敗時は無言で終わらせず、日本語の案内＋再試行を出す。 */
   buyInFlight=true; showBuyLoading('ja');
   try{
     const gid=gaClientId();
@@ -2278,9 +2276,27 @@ async function goBuy(code,lang,loc){
     const data=await res.json();
     if(data&&data.ok&&data.url){ location.href=data.url; return; }
   }catch(e){}
-  if(fallback&&fallback!=='#'){ location.href=fallback; return; } /* API失敗時は従来のPayment Linkへフォールバック */
-  buyInFlight=false; hideBuyLoading(); /* 遷移先が無い場合のみ復帰させる */
+  buyInFlight=false; hideBuyLoading();
+  showBuyError(code,lang,loc);
 }
+const BUY_ERROR_I18N={
+  ja:{msg:'決済ページを開けませんでした。通信環境をご確認のうえ、もう一度お試しください。',retry:'もう一度試す',close:'閉じる'},
+  en:{msg:"We couldn't open the checkout page. Please check your connection and try again.",retry:'Try again',close:'Close'},
+  ko:{msg:'결제 페이지를 열지 못했습니다. 통신 상태를 확인한 뒤 다시 시도해 주세요.',retry:'다시 시도',close:'닫기'},
+  zh:{msg:'无法打开结账页面。请检查网络后重试。',retry:'重试',close:'关闭'},
+  tw:{msg:'無法開啟結帳頁面。請檢查網路後重試。',retry:'重試',close:'關閉'}
+};
+function showBuyError(code,lang,loc){
+  const el=document.getElementById('buyError');if(!el)return;
+  const t=BUY_ERROR_I18N[lang]||BUY_ERROR_I18N.ja;
+  el.innerHTML='<div class="be-card"><p>'+t.msg+'</p>'
+    +'<button class="btn" onclick="retryBuy(\''+code+'\',\''+lang+'\',\''+(loc||'')+'\')">'+t.retry+'</button>'
+    +'<button class="btn sub" onclick="hideBuyError()">'+t.close+'</button></div>';
+  el.hidden=false;
+  try{ if(window.gtag) gtag('event','checkout_error',{mbti_type:code,language:lang,location:loc||''}); }catch(e){}
+}
+function hideBuyError(){ const el=document.getElementById('buyError'); if(el)el.hidden=true; }
+function retryBuy(code,lang,loc){ hideBuyError(); goBuy(code,lang,loc); }
 
 /* ===== 結果直後の有料ティーザー＋追従ボタン =====
    view_item到達が診断完了者の24%に留まっていたため、感情ピーク（結果直後）に
@@ -3375,6 +3391,7 @@ function shareInstagram(){
 })();
 </script>
 <div class="buy-loading" id="buyLoading" hidden><div class="bl-spin"></div><span id="t-buyloading"></span></div>
+<div class="buy-error" id="buyError" hidden></div>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>
