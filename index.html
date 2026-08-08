@@ -347,6 +347,16 @@ body{
 .cmpt-cta .cc-h{font-size:14px;font-weight:800;color:var(--pink-deep);margin-bottom:6px}
 .cmpt-cta .cc-t{font-size:12px;font-weight:700;color:var(--ink);line-height:1.7;margin-bottom:13px}
 .cmpt-cta .cc-btn{display:block;background:linear-gradient(135deg,#e58aa0,#d2628f);color:#fff;font-family:inherit;font-size:14px;font-weight:800;border:0;border-radius:99px;padding:13px 18px;width:100%;text-align:center;letter-spacing:.04em;cursor:pointer;text-decoration:none;box-shadow:0 8px 18px -6px rgba(210,98,143,.5)}
+/* ロックされている中身を具体的に列挙して「続きが気になる」状態を作る */
+.cmpt-cta .cc-list{list-style:none;text-align:left;margin:0 0 14px;padding:0}
+.cmpt-cta .cc-list li{position:relative;font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.65;padding:5px 0 5px 24px}
+.cmpt-cta .cc-list li::before{content:"🔒";position:absolute;left:2px;top:5px;font-size:11px}
+.cmpt-cta .cc-list li em{font-style:normal;color:var(--pink-deep)}
+.cmpt-cta .cc-price{margin-top:9px;display:flex;align-items:baseline;justify-content:center;gap:6px}
+.cmpt-cta .cc-off{font-size:10.5px;font-weight:800;color:#fff;background:#e0518a;border-radius:5px;padding:2px 6px}
+.cmpt-cta .cc-orig{font-size:12px;font-weight:700;color:var(--ink-faint);text-decoration:line-through}
+.cmpt-cta .cc-now{font-size:19px;font-weight:900;color:var(--pink-deep)}
+.cmpt-cta .cc-yen{font-size:12px;font-weight:800;color:var(--pink-deep)}
 
 /* ad + bonus */
 .adslot{margin:22px 0;min-height:90px;border-radius:18px;background:rgba(255,255,255,.5);border:1px dashed var(--hair);
@@ -730,6 +740,19 @@ footer{text-align:center;font-size:11px;color:var(--ink-faint);padding:28px 0 8p
 .lg-thumbs .pg img{width:100%;display:block}
 .lg-thumbs .pg.bl img{filter:blur(3px)}
 .lg-toc{max-width:480px;margin:10px auto 4px;background:var(--paper-solid);border:1px solid var(--beige);border-radius:16px;padding:18px 18px 14px;box-shadow:var(--shadow)}
+/* 中身のチラ見せ（実物ページのサンプル） */
+.lg-peek-pages{max-width:480px;margin:14px auto 4px;text-align:center}
+.lg-peek-pages .pp-head{font-size:13px;font-weight:800;color:var(--pink-deep);margin-bottom:10px}
+.lg-peek-pages .pp-strip{display:flex;gap:10px;overflow-x:auto;padding:2px 4px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.lg-peek-pages .pp-item{position:relative;flex:none;width:132px;padding:0;border:1px solid var(--beige);border-radius:12px;
+  background:#fff;box-shadow:var(--shadow);cursor:pointer;overflow:hidden;scroll-snap-align:center;-webkit-tap-highlight-color:transparent}
+.lg-peek-pages .pp-item img{display:block;width:100%;height:auto;aspect-ratio:1/1.414;object-fit:cover;object-position:top}
+.lg-peek-pages .pp-zoom{position:absolute;right:6px;bottom:6px;font-size:12px;background:rgba(255,255,255,.92);border-radius:99px;padding:3px 7px;box-shadow:0 2px 6px rgba(120,90,120,.25)}
+.lg-peek-pages .pp-note{font-size:11px;color:var(--ink-soft);font-weight:700}
+.pdf-lightbox{position:fixed;inset:0;z-index:402;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(45,35,50,.86)}
+.pdf-lightbox img{max-width:100%;max-height:100%;border-radius:10px;box-shadow:0 20px 60px -10px rgba(0,0,0,.6)}
+.pdf-lightbox .pl-close{position:absolute;top:14px;right:14px;width:40px;height:40px;border:0;border-radius:50%;
+  background:rgba(255,255,255,.92);font-size:17px;font-weight:800;color:var(--ink);cursor:pointer;font-family:inherit}
 .lg-toc-sec{margin-bottom:13px}
 .lg-toc-sec:last-child{margin-bottom:0}
 .lg-toc-part{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--ink);margin-bottom:5px;letter-spacing:.02em}
@@ -2627,6 +2650,39 @@ function renderUraChara(code){
     +'<p class="ura-note">'+I18.note+'</p>'
   +'</div>';
 }
+/* ===== 中身のチラ見せ（実物ページのサンプル画像） =====
+   「¥780でも中身が薄いのでは」という不安を消すのに最も効くのは実物を見せること。
+   実際のPDFから2〜3ページを画像で書き出し、pdf-sample/ に置いてここにパスを列挙する。
+   空配列のあいだはブロックごと非表示になる（偽のサンプルは出さない）。 */
+const PDF_SAMPLES=[];  /* 例: ['/pdf-sample/p1.webp','/pdf-sample/p2.webp','/pdf-sample/p3.webp'] */
+const PDF_SAMPLE_I18N={
+  ja:{head:'📖 中身をのぞいてみる',note:'実際のレポートより（一部）',open:'拡大して見る'},
+  en:{head:'📖 Take a peek inside',note:'Actual pages from the report (excerpt)',open:'View larger'},
+  ko:{head:'📖 내용 미리보기',note:'실제 리포트의 일부',open:'크게 보기'},
+  zh:{head:'📖 看看内容',note:'实际报告内页（部分）',open:'放大查看'},
+  tw:{head:'📖 看看內容',note:'實際報告內頁（部分）',open:'放大查看'}
+};
+function pdfSampleHtml(){
+  if(!PDF_SAMPLES.length) return '';
+  const t=PDF_SAMPLE_I18N[L]||PDF_SAMPLE_I18N.ja;
+  return '<div class="lg-peek-pages"><div class="pp-head">'+t.head+'</div>'
+    +'<div class="pp-strip">'+PDF_SAMPLES.map(function(src,idx){
+        return '<button type="button" class="pp-item" onclick="openPdfSample('+idx+')" aria-label="'+t.open+'">'
+          +'<img loading="lazy" decoding="async" src="'+src+'" alt="'+t.note+' '+(idx+1)+'">'
+          +'<span class="pp-zoom">🔍</span></button>';
+      }).join('')+'</div>'
+    +'<div class="pp-note">'+t.note+'</div></div>';
+}
+function openPdfSample(idx){
+  const box=document.getElementById('pdfLightbox');if(!box)return;
+  const t=PDF_SAMPLE_I18N[L]||PDF_SAMPLE_I18N.ja;
+  box.innerHTML='<button class="pl-close" onclick="closePdfSample()" aria-label="close">✕</button>'
+    +'<img src="'+PDF_SAMPLES[idx]+'" alt="'+t.note+'">';
+  box.hidden=false;
+  try{ if(window.gtag) gtag('event','pdf_sample_view',{page:idx+1,language:L}); }catch(e){}
+}
+function closePdfSample(){ const b=document.getElementById('pdfLightbox'); if(b)b.hidden=true; }
+
 function renderLoveGuide(code){
   const g=GUIDE_I18N[L]||GUIDE_I18N.ja, d=LOC[L][code], i=I();
   const ge=GUIDE_EXTRA[L]||GUIDE_EXTRA.ja;
@@ -2765,6 +2821,7 @@ function renderLoveGuide(code){
     </div>
     <div class="lg-divider" style="margin-top:22px"><span class="line">CONTENTS</span><h3 style="font-size:16px">${ge.tocHead}</h3></div>
     <div class="lg-toc">${ge.toc.map(sec=>`<div class="lg-toc-sec"><div class="lg-toc-part"><span class="pt">${sec.p}</span>${sec.l}</div><ul>${sec.it.map(it=>`<li><span class="ti">${it[0].replace('{breed}',d.breed).replace('{code}',code)}</span><span class="dt"></span><span class="pg">${it[1]}</span></li>`).join('')}</ul></div>`).join('')}</div>
+    ${pdfSampleHtml()}
     <div class="lg-toc-note">${ge.tocNote}</div>
     <div class="lg-cta">
       <div class="lg-coupon-badge">${COUPON_BADGE[L]||COUPON_BADGE.ja}</div>
@@ -3056,13 +3113,44 @@ function pickRank(c){
   buildSelects();document.getElementById('cpA').value=current;document.getElementById('cpB').value=c;syncCompatGrids();show('compat');runCompat();
 }
 /* 相性結果→有料レポートの導線（“あの人”の攻略はレポートに、で感情ピークを課金へ） */
+/* 相性結果の直後は「あの人をどうするか」への関心が最も高い＝最良の売り場。
+   {a}{b} に犬種名が入り、いま見たペア固有のオファーとして提示する。 */
 const COMPAT_CTA={
-  ja:{h:'💌 あの人のタイプとの相性、もっと詳しく',t:'全16タイプとの詳しい相性スコア＋タイプ別の攻略コメントは、あなた専用のプレミアムレポートに。',b:'あの人の攻略法を見る →'},
-  en:{h:'💌 Go deeper on your match',t:'Full compatibility scores + approach tips for all 16 types are in your personal Premium Report.',b:'See how to win them over →'},
-  ko:{h:'💌 그 사람과의 궁합, 더 자세히',t:'전 16타입과의 상세 궁합 점수＋타입별 공략 코멘트는 나만의 프리미엄 리포트에.',b:'그 사람 공략법 보기 →'},
-  zh:{h:'💌 和TA的契合，看得更深',t:'与全16类型的详细契合度＋分类型攻略点评，尽在你的专属深度报告。',b:'查看攻略TA的方法 →'},
-  tw:{h:'💌 和TA的契合，看得更深',t:'與全16類型的詳細契合度＋分類型攻略點評，盡在你的專屬深度報告。',b:'查看攻略TA的方法 →'}
+  ja:{h:'🔒 {a} × {b} の攻略、ここから先',
+      t:'この画面でわかるのは、ふたりの相性の“入口”まで。',
+      items:['{b}に響く<em>LINEの送り方・例文</em>','全16タイプ相性マップと<em>あなたのベスト相性TOP5</em>','ケンカした時の<em>仲直りフローチャート</em>'],
+      b:'{b}の攻略法を見る →'},
+  en:{h:'🔒 {a} × {b} — the rest of the playbook',
+      t:'This screen only shows the entrance to your compatibility.',
+      items:['<em>Message templates</em> that land with {b}','The full 16-type map and <em>your best-match TOP5</em>','A <em>make-up flowchart</em> for when you fight'],
+      b:'See how to win over {b} →'},
+  ko:{h:'🔒 {a} × {b} 공략, 여기서부터',
+      t:'이 화면에서 알 수 있는 건 두 사람 궁합의 “입구”까지.',
+      items:['{b}에게 통하는 <em>메시지 예문</em>','전 16타입 궁합 맵과 <em>나의 베스트 궁합 TOP5</em>','싸웠을 때 <em>화해 플로우차트</em>'],
+      b:'{b} 공략법 보기 →'},
+  zh:{h:'🔒 {a} × {b} 的攻略，从这里开始',
+      t:'这个画面能看到的，只是两人契合度的“入口”。',
+      items:['能打动{b}的<em>消息范例</em>','全16类型契合地图与<em>你的最佳契合TOP5</em>','吵架时的<em>和好流程图</em>'],
+      b:'查看攻略{b}的方法 →'},
+  tw:{h:'🔒 {a} × {b} 的攻略，從這裡開始',
+      t:'這個畫面能看到的，只是兩人契合度的「入口」。',
+      items:['能打動{b}的<em>訊息範例</em>','全16類型契合地圖與<em>你的最佳契合TOP5</em>','吵架時的<em>和好流程圖</em>'],
+      b:'查看攻略{b}的方法 →'}
 };
+/* 相性CTA（ペア固有）を組み立てる。current=自分のタイプ、b=相手のタイプ */
+function buildCompatCta(a,b){
+  if(!(current&&hasGuideLink(current,L))) return '';
+  const cc=COMPAT_CTA[L]||COMPAT_CTA.ja, cfg=guideCfg(L);
+  const ba=LOC[L][a].breed, bb=LOC[L][b].breed;
+  const f=s=>s.replace(/\{a\}/g,ba).replace(/\{b\}/g,bb);
+  const price=(cfg.currency==='USD')
+    ? '<span class="cc-orig">$'+cfg.orig+'</span><span class="cc-now">$'+cfg.price+'</span>'
+    : '<span class="cc-orig">'+cfg.orig+'</span><span class="cc-now">'+cfg.price+'</span><span class="cc-yen">'+(L==='ja'?'円':L==='ko'?'엔':'日元')+'</span>';
+  return '<div class="cmpt-cta"><div class="cc-h">'+f(cc.h)+'</div><div class="cc-t">'+f(cc.t)+'</div>'
+    +'<ul class="cc-list">'+cc.items.map(x=>'<li>'+f(x)+'</li>').join('')+'</ul>'
+    +'<a class="cc-btn" href="javascript:void(0)" onclick="goBuy(\''+current+'\',\''+L+'\',\'compat\')">'+f(cc.b)+'</a>'
+    +'<div class="cc-price">'+(cfg.off?'<span class="cc-off">'+cfg.off+'</span>':'')+price+'</div></div>';
+}
 function runCompat(){
   const a=document.getElementById('cpA').value,b=document.getElementById('cpB').value;
   const r=compatScore(a,b),s=r[0],msg=r[1];
@@ -3080,12 +3168,8 @@ function runCompat(){
   const d=compatDetail(a,b);
   const cdL={ja:{g:'いいところ',w:'気をつけたいこと',t:'うまくいくコツ'},en:{g:'What works',w:'Watch out for',t:'How to make it work'},ko:{g:'좋은 점',w:'주의할 점',t:'잘 지내는 법'},zh:{g:'契合亮点',w:'要注意的',t:'相处秘诀'},tw:{g:'契合亮點',w:'要注意的',t:'相處祕訣'}}[L]||{g:'いいところ',w:'気をつけたいこと',t:'うまくいくコツ'};
   const cx=CXL[L]||CXL.ja, axisHtml=axisBreakdown(a,b), et=extraTips(a,b);
-  /* 自分の結果があり、購入リンクが有効な言語でのみ課金導線を出す */
-  const cc=COMPAT_CTA[L]||COMPAT_CTA.ja;
-  const compatCta=(current&&hasGuideLink(current,L))
-    ? '<div class="cmpt-cta"><div class="cc-h">'+cc.h+'</div><div class="cc-t">'+cc.t+'</div>'
-      +'<a class="cc-btn" href="javascript:void(0)" onclick="goBuy(\''+current+'\',\''+L+'\',\'compat\')">'+cc.b+'</a></div>'
-    : '';
+  /* 自分の結果があり、購入可能な言語でのみ課金導線を出す（ペア固有オファー） */
+  const compatCta=buildCompatCta(a,b);
   document.getElementById('compatResult').innerHTML=
    '<div class="compat-pick mt"><div class="pair">'+dogImg(a)+'<span class="heart">💞</span>'+dogImg(b)+'</div>'
    +'<div class="score-ring"><div class="num">'+s+'<span style="font-size:24px">%</span></div>'
@@ -3392,6 +3476,7 @@ function shareInstagram(){
 </script>
 <div class="buy-loading" id="buyLoading" hidden><div class="bl-spin"></div><span id="t-buyloading"></span></div>
 <div class="buy-error" id="buyError" hidden></div>
+<div class="pdf-lightbox" id="pdfLightbox" hidden onclick="if(event.target===this)closePdfSample()"></div>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>
