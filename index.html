@@ -2082,12 +2082,12 @@ const STRIPE_LINKS_BY_LANG={
 };
 /* 通貨・割引はja(JPY・表示価格のみ、プロモコードなし)とen(USD・DISCOUNT20を自動適用)で構成が異なるため言語別に保持 */
 const GUIDE_CFG_BY_LANG={
-  ja:{ price:"680", orig:"850", off:"20%OFF", currency:"JPY", promo:null },
+  ja:{ price:"780", orig:"1180", off:"34%OFF", currency:"JPY", promo:null },
   en:{ price:"7.99", orig:"9.99", off:"20%OFF", currency:"USD", promo:"DISCOUNT20" }
 };
 function guideCfg(lang){ return GUIDE_CFG_BY_LANG[lang]||GUIDE_CFG_BY_LANG.ja; }
 const COUPON_BADGE={
-  ja:"🎟 20%OFFサービス開始記念価格｜診断した方限定",
+  ja:"🎟 34%OFF 期間限定価格｜診断した方限定",
   en:"🎟 20% OFF coupon applied · quiz-takers only",
   ko:"🎟 20% 할인 쿠폰 적용됨 · 진단한 분 한정",
   zh:"🎟 20%OFF优惠券已套用 · 仅限测验者",
