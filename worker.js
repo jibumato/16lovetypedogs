@@ -376,7 +376,7 @@ ${tagLine}
         form.set("submit_type", "pay");
         form.set("line_items[0][quantity]", "1");
         form.set("line_items[0][price_data][currency]", "jpy");
-        form.set("line_items[0][price_data][unit_amount]", "680");
+        form.set("line_items[0][price_data][unit_amount]", "780");
         form.set("line_items[0][price_data][product_data][name]", `${type}_love_guide_JP`);
         form.set("payment_method_types[0]", "card");
         form.set("payment_method_types[1]", "paypay");
@@ -422,7 +422,7 @@ ${tagLine}
           const clientId = cidRaw ? cidRaw.replace("-", ".") : (s.id || "555.555");
           const cur = String(s.currency || "jpy").toLowerCase();
           const zeroDec = cur === "jpy" || cur === "krw";
-          const value = (s.amount_total != null) ? (zeroDec ? s.amount_total : s.amount_total / 100) : 680;
+          const value = (s.amount_total != null) ? (zeroDec ? s.amount_total : s.amount_total / 100) : 780;
 
           const mid = env.GA_MEASUREMENT_ID || "G-C3W7FBQRCD";
           if (env.GA_MP_API_SECRET) {
